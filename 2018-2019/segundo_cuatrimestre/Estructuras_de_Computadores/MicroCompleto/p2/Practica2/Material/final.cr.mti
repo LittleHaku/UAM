@@ -1,0 +1,69 @@
+C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MemProgSUMA.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MemProgSUMA.vhd
+Model Technology ModelSim PE Student Edition vcom 10.4a Compiler 2015.03 Apr  7 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity MemProgSuma
+-- Compiling architecture Simple of MemProgSuma
+
+} {} {}} C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPSTb.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPSTb.vhd
+Model Technology ModelSim PE Student Edition vcom 10.4a Compiler 2015.03 Apr  7 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity ALUMIPSTb
+-- Compiling architecture Practica of ALUMIPSTb
+
+} {} {}} C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPS.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPS.vhd
+Model Technology ModelSim PE Student Edition vcom 10.4a Compiler 2015.03 Apr  7 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity RegsMIPS
+-- Compiling architecture Practica of RegsMIPS
+
+} {} {}} C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSumaTb.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSumaTb.vhd
+Model Technology ModelSim PE Student Edition vcom 10.4a Compiler 2015.03 Apr  7 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity MicroSumaTb
+-- Compiling architecture Test of MicroSumaTb
+
+} {} {}} C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPS.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPS.vhd
+Model Technology ModelSim PE Student Edition vcom 10.4a Compiler 2015.03 Apr  7 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Compiling entity ALUMIPS
+-- Compiling architecture Practica of ALUMIPS
+
+} {} {}} C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSuma.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSuma.vhd
+Model Technology ModelSim PE Student Edition vcom 10.4a Compiler 2015.03 Apr  7 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity MicroSuma
+-- Compiling architecture Practica of MicroSuma
+
+} {} {}} C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPSTb.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPSTb.vhd
+Model Technology ModelSim PE Student Edition vcom 10.4a Compiler 2015.03 Apr  7 2015
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity RegsMIPSTb
+-- Compiling architecture Practica of RegsMIPSTb
+
+} {} {}}

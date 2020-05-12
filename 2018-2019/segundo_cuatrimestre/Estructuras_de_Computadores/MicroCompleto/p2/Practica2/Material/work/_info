@@ -1,0 +1,307 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Modeltech_pe_edu_10.4a/examples
+Ealumips
+Z0 w1557159041
+Z1 DPx4 ieee 16 std_logic_signed 0 22 C<aanc0R`<LWPSe[JYRP^3
+Z2 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z5 dC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material
+Z6 8C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPS.vhd
+Z7 FC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPS.vhd
+l0
+L20
+VUKeOb]Q;ll3Me4d97kDaI1
+!s100 1KB8gONAKP;1c2GJ4;9<D3
+Z8 OP;C;10.4a;61
+32
+Z9 !s110 1557159043
+!i10b 1
+Z10 !s108 1557159043.000000
+Z11 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPS.vhd|
+Z12 !s107 C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPS.vhd|
+!i113 1
+Z13 o-work work -2002 -explicit -O0
+Z14 tExplicit 1
+Apractica
+R1
+R2
+R3
+R4
+Z15 DEx4 work 7 alumips 0 22 UKeOb]Q;ll3Me4d97kDaI1
+l34
+L30
+VOWFLLX=jJj`?[0SIN22XZ0
+!s100 :e4I@G9Memc3[3]`QD6733
+R8
+32
+R9
+!i10b 1
+R10
+R11
+R12
+!i113 1
+R13
+R14
+Ealumipstb
+Z16 w1557158214
+Z17 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+R3
+R4
+R5
+Z18 8C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPSTb.vhd
+Z19 FC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPSTb.vhd
+l0
+L24
+VlV]M8nBCD0]kL4I_EE=Rn0
+!s100 jPWk4n?6A@n7n>TPCCNHl2
+R8
+32
+Z20 !s110 1557158986
+!i10b 1
+Z21 !s108 1557158986.000000
+Z22 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPSTb.vhd|
+Z23 !s107 C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/ALUMIPSTb.vhd|
+!i113 1
+R13
+R14
+Apractica
+R17
+R3
+R4
+DEx4 work 9 alumipstb 0 22 lV]M8nBCD0]kL4I_EE=Rn0
+l165
+L27
+V`8ChfmM6RhR?W:[VhGXhh0
+!s100 =dLAPhiik@g]VTdd;aTWk1
+R8
+32
+R20
+!i10b 1
+R21
+R22
+R23
+!i113 1
+R13
+R14
+Ememprogsuma
+Z24 w1551039603
+Z25 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+R2
+R3
+R4
+R5
+Z26 8C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MemProgSUMA.vhd
+Z27 FC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MemProgSUMA.vhd
+l0
+L21
+VN>SW`X=WDANViz:02iT>H2
+!s100 BVW=Z:ho5A]0X`X04aTU:0
+R8
+32
+Z28 !s110 1557158188
+!i10b 1
+Z29 !s108 1557158188.000000
+Z30 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MemProgSUMA.vhd|
+Z31 !s107 C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MemProgSUMA.vhd|
+!i113 1
+R13
+R14
+Asimple
+R25
+R2
+R3
+R4
+DEx4 work 11 memprogsuma 0 22 N>SW`X=WDANViz:02iT>H2
+l30
+L28
+VhL[agP<?J>]81?L2Z@TY_3
+!s100 K:XIB8b477JVzdei@PDAW2
+R8
+32
+R28
+!i10b 1
+R29
+R30
+R31
+!i113 1
+R13
+R14
+Emicrosuma
+Z32 w1551096088
+R25
+R2
+R3
+R4
+R5
+Z33 8C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSuma.vhd
+Z34 FC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSuma.vhd
+l0
+L20
+VNHUGSS[m6KP12L0^^0=OS2
+!s100 Ion[A6hgWknK5oRVoMfE:3
+R8
+32
+R28
+!i10b 1
+R29
+Z35 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSuma.vhd|
+Z36 !s107 C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSuma.vhd|
+!i113 1
+R13
+R14
+Apractica
+R25
+R2
+R3
+R4
+DEx4 work 9 microsuma 0 22 NHUGSS[m6KP12L0^^0=OS2
+l37
+L29
+Vo3Djd2;KO][GmMHX<;cYk3
+!s100 na;W;DSU3?`OX4NXzh5:d0
+R8
+32
+R28
+!i10b 1
+R29
+R35
+R36
+!i113 1
+R13
+R14
+Emicrosumatb
+Z37 w1551096082
+R2
+R25
+R3
+R4
+R5
+Z38 8C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSumaTb.vhd
+Z39 FC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSumaTb.vhd
+l0
+L20
+VKAmHLnOM`Fc9;zgmAK0hl1
+!s100 FUg[2n;QoIFFfk8Ge1G381
+R8
+32
+R28
+!i10b 1
+R29
+Z40 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSumaTb.vhd|
+Z41 !s107 C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/MicroSumaTb.vhd|
+!i113 1
+R13
+R14
+Atest
+R2
+R25
+R3
+R4
+DEx4 work 11 microsumatb 0 22 KAmHLnOM`Fc9;zgmAK0hl1
+l59
+L23
+VRY7OI;0]az2YaOeAIaFeB3
+!s100 FHCEc2`R4D`UbbaMU@h`^3
+R8
+32
+R28
+!i10b 1
+R29
+R40
+R41
+!i113 1
+R13
+R14
+Eregsmips
+Z42 w1557158643
+R2
+R25
+R3
+R4
+R5
+Z43 8C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPS.vhd
+Z44 FC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPS.vhd
+l0
+L20
+VN84S12k933X23e>>S9Tg<1
+!s100 LJQTSeORh221@Pl1ImODd3
+R8
+32
+Z45 !s110 1557158647
+!i10b 1
+Z46 !s108 1557158646.000000
+Z47 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPS.vhd|
+Z48 !s107 C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPS.vhd|
+!i113 1
+R13
+R14
+Apractica
+R2
+R25
+R3
+R4
+DEx4 work 8 regsmips 0 22 N84S12k933X23e>>S9Tg<1
+l46
+L34
+VKVP:H]02QI:oAgXkB0=Ba3
+!s100 _GWdL189MFGlk7ak?_hzK2
+R8
+32
+R45
+!i10b 1
+R46
+R47
+R48
+!i113 1
+R13
+R14
+Eregsmipstb
+Z49 w1551091179
+R17
+R3
+R4
+R5
+Z50 8C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPSTb.vhd
+Z51 FC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPSTb.vhd
+l0
+L18
+V9XLGPllDVXSH@egZ99dVb1
+!s100 oQdiG5TXVVJ64@`O6^=OO2
+R8
+32
+Z52 !s110 1557158187
+!i10b 1
+Z53 !s108 1557158186.000000
+Z54 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPSTb.vhd|
+Z55 !s107 C:/Users/User/Desktop/Micro5-5/p2/Practica2/Material/RegsMIPSTb.vhd|
+!i113 1
+R13
+R14
+Apractica
+R17
+R3
+R4
+DEx4 work 10 regsmipstb 0 22 9XLGPllDVXSH@egZ99dVb1
+l48
+L21
+VZbL1Q3OzNOz5IKHOKS[>M2
+!s100 >Th2^Z1eG_mDUU<KMf1XG0
+R8
+32
+R52
+!i10b 1
+R53
+R54
+R55
+!i113 1
+R13
+R14

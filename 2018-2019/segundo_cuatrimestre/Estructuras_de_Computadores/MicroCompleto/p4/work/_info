@@ -1,0 +1,608 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/User/Desktop/Micro5-5/p2/Practica2/Material
+Ealumips
+Z0 w1557159041
+Z1 DPx4 ieee 16 std_logic_signed 0 22 C<aanc0R`<LWPSe[JYRP^3
+Z2 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z5 dC:/Users/User/Desktop/Micro5-5/p4
+Z6 8C:/Users/User/Desktop/Micro5-5/p4/ALUMIPS.vhd
+Z7 FC:/Users/User/Desktop/Micro5-5/p4/ALUMIPS.vhd
+l0
+L20
+VUKeOb]Q;ll3Me4d97kDaI1
+!s100 1KB8gONAKP;1c2GJ4;9<D3
+Z8 OP;C;10.4a;61
+32
+Z9 !s110 1557159171
+!i10b 1
+Z10 !s108 1557159171.000000
+Z11 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/ALUMIPS.vhd|
+Z12 !s107 C:/Users/User/Desktop/Micro5-5/p4/ALUMIPS.vhd|
+!i113 1
+Z13 o-work work -2002 -explicit -O0
+Z14 tExplicit 1
+Apractica
+R1
+R2
+R3
+R4
+DEx4 work 7 alumips 0 22 UKeOb]Q;ll3Me4d97kDaI1
+l34
+L30
+VOWFLLX=jJj`?[0SIN22XZ0
+!s100 :e4I@G9Memc3[3]`QD6733
+R8
+32
+R9
+!i10b 1
+R10
+R11
+R12
+!i113 1
+R13
+R14
+Eextcero
+Z15 w1557161325
+R2
+Z16 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+R3
+R4
+R5
+Z17 8C:/Users/User/Desktop/Micro5-5/p4/ExtCero.vhd
+Z18 FC:/Users/User/Desktop/Micro5-5/p4/ExtCero.vhd
+l0
+L6
+V=BjI58m:DPF]0?JnMgE]31
+!s100 80H43@D=<;4G6j7:`lkAh2
+R8
+32
+Z19 !s110 1557161327
+!i10b 1
+Z20 !s108 1557161327.000000
+Z21 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/ExtCero.vhd|
+Z22 !s107 C:/Users/User/Desktop/Micro5-5/p4/ExtCero.vhd|
+!i113 1
+R13
+R14
+Aextceroarch
+R2
+R16
+R3
+R4
+DEx4 work 7 extcero 0 22 =BjI58m:DPF]0?JnMgE]31
+l15
+L14
+VkH[F3Dc74=23dZe86fL^91
+!s100 4U0]LFRclESMTc05C@`z@2
+R8
+32
+R19
+!i10b 1
+R20
+R21
+R22
+!i113 1
+R13
+R14
+Eextsgn
+Z23 w1557161892
+R2
+R16
+R3
+R4
+R5
+Z24 8C:/Users/User/Desktop/Micro5-5/p4/ExtSgn.vhd
+Z25 FC:/Users/User/Desktop/Micro5-5/p4/ExtSgn.vhd
+l0
+L7
+VCfQ_1K5>7`i1>BlGLzDB`1
+!s100 :3ZEZiYeMlQ^M8Pl[>@KB2
+R8
+32
+Z26 !s110 1557161894
+!i10b 1
+Z27 !s108 1557161894.000000
+Z28 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/ExtSgn.vhd|
+Z29 !s107 C:/Users/User/Desktop/Micro5-5/p4/ExtSgn.vhd|
+!i113 1
+R13
+R14
+Aextsgnarch
+R2
+R16
+R3
+R4
+DEx4 work 6 extsgn 0 22 CfQ_1K5>7`i1>BlGLzDB`1
+l16
+L15
+V3@18^]?h>d^>kQfS4?1j03
+!s100 [W5z;ICFi?ObHm@c40^`C2
+R8
+32
+R26
+!i10b 1
+R27
+R28
+R29
+!i113 1
+R13
+R14
+Ememdatamips
+Z30 w1553856797
+R2
+R16
+R3
+R4
+R5
+Z31 8C:/Users/User/Desktop/Micro5-5/p4/MemDataMIPS.vhd
+Z32 FC:/Users/User/Desktop/Micro5-5/p4/MemDataMIPS.vhd
+l0
+L19
+V_bgLo@14M6M_h<Q=;F?o93
+!s100 JQFAiT0PO203fPM;4eblH0
+R8
+32
+Z33 !s110 1557159172
+!i10b 1
+R10
+Z34 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/MemDataMIPS.vhd|
+Z35 !s107 C:/Users/User/Desktop/Micro5-5/p4/MemDataMIPS.vhd|
+!i113 1
+R13
+R14
+Asimple
+R2
+R16
+R3
+R4
+DEx4 work 11 memdatamips 0 22 _bgLo@14M6M_h<Q=;F?o93
+l37
+L30
+Vff1722SK8O`SEb]^OEV?`3
+!s100 AI3EFngkb?zo2N?zzHM0^2
+R8
+32
+R33
+!i10b 1
+R10
+R34
+R35
+!i113 1
+R13
+R14
+Ememdataplantilla
+Z36 w1553857439
+R2
+R16
+R3
+R4
+R5
+Z37 8C:/Users/User/Desktop/Micro5-5/p4/MemDataPlantilla.vhd
+Z38 FC:/Users/User/Desktop/Micro5-5/p4/MemDataPlantilla.vhd
+l0
+L21
+VTGc=WR=a2_ZR08>R[@Q6g1
+!s100 n^8jf[Q`adTbP9QoUf2T;1
+R8
+32
+R33
+!i10b 1
+Z39 !s108 1557159172.000000
+Z40 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/MemDataPlantilla.vhd|
+Z41 !s107 C:/Users/User/Desktop/Micro5-5/p4/MemDataPlantilla.vhd|
+!i113 1
+R13
+R14
+Asimple
+R2
+R16
+R3
+R4
+DEx4 work 16 memdataplantilla 0 22 TGc=WR=a2_ZR08>R[@Q6g1
+l39
+L32
+V^Ubo:jh369U6oG4m?;;`;2
+!s100 aW[[6_KQfmk8B0L6B@U8@3
+R8
+32
+R33
+!i10b 1
+R39
+R40
+R41
+!i113 1
+R13
+R14
+Ememprogmips
+Z42 w1553857296
+R16
+R2
+R3
+R4
+R5
+Z43 8C:/Users/User/Desktop/Micro5-5/p4/MemProgMIPS.vhd
+Z44 FC:/Users/User/Desktop/Micro5-5/p4/MemProgMIPS.vhd
+l0
+L21
+VDVY8<W=1RggYL=XSiKAba1
+!s100 lm9?ZD=l6Pn>1>3[CUY:b2
+R8
+32
+R33
+!i10b 1
+R39
+Z45 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/MemProgMIPS.vhd|
+Z46 !s107 C:/Users/User/Desktop/Micro5-5/p4/MemProgMIPS.vhd|
+!i113 1
+R13
+R14
+Asimple
+R16
+R2
+R3
+R4
+DEx4 work 11 memprogmips 0 22 DVY8<W=1RggYL=XSiKAba1
+l30
+L28
+Vz40kb;LM[onIPgjd]0a[=3
+!s100 I7lXQz?=iP`3z9ADKgNSW2
+R8
+32
+R33
+!i10b 1
+R39
+R45
+R46
+!i113 1
+R13
+R14
+Ememprogplantilla
+Z47 w1553857535
+R16
+R2
+R3
+R4
+R5
+Z48 8C:/Users/User/Desktop/Micro5-5/p4/MemProgPlantilla.vhd
+Z49 FC:/Users/User/Desktop/Micro5-5/p4/MemProgPlantilla.vhd
+l0
+L20
+V<OdhC3XVIGk<GU>JDTnkV2
+!s100 VHEcWXD4UH`SzUXXlmSS32
+R8
+32
+R33
+!i10b 1
+R39
+Z50 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/MemProgPlantilla.vhd|
+Z51 !s107 C:/Users/User/Desktop/Micro5-5/p4/MemProgPlantilla.vhd|
+!i113 1
+R13
+R14
+Asimple
+R16
+R2
+R3
+R4
+DEx4 work 16 memprogplantilla 0 22 <OdhC3XVIGk<GU>JDTnkV2
+l29
+L27
+V2hblB@ff7^z;>z]FgCAS72
+!s100 jeA_hPZKP<gbId6ODoWRE1
+R8
+32
+R33
+!i10b 1
+R39
+R50
+R51
+!i113 1
+R13
+R14
+Emicromips
+Z52 w1557165300
+R2
+R16
+R3
+R4
+R5
+Z53 8C:/Users/User/Desktop/Micro5-5/p4/MicroMIPS.vhd
+Z54 FC:/Users/User/Desktop/Micro5-5/p4/MicroMIPS.vhd
+l0
+L7
+V47H;CYLDUVONI7??oB7Ff0
+!s100 U0HamjT<Y7iIFc^Ibf:zO2
+R8
+32
+Z55 !s110 1557165307
+!i10b 1
+Z56 !s108 1557165307.000000
+Z57 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/MicroMIPS.vhd|
+Z58 !s107 C:/Users/User/Desktop/Micro5-5/p4/MicroMIPS.vhd|
+!i113 1
+R13
+R14
+Amicromipsarch
+R2
+R16
+R3
+R4
+Z59 DEx4 work 9 micromips 0 22 47H;CYLDUVONI7??oB7Ff0
+l105
+L23
+VQ86B`dT6_bgSi>>03aF;`1
+!s100 `dNYo4fTfQT3Hz7kR^5KN3
+R8
+32
+R55
+!i10b 1
+R56
+R57
+R58
+!i113 1
+R13
+R14
+Emicromipstb
+Z60 w1557160613
+R2
+R16
+R3
+R4
+R5
+Z61 8C:/Users/User/Desktop/Micro5-5/p4/MicroMIPSTb.vhd
+Z62 FC:/Users/User/Desktop/Micro5-5/p4/MicroMIPSTb.vhd
+l0
+L20
+VMKV1mmH3X@k=9=0AVDPZO1
+!s100 f64iUd^;MODkVm`OOTXVB0
+R8
+32
+Z63 !s110 1557160617
+!i10b 1
+Z64 !s108 1557160617.000000
+Z65 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/MicroMIPSTb.vhd|
+Z66 !s107 C:/Users/User/Desktop/Micro5-5/p4/MicroMIPSTb.vhd|
+!i113 1
+R13
+R14
+Atest
+R2
+R16
+R3
+R4
+DEx4 work 11 micromipstb 0 22 MKV1mmH3X@k=9=0AVDPZO1
+l78
+L23
+Vca7aJT==aN0jeG1DUEA7]1
+!s100 WWKc5?7HH5@8f9Q_0ObI00
+R8
+32
+R63
+!i10b 1
+R64
+R65
+R66
+!i113 1
+R13
+R14
+Emicromipsvectorestb
+Z67 w1553858660
+R2
+R16
+R3
+R4
+R5
+Z68 8C:/Users/User/Desktop/Micro5-5/p4/MicroMIPSVectoresTb.vhd
+Z69 FC:/Users/User/Desktop/Micro5-5/p4/MicroMIPSVectoresTb.vhd
+l0
+L23
+Vnd9<E8Nk22=bEJ@Nh0]Sl3
+!s100 [<jRbG28Go28G927gD05A2
+R8
+32
+Z70 !s110 1557159173
+!i10b 1
+R39
+Z71 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/MicroMIPSVectoresTb.vhd|
+Z72 !s107 C:/Users/User/Desktop/Micro5-5/p4/MicroMIPSVectoresTb.vhd|
+!i113 1
+R13
+R14
+Atest
+R2
+R16
+R3
+R4
+DEx4 work 19 micromipsvectorestb 0 22 nd9<E8Nk22=bEJ@Nh0]Sl3
+l81
+L26
+V1fUPC>i@L>>NQdM>0jQZd2
+!s100 dN9LGgo6:z[S>GHNR50Yj0
+R8
+32
+R70
+!i10b 1
+R39
+R71
+R72
+!i113 1
+R13
+R14
+Epcounter
+Z73 w1557162145
+R2
+R16
+R3
+R4
+R5
+Z74 8C:/Users/User/Desktop/Micro5-5/p4/pcounter.vhd
+Z75 FC:/Users/User/Desktop/Micro5-5/p4/pcounter.vhd
+l0
+L8
+V:9YB;;69aozA6jl?C35c=3
+!s100 zDHAgCn[`<kE?9<6YXXg20
+R8
+32
+Z76 !s110 1557162147
+!i10b 1
+Z77 !s108 1557162146.000000
+Z78 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/pcounter.vhd|
+Z79 !s107 C:/Users/User/Desktop/Micro5-5/p4/pcounter.vhd|
+!i113 1
+R13
+R14
+Apcounterarch
+R2
+R16
+R3
+R4
+DEx4 work 8 pcounter 0 22 :9YB;;69aozA6jl?C35c=3
+l20
+L18
+VTE1RlH?oV]7Q1^nkHZzkK2
+!s100 8DFfzO1o6009L@e^YlfcO1
+R8
+32
+R76
+!i10b 1
+R77
+R78
+R79
+!i113 1
+R13
+R14
+Eregsmips
+Z80 w1557158643
+R2
+R16
+R3
+R4
+R5
+Z81 8C:/Users/User/Desktop/Micro5-5/p4/RegsMIPS.vhd
+Z82 FC:/Users/User/Desktop/Micro5-5/p4/RegsMIPS.vhd
+l0
+L20
+VN84S12k933X23e>>S9Tg<1
+!s100 LJQTSeORh221@Pl1ImODd3
+R8
+32
+R70
+!i10b 1
+Z83 !s108 1557159173.000000
+Z84 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/RegsMIPS.vhd|
+Z85 !s107 C:/Users/User/Desktop/Micro5-5/p4/RegsMIPS.vhd|
+!i113 1
+R13
+R14
+Apractica
+R2
+R16
+R3
+R4
+DEx4 work 8 regsmips 0 22 N84S12k933X23e>>S9Tg<1
+l46
+L34
+VKVP:H]02QI:oAgXkB0=Ba3
+!s100 _GWdL189MFGlk7ak?_hzK2
+R8
+32
+R70
+!i10b 1
+R83
+R84
+R85
+!i113 1
+R13
+R14
+Eunidadcontrol
+Z86 w1557160535
+Z87 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+R3
+R4
+R5
+Z88 8C:/Users/User/Desktop/Micro5-5/p4/UnidadControl.vhd
+Z89 FC:/Users/User/Desktop/Micro5-5/p4/UnidadControl.vhd
+l0
+L6
+V9nZCQ[bzA[e`KNb^3fLCM2
+!s100 5QfYIC2KA8U0meYd2jej[2
+R8
+32
+!s110 1557160537
+!i10b 1
+Z90 !s108 1557160537.000000
+Z91 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/UnidadControl.vhd|
+Z92 !s107 C:/Users/User/Desktop/Micro5-5/p4/UnidadControl.vhd|
+!i113 1
+R13
+R14
+Aunidadcontrolarch
+R87
+R3
+R4
+DEx4 work 13 unidadcontrol 0 22 9nZCQ[bzA[e`KNb^3fLCM2
+l52
+L30
+V6f]QPSZg<NW4=QY<K@nk13
+!s100 3Ez]_aIC73XIYVQkB9;=I3
+R8
+32
+!s110 1557160538
+!i10b 1
+R90
+R91
+R92
+!i113 1
+R13
+R14
+Eunidadcontroltb
+Z93 w1553859052
+R87
+R3
+R4
+R5
+Z94 8C:/Users/User/Desktop/Micro5-5/p4/UnidadControlTb.vhd
+Z95 FC:/Users/User/Desktop/Micro5-5/p4/UnidadControlTb.vhd
+l0
+L18
+Ve;i^hfEe<MLSRjCf5__LV2
+!s100 7nNi0FG;`oQV=XMoMg4]Z3
+R8
+32
+R70
+!i10b 1
+R83
+Z96 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|C:/Users/User/Desktop/Micro5-5/p4/UnidadControlTb.vhd|
+Z97 !s107 C:/Users/User/Desktop/Micro5-5/p4/UnidadControlTb.vhd|
+!i113 1
+R13
+R14
+Abehavior
+R87
+R3
+R4
+DEx4 work 15 unidadcontroltb 0 22 e;i^hfEe<MLSRjCf5__LV2
+l127
+L21
+Vnelek`SAz8mRh4Jc5kPZD0
+!s100 6V:2H:SQgN^h1]fgIaSnP3
+R8
+32
+R70
+!i10b 1
+R83
+R96
+R97
+!i113 1
+R13
+R14

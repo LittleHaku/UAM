@@ -1,0 +1,78 @@
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+ 
+entity UnidadControl is
+port(
+		OPCode : in  std_logic_vector (5 downto 0); -- OPCode of the instruction
+		Funct : in std_logic_vector(5 downto 0); -- Funct of the instruction
+		-- Signals for the PC
+		Jump : out  std_logic;
+--		RegToPC : out std_logic;
+		Branch : out  std_logic;
+--		PCToReg : out std_logic;
+		-- Signals to the memory
+		MemToReg : out  std_logic;
+		MemWrite : out  std_logic;
+		
+		-- Sifnals for the ALU
+		ALUSrc : out  std_logic;
+		ALUControl : out  std_logic_vector (2 downto 0);
+		ExtCero : out std_logic;
+		
+		-- Signals for the GPR
+		RegWrite : out  std_logic;
+		RegDest : out  std_logic
+        );
+end entity;
+
+architecture UnidadControlarch of UnidadControl is
+
+
+constant RTYPE: std_logic_vector(5 downto 0) := "000000";
+constant J: std_logic_vector(5 downto 0) := "000010";
+constant BEQ: std_logic_vector(5 downto 0) := "000100";
+constant ADDI: std_logic_vector(5 downto 0) := "001000";
+constant ANDI: std_logic_vector(5 downto 0) := "001100";
+constant ORI: std_logic_vector(5 downto 0) := "001101";
+constant LW: std_logic_vector(5 downto 0) := "100011";
+constant SW: std_logic_vector(5 downto 0) := "101011";
+constant SLTI: std_logic_vector(5 downto 0) := "001010";
+
+constant RRAND: std_logic_vector(5 downto 0) := "100100";
+constant RRADD: std_logic_vector(5 downto 0) := "100000";
+constant RRSUB: std_logic_vector(5 downto 0) := "100010";
+constant RRNOR: std_logic_vector(5 downto 0) := "100111";
+constant RROR: std_logic_vector(5 downto 0) := "100101";
+constant RRSLT: std_logic_vector(5 downto 0) := "101010";
+
+
+
+begin
+
+	Jump <= '1' when OPCODE = J ELSE '0';
+
+
+	Branch <= '1' when OPCODE = BEQ else '0';
+
+	MemToReg <= '1' when opcode = lw else '0';
+
+	MemWrite <= '1' when opcode = sw else '0';
+
+	ALUSrc <= '0' when opcode = rtype or opcode = beq else '1'; 
+
+	ALUControl <= "110" when opcode = beq or (opcode = rtype and funct = rrsub) else
+			"000" when opcode = andi or (opcode = rtype and funct = rrand) else
+			"001" when opcode = ori or (opcode = rtype and funct = rror) else
+			"111" when opcode = slti or (opcode = rtype and funct = rrslt) else
+			"101" when opcode = rtype and funct = rrnor else
+			"010";
+
+	ExtCero <= '1' when  opcode = andi or opcode = ori else '0';
+
+	RegWrite <= '0' when opcode = j or opcode = beq or opcode = sw else '1';
+
+	RegDest <= '0' when opcode = addi or opcode = andi or opcode = ori or opcode = lw or opcode = slti else '1';
+
+end;

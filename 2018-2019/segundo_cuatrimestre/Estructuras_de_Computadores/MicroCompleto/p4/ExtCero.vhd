@@ -1,0 +1,20 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use ieee.std_logic_arith.all;
+
+entity ExtCero is
+	port(
+		entradacortacero : in std_logic_vector(15 downto 0);
+		salidalargacero : out std_logic_vector(31 downto 0)
+	);
+
+end entity;
+
+architecture ExtCeroarch of extcero is
+begin
+
+salidalargacero(15 downto 0) <= entradacortacero;
+salidalargacero(31 downto 16) <= (Others => '0');
+
+end architecture;

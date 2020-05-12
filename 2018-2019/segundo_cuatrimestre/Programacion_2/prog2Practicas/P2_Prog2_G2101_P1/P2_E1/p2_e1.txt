@@ -1,0 +1,8 @@
+Contenido de la pila:
+[222, second, 0]
+[111, first, 0]
+Caracteres impresos: 32
+Vaciando pila. Extracciones:
+[222, second, 0][111, first, 0]
+Contenido de la pila despues de vaciar:
+Caracteres impresos: 0
