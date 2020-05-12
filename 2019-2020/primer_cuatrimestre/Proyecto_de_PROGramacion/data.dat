@@ -1,0 +1,65 @@
+#s:1|Hall|-1|-1|2|1|-1|3|0|                     ___ %                    ( o )%     _______________ | | %    /              / | | %   /              /  | | %  /              /   |_| % /______________/        %House Hall|There's a Trapdoor under the rug|
+#s:2|Toilet|-1|1|-1|-1|-1|-1|0| _            _ %/_/_         | |%|    )    __ | |%|   |    (    .'%|___|     )  (  %        %       %Guests' Toilet|Look around, think about something that can be useful to scape|
+#s:3|Bathroom|-1|11|-1|-1|-1|-1|0|      __              %     /__\           _ %    //..   |       | |%   // ;,   |o    __| |%  //       |    (    .% ||________|     )  ( %        %Bathroom|If you still searching, you'll find it|
+#s:4|Corridor_1|2|5|-1|4|6|-1|1|     __________  %    / __      /| %   / /o/)    / | %  / (__)    /  | % /_________/  /  % |         | /   % |_________|/    %Main corridor|Look, you can go upstairs|
+#s:5|Kitchen|-1|4|17|-1|-1|-1|0|        _                  %    ___.\\________________ %   / /. ./      /        /|%  /_/___/_____ /________/ |%  |    o|__o__|o_o_o__O_| |%  |     |__o__| |/____| | |%  |_____|__o__|_|_____|_|/ %Kitchen|Are you hungry?|
+#s:6|Living_Room|-1|13|7|5|-1|-1|0|                ____  %   ________    /    \ %  /        \  /______\% /  () ()   \    ||   %(_)========(_)   ||   % I|________|I   _||_  %        %Dining Room|Take a seat, this is gonna be interesting|
+#s:7|Garden|7|-1|8|-1|-1|-1|1|        %        %   _                  _ %  ( )                ( )%  _|_                _|_%  \_/ ,,,,,,,,,,,,,, \_/%        %Garden|Looks like the kitchen door is shut|
+#s:8|Children's Room|-1|-1|-1|10|-1|-1|1|  ()//__/)____________()%  ||(___)//#/#/#/#/()/||%  |____|#|#|#|#|#|#|| ||%  /   /||#|#|#|#|#||| ||% /___/ ||#|#|#|#|#|||   % |___|/                 %        %Children's Room|Do you find something?|
+#s:9|Parents' Room|9|12|-1|-1|-1|-1|1|      /__/)_________________()%    (___)//#/_/#/_/#/_/#/_/||%   /__/)//#/_/#/_/#/_/#/_/ ||%()(   )//#/_/#/_/#/_/#/_/()||%||-----|#|_|#|_|#|_|#|_|#||  %||     |#| |#|_|#|_|#|_|#||  %||     |#| |#|_|#|_|#|_|#||  %Parents' Room|What's that? Another room...|
+#s:10|Corridor_2|-1|10|9|11|15|6|0|           ____________   %          |\     |U|   \  %          | \    (_)    \ %          \  \___________\%           \ |           |%            \|___________|%        %Upstairs corridor|Is that a Secret_door on the ceiling?|
+#s:11|Swimming_Pool|8|-1|-1|-1|-1|16|1|        % % __  ________________________%/_/|/ .     .  .    .    .  /%|_|/    .         .        / %  /   .     .   .     .   /  % /_______________________/   %Swimming Pool|I think something bright is on the bottom of the pool|
+#s:12|Basement|-1|-1|-1|-1|3|-1|1|      ____________   _________ %    /|___________/| |_o__o__o_|%   / /   ooo    / |              %  / /    oo    / /|              % /_/_____o____/ /                % |___________ |/                 % ||           ||                  %Basement|Look carefully, maybe there's something useful|
+#s:13|Attic|-1|-1|-1|18|-1|15|0|              ________________ %  /|         |____|______|____|% / |______   |________|_______|%/  /     /|  |___|______|_____|%| /     /                         %|/_____/                          %||    ||                          %Attic|Jingle bells ring outside|
+#s:15|Game_Room|-1|-1|-1|13|-1|-1|0|     _____________________ %    / __    /_/      __  /|%   / /_/  o o o     /_/ / |%  /      __o o o    o  /  |% /______/_/___________/    % |                    |    % |                    |    %Game's Room|It's not time for a poker round|
+#s:16|Parents'_Bathroom|-1|-1|-1|12|-1|-1|0|                     _ %  _                 | |% //__________     __| |% (           )   (    .%  (_________)     )  ( % %        %Main Bathroom|If only you had an ax...|
+#s:17|Pool_bottom|-1|-1|-1|-1|16|-1|0| . . . . . . . .  . . . . . .% .  . . . . . . . . . .  . . %  . . . . . . . . . . . . . .% . . . . . . . . . . . . . . %  . . . . . . . . . . . . . .% . . . . . . . . . . . . . . %  . . . . . . . . . . . . . .%Pool's botom|Try not to drown!|
+#s:18|Rooftop|-1|18|-1|-1|-1|-1|0| *        *        *  __o    %     *       *     * /_| _   %  K  *   K       *  O'_)/ \  * %<')___ <')___  __*  V   \  ) __% \ ___)-\ ___)-( (  (___|__)/ /%  |  |   |  |  *\ \__| |___/ / %  |* |   |  |    \__________/  %CONGRATULATIONS, YOU'VE ESCAPED!|HO HO HO! Santa has come to rescue you!!!|
+
+#l:1|Door|1|2|1|
+#l:2|Air|1|4|0|
+#l:3|Trapdoor|1|12|1|
+#l:4|Kitchen_door|4|5|1|
+#l:5|Living_door|4|6|1|
+#l:6|Upstairs|4|10|0|
+#l:7|Window|6|7|0|
+#l:8|Swimming_door|7|11|0|
+#l:9|Parents_door|10|9|0|
+#l:10|Toy_door|10|8|0|
+#l:11|Bathroom_door|10|3|0|
+#l:12|Old_door|9|16|1|
+#l:13|Game_door|6|15|0|
+#l:15|Secret_door|10|13|1|
+#l:16|Water|11|17|0|
+#l:17|Garden_door|5|7|1|
+#l:18|Wall|13|18|1|
+
+#o:1|paper|1|1|1|1|-1|0|1|It is a letter. It's signed by... Naughty?|Dear Nice: Does it feel good to be the nicest kid in Santa's list? This year justice will be made|
+#o:2|key|1|1|1|1|1|0|1|It is a key|Try to open one of the rooms around with it|
+#o:3|tnt|13|0|1|1|18|0|1|It is tnt|It is a good moment to blow up the wall, right?|
+#o:4|lamp|6|1|0|1|-1|0|1|It is a lamp|Turn in on, see what happens|
+#o:5|cigarrettes|15|1|1|1|-1|0|1|They are cigarrettes|If you like to smoke, outside please|
+#o:6|pink_key|6|0|1|1|6|0|1|It is a key|Maybe it opens one door or not|
+#o:7|blue_key|17|1|1|1|5|0|1|It is a key|That's the thind which was brighting in the water|
+#o:8|hairpin|2|1|1|1|4|0|1|It is a hairpin|I don't think this is for a new hairstyle, not now|
+#o:9|wire|12|0|1|1|15|0|1|It is a piece of wire|Have you ever opened a door with this?|
+#o:10|knife|5|1|1|1|17|0|1|It is a knife|Lucky you, now you can open a door or cook something for dinner, what do you think?|
+#o:11|crowbar|16|1|1|1|3|0|1|It is a crowbar|This will help with a tough door|
+#o:12|green_key|5|0|1|1|8|0|1|It is a key|There are lots of keys in here, it's crazy uh!|
+#o:13|hammer|2|1|1|1|16|0|1|It is hammer|Could you be able to break a door with it?|
+#o:14|lantern|12|0|0|1|-1|0|1|It is a lantern|You can tell a scary story, I'm waiting for it|
+#o:15|doll|8|1|1|1|-1|0|1|It is a doll|It is a pretty old doll, maybe from the 80's|
+#o:16|picture|16|0|1|1|-1|0|1|It is a picture|What a wonderful painting!|
+#o:17|toy_key|10|0|1|1|9|0|1|It is a key|Is this kids game?|
+#o:18|X-ray|6|1|1|1|13|0|1|It is a X-ray|Have you ever opened a door with this?|
+#o:19|ax|15|0|1|1|12|0|1|It is an ax|Hope you're strong enough to handle this|
+#o:20|soap|3|1|1|1|12|0|1|It is a soap|It is slippery, can be useful to pull out a door or a window|
+#o:21|sunglasses|13|0|1|1|-1|0|1|They are sunglasses|They can protect you from sun rays|
+#o:22|cards|15|1|1|1|7|0|1|They are cards|A poker round would be great, don't you think so?|
+#o:23|torch|7|1|0|1|-1|0|1|It is a torch|Kind of primitive, isn't it?|
+#o:24|plant|7|1|1|1|-1|0|1|It is a plant full of flowers|It has lots of colours|
+#o:25|bells|18|1|1|1|-1|0|1|They are bells|Jingle bells, jingle bells, X-mas has come|
+#o:26|float|11|1|1|1|-1|0|1|It is a float|Maybe it helps you not to drown|
+
+
+#p:1|ply1|1|5|0|

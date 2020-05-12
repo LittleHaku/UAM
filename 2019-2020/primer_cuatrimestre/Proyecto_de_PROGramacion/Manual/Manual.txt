@@ -1,0 +1,103 @@
+
+ *_   _   *   *  *    *   _ * * _   *     *       **    *   _ * _   _ _  *    *  
+ | \ | | __ _ _   _  __ _| |__ | |_ _   _    __ _ _ __   __| | | \ | (_) ___ ___ *
+ |  \| |/ _` | | | |/ _` | '_ \| __| | | |  / _` | '_ \ / _` | |  \| | |/ __/ _ \
+ | |\  | (_| | |_| | (_| | | | | |_| |_| | | (_| | | | | (_| | | |\  | | (_|  __/*
+ |_| \_|\__,_|\__,_|\__, |_| |_|\__|\__, |  \__,_|_| |_|\__,_| |_| \_|_|\___\___|
+    *      *        |___/     *     |___/       *           *         * *     *   *
+  *   *  *   *   *       *  *   *   *    *  *      *   * *        *      *  *  *
+   *    **      *    *    *    *  *  * *     *  *   *  *    *   *    * * *   *   *   
+
+
+Argumento:
+	Fuiste un niño bueno este año, incluso fuiste a la cama temprano después de la
+cena de Navidad. Pero despiertas y no hay regalos. Claro, aún es de noche, Papá Noel
+aún no se ha comido las galletas. Espera, ¿dónde están las galletas? ¿Dónde está el 
+árbol? ¿Dónde estás tú? Esta no es tu casa. ¿Podrás escapar antes del amanecer?
+
+Comandos:
+	-next or n: te mueves hacia adelante (sur).
+
+	-back or b: te mueves hacia atrás (norte).
+
+	-left or l: te mueves hacia la izquierda (oeste).
+
+	-right or r: te mueves hacia la derecha (este).
+
+	-move or m <dir>: te mueves en la dirección que indiques (north o n, south o s,
+	east o e, west o w).
+
+	-up or u: te mueves hacia arriba.
+
+	-down or d: te mueves hacia abajo.
+
+	-inspect or i <spc/obj>: observas con detenimiento:
+		-El objeto que indiques: inspect <obj>.
+		-El espacio actual: inspect space, inspect s.
+
+	-take or t: coges el objeto que indiques.
+
+	-drop or dr: dejas el objeto que indiques.
+
+	-turnon or ton: enciendes el objeto que indiques.
+
+	-turnoff or toff: apagas el objeto que indiques.
+
+	-open or o <lnk> with <obj>: intentas abrir el enlace que indiques con el objeto
+	que indiques.
+
+	-roll or rl: lanzas el dado.
+
+	-save or s:	guardas la partida en la dirección indicada.
+
+	-load or ld: cargas la partida desde la dirección indicada.
+
+	-exit or e: cierras el juego.
+
+Guía:
+	1. Haz inspect sobre paper. Dice que es una carta de Naughty.
+
+	2. Coge paper y vuelve a hacer inspect. Lees la carta.
+
+	3. Coge key y úsala para abrir Door.
+
+	4. Ve a Toilet. Coge hairpin.
+
+	5. Ve a Hall, luego al sur (no se ve nada). Abre Kitchen_door con hairpin.
+
+	6. Ve a Kitchen. Coge knife. Abre Garden_door con knife.
+
+	7. Cruza Garden_door. No puedes volver a la cocina.
+
+	8. Ve a Living_room. Coge lamp.
+
+	9. Ve al sur, no se ve nada. Enciende lamp, ahora ves Garden, y la dejas ahí.
+
+	10.Ve al sur. Haz inspect sobre space.
+
+	11.Ve hacia abajo y coge blue_key.
+
+	Si tu inventario está lleno, de ahora en adelante haz drop de lo que no necesites.
+
+	12.Regresa a Living. Usa blue_key para abrir Living_door.
+
+	13.Ve al oeste. Haz inspect sobre space.
+
+	14.Sube y ve al oeste. Coge soap.
+
+	15.Ve al este y luego al sur. Abre Old_door con soap.
+
+	16.Ve al este. Coge crowbar. Vuelve a Corridor 2.
+
+	17.Haz inspect sobre space.
+
+	18.Baja y ve a Hall. Haz inspect sobre space. Abre Trapdoor con crowbar.
+
+	19.Baja. Haz inspect sobre space. Coge wire.
+
+	20.Regresa a Corridor 2. Abre Secret_door con wire. Sube
+
+	21.Coge tnt. Abre wall con tnt.
+
+	22.Ve al oeste. Saluda a Papá Noel y haz exit (o no, si quieres hacer save o
+	dar una vuelta por la casa).

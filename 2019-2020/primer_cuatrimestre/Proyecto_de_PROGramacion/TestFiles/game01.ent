@@ -1,0 +1,10 @@
+move north
+move south
+move east
+move west
+move up
+move down
+take obj1
+drop obj1
+inspect obj1
+exit

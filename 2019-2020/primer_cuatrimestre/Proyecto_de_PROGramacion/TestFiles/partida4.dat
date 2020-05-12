@@ -1,0 +1,39 @@
+#s:1|Hall|-1|-1|2|1|-1|3|0|Bien-  |venido |jugador|Haunted House Hall|You'll find the reason why your here|
+#s:2|Toilet|-1|1|-1|-1|-1|-1|1|       |       |       |Guests' Toilet|Look around, your close to what you're searching|
+#s:3|Bathroom|-1|11|-1|-1|-1|-1|1|       |       |       |Bathroom|If you still searching, you'll find it|
+#s:4|Corridor 1|2|5|4|-1|6|-1|1|       |       |       |Main corridor|It leads to usefull places for your case|
+#s:5|Kitchen|4|-1|-1|-1|-1|-1|1|       |<O)__/ | \_-/  |Kitchen|A good place to find usefull objects to get free|
+#s:6|Dinning Room|5|-1|7|-1|-1|-1|0|       |       |       |Dining Room|Dinner is almost on the table, you must have a seat|
+#s:7|Garden|7|8|-1|-1|-1|-1|1|       |       |       |Garden|It's a rainy day, be fast or you'll get wet|
+#s:8|Children's Room|-1|-1|-1|10|-1|-1|1|  ___  | / _ \ |/ / \ \|Children's Room|Go close to toys, they wanna help you|
+#s:9|Parents' Room|9|12|-1|13|-1|-1|1|       |<O)__/ | \_-/  |Parents' Room| |
+#s:10|Corridor 2|-1|10|9|11|14|6|0|       |       |       |Other corridor|You're close, will you get it?|
+#s:11|Swimming Pool|-1|-1|-1|8|-1|-1|0|       |       |       |Swimming Pool|Don't you wanna swim?|
+#s:12|Basement|-1|-1|-1|-1|3|-1|1|       |       |       |Basement| |
+#s:13|Attic|-1|-1|-1|-1|-1|15|1|       |<O)__/ | \_-/  |Attic|Did you get it? Prove it!|
+#s:14|Corridor 3|-1|-1|15|-1|-1|14|1|       |       |       |Another corridor|Nothing interesting?|
+#s:15|Game Room|-1|13|-1|-1|-1|-1|0|       |       |       |Game's Room|It's not time for a poker's round|
+#s:16|Parents' Bathroom|-1|-1|-1|12|-1|-1|1|  ___  | / _ \ |/ / \ \|Main Bathroom|Keep searching, you're close|
+
+#l:1|Link 1|1|2|0|
+#l:2|Link 2|1|4|0|
+#l:3|Link 3|1|12|0|
+#l:4|Link 4|4|5|0|
+#l:5|Link 5|4|6|0|
+#l:6|Link 6|4|10|0|
+#l:7|Link 7|6|7|0|
+#l:8|Link 8|7|11|0|
+#l:9|Link 9|10|9|0|
+#l:10|Link 10|10|8|0|
+#l:11|Link 11|10|3|0|
+#l:12|Link 12|9|16|0|
+#l:13|Link 13|9|15|0|
+#l:14|Link 14|10|14|0|
+#l:15|Link 15|14|13|0|
+
+#o:1|Paper|1|0|0|0|1|1|1|A letter|yeah|
+#o:2|Key|1|1|1|1|32|1|1|It is a key|yeah|
+#o:3|tnt|-1|0|1|1|40|1|1|It is tnt|yeah|
+#o:4|lamp|4|0|0|0|1|1|1|It is a lamp|yeah|
+
+#p:1|ply1|7|4|1|3|

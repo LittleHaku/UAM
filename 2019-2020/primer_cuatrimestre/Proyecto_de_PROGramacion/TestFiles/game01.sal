@@ -1,0 +1,10 @@
+move north: ERROR
+move south: ERROR
+move east: ERROR
+move west: ERROR
+move up: ERROR
+move down: ERROR
+take obj1: ERROR
+drop obj1: ERROR
+inspect obj1: ERROR
+exit: OK

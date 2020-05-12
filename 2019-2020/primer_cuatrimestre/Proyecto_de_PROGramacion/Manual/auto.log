@@ -1,0 +1,60 @@
+inspect paper
+take paper
+inspect paper
+take key
+open Door with key
+move w
+take hairpin
+move e
+move s
+open Kitchen_door with hairpin
+move w
+take knife
+open Garden_door with knife
+move s
+move n
+take lamp
+move s
+turnon lamp
+drop key
+move s
+inspect s
+down
+take blue_key
+up
+move n
+move n
+open Living_door with blue_key
+move w
+inspect s
+up
+move w
+drop hairpin
+take soap
+move e
+move s
+open Old_door with soap
+move e
+drop blue_key
+take crowbar
+move w
+move n
+inspect s
+down
+move n
+inspect s
+open Trapdoor with crowbar
+down
+inspect s
+drop soap
+take wire
+up
+move s
+up
+open Secret_door with wire
+up
+drop wire
+take tnt
+open Wall with tnt
+move w
+exit

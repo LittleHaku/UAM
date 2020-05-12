@@ -1,0 +1,7 @@
+#s:1|Space 1|-1|2|1|-1|-1|0|1|Bien-  |venido |jugador| Primera casilla del juego|Es una de las casillas normales|
+#s:2|Space 2|-1|-1|1|-1|1|0|0|Hasta  |pronto |jugador| Segunda casilla del juego|Es una de las casillas especiales|
+
+#l:1|Link 1|1|2|1|
+#l:2|Link 2|2|3|0|
+
+#p:1|Player 1|1|1|
