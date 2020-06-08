@@ -1,0 +1,35 @@
+@startuml sequence_proyecto
+hide footbox
+skinparam sequenceParticipant underline
+skinparam padding 5
+participant ":Aplicacion" as A
+participant "pr:Proyecto" as P
+participant "c:Colectivo" as C
+
+?o->A: crearProyectoColectivo(c:Colectivo)
+activate A
+A->A: usuarioActual()
+activate A
+A-->A: usr
+deactivate A
+create P
+A->P: new
+
+
+A->P: anadirSubscritor(usr)
+activate P
+P-->A : Subscriptor anadido
+deactivate P
+
+A->C: getCiudadanos()
+activate C
+C-->A: ciudadanos
+deactivate C
+
+loop c en ciudadanos
+    A->P: anadirApoyo(c)
+    activate P
+    P-->A : ApoyoAnadido
+    deactivate P
+end
+@enduml

@@ -1,0 +1,36 @@
+@startuml sequence_enviar_proyecto
+hide footbox
+Actor ciudadano
+participant ":__Aplicacion__" as A
+participant ":__Proyecto__" as P
+participant "__c:Ciudadano__" as ciu
+participant ":__SistemaExterno__" as S
+
+activate ciudadano
+activate A
+ciudadano->A: enviarProyectoFinanciacion()
+activate P
+A->P: consultarEstado()
+P-->A: estado
+
+
+alt estado==DisponibleEnviar
+    A->P: getSubscriptores()
+    P-->A: subscriptores
+    deactivate P
+
+
+    loop c en subscriptores
+        A->ciu : notificar("Proyecto enviado")
+    end
+    A->S: envioDatosProyecto()
+else fail
+    A-->ciudadano: ERROR, insuficientes apoyos
+end
+
+deactivate A
+deactivate ciudadano
+
+
+
+@enduml

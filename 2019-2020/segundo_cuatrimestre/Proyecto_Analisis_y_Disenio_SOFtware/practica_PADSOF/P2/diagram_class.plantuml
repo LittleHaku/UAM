@@ -1,0 +1,114 @@
+@startuml diagram_class
+skinparam classAttributeIconSize 0
+skinparam padding 3
+hide circle
+
+
+class Aplicacion{
+    {static} + apoyosMinimos: int
+}
+ 
+abstract class Usuario{
+    - usuario: String
+    - contrasena: String
+    {abstract} +inicSesion(usr:String, pswd: String): bool
+}
+
+class Ciudadano{
+    - bloqueado: bool
+    - autorizadoRegistro: bool
+    - NIF: String
+    {method}+inicSesion(usr:String, pswd: String): bool
+    + apoyarProyecto(p: Proyecto): Proyecto
+    + susbcribirseProyecto(p: Proyecto): Proyecto
+    + consultarProyectoPropuestos(): List<Proyecto>
+    + consultarColectivoPertenece(): List<Colectivo>
+}
+
+class Administrador{
+    {method}+inicSesion(usr:String, pswd: String): bool
+    +autorizaRegistro(usr: Ciudadano): Ciudadano
+    +autorizaCreacionProyecto(p: Proyecto): Proyecto
+    +bloquearCiudadano(c: Ciudadano, b: boolean): Ciudadano
+}
+
+
+
+interface  Elemento <<interface>>{
+    - nombre: String
+}
+
+class Colectivo{
+    +{method} anadirElemento(e:Elemento): void
+    +{method} eliminarElemento(e:Elemento): void
+}
+
+
+
+abstract class Proyecto{
+    + apoyos: int
+    + titulo: String
+    + descripcion: String
+    + importePedido: double
+    + importeAdjudiacado: double
+    + creacion: Date
+    + ultimoApoyo: Date
+    + id: int
+    + estado: EstadoProyecto
+    {method} +anadirApoyos(e:Elemento):void
+    {method} +enviar(): void
+
+}
+
+class ProyInfraestructura{
+    + imagen: String
+
+}
+
+class ProySocial{
+    + grupo: String
+    + nacional: boolean
+}
+
+class Distrito{
+    - nombre: String
+}
+enum EstadoProyecto <<enumeracion>>{
+    + PROPUESTO: int
+    + RECIBIENDO_APOYOS: int
+    + CADUCADO: int
+    + ENVIADO: int
+}
+class Notificacion{
+    -texto: String
+    -visto: bool
+}
+Notificacion "0..*"--"1" Proyecto
+Notificacion -left-* Ciudadano
+Notificacion -u[hidden]- Administrador
+Distrito --* Aplicacion
+Usuario <|-down- Ciudadano
+Usuario <|-down- Administrador
+Elemento <|-- Ciudadano
+Elemento <|-- Colectivo
+Elemento ---o Colectivo: compuesto de
+Colectivo "0..*"---  "                 1\n representante" Ciudadano
+
+
+Proyecto <|-- ProySocial
+Proyecto <|-- ProyInfraestructura
+Distrito "1..*"--> "0..*" ProyInfraestructura
+Ciudadano "        1..*\n Subscriptor"---"0..*" Proyecto
+Elemento  "1..*"--"0..*" Proyecto: Apoyos
+Elemento  "1           \n Propone"--"0..*        \n Propuesto" Proyecto
+Aplicacion *--- Colectivo
+Aplicacion *--- Usuario
+Aplicacion *--- Proyecto
+
+Ciudadano -left[hidden]-- Administrador
+
+Usuario -right[hidden]- Colectivo
+EstadoProyecto -right[hidden]--- Proyecto
+Proyecto-left[hidden]-EstadoProyecto
+Aplicacion "1"-"0..1" Usuario: UsrActivo
+@enduml

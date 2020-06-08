@@ -1,0 +1,7 @@
+web: https://online.visual-paradigm.com/app/diagrams/#
+usuario (correo): pyefmwrj@sharklasers.com
+pass: iV!hpJ8ZYlml
+File extension: vpd
+
+//temas abiertos en los casos de uso
+

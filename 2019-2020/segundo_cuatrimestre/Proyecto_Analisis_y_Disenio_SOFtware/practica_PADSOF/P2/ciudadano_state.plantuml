@@ -1,0 +1,17 @@
+@startuml ciudadano_state
+hide empty description
+[*] --> Pendiente
+
+Pendiente : Pendiente de respuesta del Admin
+
+Pendiente --> Activo : AceptarRegistro()
+
+Activo : Puede usar la aplicacion de forma completa
+Bloqueado : No se tienen en cuenta sus apoyos
+
+Activo -> Bloqueado : BloquearUsuario()
+Bloqueado -> Activo : DesbloquearUsuario()
+
+
+Pendiente -> [*] : RechazarRegistro()
+@enduml

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"componentes"},{"l":"controlador"},{"l":"exceptions"},{"l":"fechaSimulada"},{"l":"main"},{"l":"modelo.aplicacion"},{"l":"modelo.colectivoCiudadano"},{"l":"modelo.notificacion"},{"l":"modelo.proyecto"},{"l":"test"},{"l":"vista"}]

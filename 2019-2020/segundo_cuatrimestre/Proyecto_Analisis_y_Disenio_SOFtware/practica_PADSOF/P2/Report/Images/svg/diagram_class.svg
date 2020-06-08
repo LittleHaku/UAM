@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="1443px" preserveAspectRatio="none" style="width:871px;height:1443px;" version="1.1" viewBox="0 0 871 1443" width="871px" zoomAndPan="magnify"><defs><filter height="300%" id="f4aoqdkmlnxgr" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[2a2f4971b8c2adde23f91bbad837c5c6]
+class Aplicacion--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="65.0879" id="Aplicacion" style="stroke: #A80036; stroke-width: 1.5;" width="131" x="112.5" y="144"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="58" x="149" y="163.6016">Aplicacion</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="113.5" x2="242.5" y1="174.1328" y2="174.1328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" text-decoration="underline" textLength="113" x="121.5" y="191.7676">+apoyosMinimos: int</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="113.5" x2="242.5" y1="201.0879" y2="201.0879"/><!--MD5=[35a64b983c79880384a2fd9b61f0c24b]
+class Usuario--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="102.998" id="Usuario" style="stroke: #A80036; stroke-width: 1.5;" width="244" x="60" y="364"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="43" x="160.5" y="383.6016">Usuario</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="61" x2="303" y1="394.1328" y2="394.1328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="85" x="69" y="411.7676">-usuario: String</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="104" x="69" y="430.7227">-contrasena: String</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="61" x2="303" y1="440.043" y2="440.043"/><text fill="#000000" font-family="sans-serif" font-size="11" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="226" x="69" y="457.6777">+inicSesion(usr:String, pswd: String): bool</text><!--MD5=[9ca4cab55b8e76a2b0c972b740e2596f]
+class Ciudadano--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="197.7734" id="Ciudadano" style="stroke: #A80036; stroke-width: 1.5;" width="284" x="343" y="711"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="62" x="454" y="730.6016">Ciudadano</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="344" x2="626" y1="741.1328" y2="741.1328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="93" x="352" y="758.7676">-bloqueado: bool</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="139" x="352" y="777.7227">-autorizadoRegistro: bool</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="61" x="352" y="796.6777">-NIF: String</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="344" x2="626" y1="805.998" y2="805.998"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="226" x="352" y="823.6328">+inicSesion(usr:String, pswd: String): bool</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="214" x="352" y="842.5879">+apoyarProyecto(p: Proyecto): Proyecto</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="244" x="352" y="861.543">+susbcribirseProyecto(p: Proyecto): Proyecto</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="266" x="352" y="880.498">+consultarProyectoPropuestos(): List&lt;Proyecto&gt;</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="263" x="352" y="899.4531">+consultarColectivoPertenece(): List&lt;Colectivo&gt;</text><!--MD5=[fdcda49d453d44c676d62f3f6af62207]
+class Administrador--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="121.9531" id="Administrador" style="stroke: #A80036; stroke-width: 1.5;" width="337" x="59.5" y="528"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="82" x="187" y="547.6016">Administrador</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="60.5" x2="395.5" y1="558.1328" y2="558.1328"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="60.5" x2="395.5" y1="566.1328" y2="566.1328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="226" x="68.5" y="583.7676">+inicSesion(usr:String, pswd: String): bool</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="252" x="68.5" y="602.7227">+autorizaRegistro(usr: Ciudadano): Ciudadano</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="269" x="68.5" y="621.6777">+autorizaCreacionProyecto(p: Proyecto): Proyecto</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="319" x="68.5" y="640.6328">+bloquearCiudadano(c: Ciudadano, b: boolean): Ciudadano</text><!--MD5=[6d3950f02135f600bc78651f38d40f36]
+class Elemento--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="85.2207" id="Elemento" style="stroke: #A80036; stroke-width: 1.5;" width="104" x="557" y="134"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="62" x="578" y="153.6016">«interface»</text><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="53" x="582.5" y="173.7344">Elemento</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="558" x2="660" y1="184.2656" y2="184.2656"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="86" x="566" y="201.9004">-nombre: String</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="558" x2="660" y1="211.2207" y2="211.2207"/><!--MD5=[056c4c5ec153aab551bcbc8231d5efda]
+class Colectivo--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="84.043" id="Colectivo" style="stroke: #A80036; stroke-width: 1.5;" width="214" x="339" y="373.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="51" x="420.5" y="393.1016">Colectivo</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="340" x2="552" y1="403.6328" y2="403.6328"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="340" x2="552" y1="411.6328" y2="411.6328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="187" x="348" y="429.2676">+anadirElemento(e:Elemento): void</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="196" x="348" y="448.2227">+eliminarElemento(e:Elemento): void</text><!--MD5=[faada12487b37c3e3e7a1c6d4e583097]
+class Proyecto--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="254.6387" id="Proyecto" style="stroke: #A80036; stroke-width: 1.5;" width="194" x="481" y="1032"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="49" x="553.5" y="1051.6016">Proyecto</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="482" x2="674" y1="1062.1328" y2="1062.1328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="68" x="490" y="1079.7676">+apoyos: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="75" x="490" y="1098.7227">+titulo: String</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="110" x="490" y="1117.6777">+descripcion: String</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="130" x="490" y="1136.6328">+importePedido: double</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="161" x="490" y="1155.5879">+importeAdjudiacado: double</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="85" x="490" y="1174.543">+creacion: Date</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="108" x="490" y="1193.498">+ultimoApoyo: Date</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="39" x="490" y="1212.4531">+id: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="134" x="490" y="1231.4082">+estado: EstadoProyecto</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="482" x2="674" y1="1240.7285" y2="1240.7285"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="176" x="490" y="1258.3633">+anadirApoyos(e:Elemento):void</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="79" x="490" y="1277.3184">+enviar(): void</text><!--MD5=[e267b19f0a3f5fa2f89cffae99dc09f8]
+class ProyInfraestructura--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="65.0879" id="ProyInfraestructura" style="stroke: #A80036; stroke-width: 1.5;" width="121" x="705.5" y="1357.5"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="109" x="711.5" y="1377.1016">ProyInfraestructura</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="706.5" x2="825.5" y1="1387.6328" y2="1387.6328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="86" x="714.5" y="1405.2676">+imagen: String</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="706.5" x2="825.5" y1="1414.5879" y2="1414.5879"/><!--MD5=[7c4943991f546bad7c9fb88c90948537]
+class ProySocial--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="84.043" id="ProySocial" style="stroke: #A80036; stroke-width: 1.5;" width="121" x="517.5" y="1348"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="57" x="549.5" y="1367.6016">ProySocial</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="518.5" x2="637.5" y1="1378.1328" y2="1378.1328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="80" x="526.5" y="1395.7676">+grupo: String</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="103" x="526.5" y="1414.7227">+nacional: boolean</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="518.5" x2="637.5" y1="1424.043" y2="1424.043"/><!--MD5=[f80e4a96403096b8247bb9e11d34c086]
+class Distrito--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="65.0879" id="Distrito" style="stroke: #A80036; stroke-width: 1.5;" width="104" x="466" y="8"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="41" x="497.5" y="27.6016">Distrito</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="467" x2="569" y1="38.1328" y2="38.1328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="86" x="475" y="55.7676">-nombre: String</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="467" x2="569" y1="65.0879" y2="65.0879"/><!--MD5=[a0537ef59235cc5a0efca2ec367755ca]
+class EstadoProyecto--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="142.0859" id="EstadoProyecto" style="stroke: #A80036; stroke-width: 1.5;" width="162" x="284" y="1088.5"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="86" x="322" y="1108.1016">«enumeracion»</text><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="88" x="321" y="1128.2344">EstadoProyecto</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="285" x2="445" y1="1138.7656" y2="1138.7656"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="93" x="293" y="1156.4004">+PROPUESTO: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="144" x="293" y="1175.3555">+RECIBIENDO_APOYOS: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="94" x="293" y="1194.3105">+CADUCADO: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="78" x="293" y="1213.2656">+ENVIADO: int</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="285" x2="445" y1="1222.5859" y2="1222.5859"/><!--MD5=[d331226d1317b3fc678f52fa8b08f650]
+class Notificacion--><rect fill="#FEFECE" filter="url(#f4aoqdkmlnxgr)" height="84.043" id="Notificacion" style="stroke: #A80036; stroke-width: 1.5;" width="90" x="218" y="768"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="66" x="230" y="787.6016">Notificacion</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="219" x2="307" y1="798.1328" y2="798.1328"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="72" x="227" y="815.7676">-texto: String</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="62" x="227" y="834.7227">-visto: bool</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="219" x2="307" y1="844.043" y2="844.043"/><!--MD5=[5c40fe0d0190ee78c070b9a81c409129]
+link Notificacion to Proyecto--><path d="M285.8738,852.259 C296.6488,870.5261 310.3475,891.6448 325,909 C378.0014,971.778 404.733,974.0761 463,1032 C468.9193,1037.8845 474.9195,1044.007 480.9121,1050.2451 " fill="none" id="Notificacion-Proyecto" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="262.1771" y="875.596">0..*</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="461.9429" y="1015.6704">1</text><!--MD5=[b3faa0c53a0e9ff78d75cc7c6aabdc67]
+link Notificacion to Ciudadano--><path d="M308.0938,810 C315.3641,810 322.6344,810 329.9047,810 " fill="none" id="Notificacion-&gt;Ciudadano" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="342.9913,810,336.9913,806,330.9913,810,336.9913,814,342.9913,810" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[c063362dcebf07d273dd51e2fdafb301]
+link Administrador to Notificacion--><!--MD5=[50038c560d71f4ace8f8fc196b2178bc]
+link Distrito to Aplicacion--><path d="M465.9912,61.3035 C409.9804,83.7078 320.25,119.6 255.8296,145.3682 " fill="none" id="Distrito-&gt;Aplicacion" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="243.7053,150.2179,250.7617,151.7034,254.847,145.7611,247.7906,144.2756,243.7053,150.2179" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[5da1452467c20b79d6bc2b43a7d88a58]
+reverse link Usuario to Ciudadano--><path d="M322.7624,471.9726 C363.2477,490.6949 400.2194,511.0619 414,528 C455.8186,579.4005 473.4196,652.221 480.6432,710.9866 " fill="none" id="Usuario&lt;-Ciudadano" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="319.656,478.2506,304.3041,463.6451,325.4133,465.4892,319.656,478.2506" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[39a07826a1b74c11cd6c15b957d26b5e]
+reverse link Usuario to Administrador--><path d="M200.8462,486.5831 C204.4741,500.2665 208.2446,514.4879 211.7804,527.8237 " fill="none" id="Usuario&lt;-Administrador" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="194.0363,488.212,195.677,467.086,207.5688,484.6241,194.0363,488.212" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[3f45218fbdc854b2bc7ea9b8bd47ac4b]
+reverse link Elemento to Ciudadano--><path d="M602.5744,239.3123 C596.0598,298.3662 584.8319,389.0878 570,467 C551.6761,563.256 540.5734,585.8933 517,681 C514.6129,690.6307 512.1249,700.6656 509.6372,710.6972 " fill="none" id="Elemento&lt;-Ciudadano" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="595.6533,238.204,604.7592,219.0707,609.5724,239.7064,595.6533,238.204" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[60e83b3d58ebbff1c832a0d98bc7efb1]
+reverse link Elemento to Colectivo--><path d="M537.3809,193.8837 C502.7589,205.1079 462.4377,222.6572 433,249 C399.1861,279.2589 411.5734,334.7463 426.3107,373.308 " fill="none" id="Elemento&lt;-Colectivo" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="535.8132,187.0455,556.9819,187.9872,539.8462,200.452,535.8132,187.0455" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[61058e3f3287d6e9c715a2b0d184bb64]
+link Elemento to Colectivo--><path d="M556.9518,209.5909 C532.2673,227.6822 504.2536,252.0883 486,280 C470.2089,304.1463 460.4843,334.7102 454.5852,360.6963 " fill="none" id="Elemento-&gt;Colectivo" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#FFFFFF" points="451.912,373.4223,457.06,368.3727,454.3789,361.6786,449.2309,366.7282,451.912,373.4223" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="89" x="490" y="296.5684">compuesto de</text><!--MD5=[0f572014de070d1fb6db16573e61fb05]
+link Colectivo to Ciudadano--><path d="M464.5527,457.8983 C469.1538,470.2709 473.4847,483.9724 476,497 C489.6292,567.591 491.5786,648.7798 490.2784,710.7775 " fill="none" id="Colectivo-Ciudadano" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="440.2214" y="481.2557">0..*</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="401.141" y="681.7685">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="86" x="398.141" y="697.079">representante</text><!--MD5=[7bbe55cfedc1d95b200388bb63651764]
+reverse link Proyecto to ProySocial--><path d="M578,1307.3971 C578,1321.9211 578,1335.6911 578,1347.6756 " fill="none" id="Proyecto&lt;-ProySocial" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="571.0001,1307.2212,578,1287.2212,585.0001,1307.2211,571.0001,1307.2212" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[e7e3cc62fdb18abf1852ee0745055151]
+reverse link Proyecto to ProyInfraestructura--><path d="M687.7462,1294.0558 C706.9542,1317.6061 725.2593,1340.0493 739.3292,1357.2999 " fill="none" id="Proyecto&lt;-ProyInfraestructura" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="682.2453,1298.3865,675.0288,1278.4635,693.0943,1289.5378,682.2453,1298.3865" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[14bdab84d006f69601c73b9d4f842534]
+link Distrito to ProyInfraestructura--><path d="M570.1618,50.0546 C665.686,69.0483 859,115.0743 859,176.5 C859,176.5 859,176.5 859,1159.5 C859,1232.0911 818.842,1308.8115 791.3032,1352.889 " fill="none" id="Distrito-&gt;ProyInfraestructura" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="788.5127,1357.3133,796.6973,1351.835,791.1801,1353.0843,789.9309,1347.5671,788.5127,1357.3133" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="580.8118" y="44.5265">1..*</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="765.1354" y="1343.6704">0..*</text><!--MD5=[9ef73f9f06dcbaa86e45a75ca28879cb]
+link Ciudadano to Proyecto--><path d="M511.4013,909.2178 C521.5508,947.3602 533.2821,991.4474 544.0445,1031.8931 " fill="none" id="Ciudadano-Proyecto" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="474.4661" y="932.3226">1..*</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="72" x="435.4661" y="947.6331">Subscriptor</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="516.1222" y="1018.066">0..*</text><!--MD5=[20d57e7f25b47fe3445e2b6981e9a218]
+link Elemento to Proyecto--><path d="M650.7117,219.2418 C666.1664,239.4722 680,264.9859 680,291.5 C680,291.5 680,291.5 680,970.5 C680,991.3802 675.1191,1012.1692 667.4928,1031.9078 " fill="none" id="Elemento-Proyecto" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="47" x="684" y="594.0684">Apoyos</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="629.7819" y="242.6366">1..*</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="647.0931" y="1018.0816">0..*</text><!--MD5=[20d57e7f25b47fe3445e2b6981e9a218]
+link Elemento to Proyecto--><path d="M661.2554,186.7849 C714.0897,200.5807 788,230.7384 788,291.5 C788,291.5 788,291.5 788,970.5 C788,1036.4718 730.0326,1085.2924 675.0088,1116.7733 " fill="none" id="Elemento-Proyecto-1" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="673.3844" y="165.6605">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="51" x="675.8844" y="180.971">Propone</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="692.6445" y="1122.6711">0..*</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="63" x="690.1445" y="1137.9816">Propuesto</text><!--MD5=[9e01cf0be35297b231427473310808f0]
+reverse link Aplicacion to Colectivo--><path d="M224.6659,218.1162 C273.391,261.5688 349.411,329.3628 398.4596,373.1039 " fill="none" id="Aplicacion&lt;-Colectivo" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="214.7023,209.2308,216.518,216.2096,223.6583,217.2177,221.8426,210.2389,214.7023,209.2308" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[7ffc60556dd620889b8d8c3c3a3f2297]
+reverse link Aplicacion to Usuario--><path d="M173.6305,222.3336 C172.9509,231.1742 172.3565,240.3688 172,249 C170.4407,286.7482 170.3155,296.3151 173,334 C173.6878,343.6555 174.6452,353.932 175.6805,363.8181 " fill="none" id="Aplicacion&lt;-Usuario" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="174.7076,209.3071,170.2268,214.9571,173.7187,221.2663,178.1996,215.6163,174.7076,209.3071" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[ebd3e6ec6d60bec862be553d59ddda72]
+link Aplicacion to Usuario--><path d="M178.5478,209.2308 C179.2154,249.1181 180.3513,316.9883 181.1368,363.9256 " fill="none" id="Aplicacion-Usuario" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="61" x="185" y="296.5684">UsrActivo</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="8" x="186.3582" y="232.7904">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="24" x="192.0052" y="350.1737">0..1</text><!--MD5=[c18a9c1f5fcf7d659c0a1d642c8d31b5]
+reverse link Aplicacion to Proyecto--><path d="M100.0804,196.4035 C54.5632,213.2328 6,242.6376 6,291.5 C6,291.5 6,291.5 6,970.5 C6,1072.971 372.3624,984.1969 463,1032 C469.0644,1035.1984 474.9673,1038.8513 480.6889,1042.8511 " fill="none" id="Aplicacion&lt;-Proyecto" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="112.4835,192.0864,105.502,190.281,101.1504,196.0311,108.1318,197.8364,112.4835,192.0864" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[9246778178c12ddc58285abf9dc49218]
+link Administrador to Ciudadano--><!--MD5=[041d1efa12021ed1ea457bcfdc3b0673]
+link Usuario to Colectivo--><!--MD5=[fba799611c60f52e5a8636b11727d334]
+link EstadoProyecto to Proyecto--><!--MD5=[fba799611c60f52e5a8636b11727d334]
+link EstadoProyecto to Proyecto--><!--MD5=[efc45d0189008b8df861137380460839]
+@startuml diagram_class
+skinparam classAttributeIconSize 0
+skinparam padding 3
+hide circle
+
+
+class Aplicacion{
+    {static} + apoyosMinimos: int
+}
+ 
+abstract class Usuario{
+    - usuario: String
+    - contrasena: String
+    {abstract} +inicSesion(usr:String, pswd: String): bool
+}
+
+class Ciudadano{
+    - bloqueado: bool
+    - autorizadoRegistro: bool
+    - NIF: String
+    {method}+inicSesion(usr:String, pswd: String): bool
+    + apoyarProyecto(p: Proyecto): Proyecto
+    + susbcribirseProyecto(p: Proyecto): Proyecto
+    + consultarProyectoPropuestos(): List<Proyecto>
+    + consultarColectivoPertenece(): List<Colectivo>
+}
+
+class Administrador{
+    {method}+inicSesion(usr:String, pswd: String): bool
+    +autorizaRegistro(usr: Ciudadano): Ciudadano
+    +autorizaCreacionProyecto(p: Proyecto): Proyecto
+    +bloquearCiudadano(c: Ciudadano, b: boolean): Ciudadano
+}
+
+
+
+interface  Elemento <<interface>>{
+    - nombre: String
+}
+
+class Colectivo{
+    +{method} anadirElemento(e:Elemento): void
+    +{method} eliminarElemento(e:Elemento): void
+}
+
+
+
+abstract class Proyecto{
+    + apoyos: int
+    + titulo: String
+    + descripcion: String
+    + importePedido: double
+    + importeAdjudiacado: double
+    + creacion: Date
+    + ultimoApoyo: Date
+    + id: int
+    + estado: EstadoProyecto
+    {method} +anadirApoyos(e:Elemento):void
+    {method} +enviar(): void
+
+}
+
+class ProyInfraestructura{
+    + imagen: String
+
+}
+
+class ProySocial{
+    + grupo: String
+    + nacional: boolean
+}
+
+class Distrito{
+    - nombre: String
+}
+enum EstadoProyecto <<enumeracion>>{
+    + PROPUESTO: int
+    + RECIBIENDO_APOYOS: int
+    + CADUCADO: int
+    + ENVIADO: int
+}
+class Notificacion{
+    -texto: String
+    -visto: bool
+}
+Notificacion "0..*"- -"1" Proyecto
+Notificacion -left-* Ciudadano
+Notificacion -u[hidden]- Administrador
+Distrito - -* Aplicacion
+Usuario <|-down- Ciudadano
+Usuario <|-down- Administrador
+Elemento <|- - Ciudadano
+Elemento <|- - Colectivo
+Elemento - - -o Colectivo: compuesto de
+Colectivo "0..*"- - -  "1                 \n representante" Ciudadano
+
+
+Proyecto <|- - ProySocial
+Proyecto <|- - ProyInfraestructura
+Distrito "1..*"- -> "0..*" ProyInfraestructura
+Ciudadano "        1..*\n Subscriptor"- - -"0..*" Proyecto
+Elemento  "1..*"- -"0..*" Proyecto: Apoyos
+Elemento  "1           \n Propone"- -"0..*        \n Propuesto" Proyecto
+Aplicacion *- - - Colectivo
+Aplicacion *- - - Usuario
+Aplicacion *- - - Proyecto
+
+Ciudadano -left[hidden]- - Administrador
+
+Usuario -right[hidden]- Colectivo
+EstadoProyecto -right[hidden]- - - Proyecto
+Proyecto-left[hidden]-EstadoProyecto
+Aplicacion "1"-"0..1" Usuario: UsrActivo
+@enduml
+
+PlantUML version 1.2020.01(Sun Feb 16 18:40:32 CET 2020)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 11.0.6+8-LTS
+Operating System: Mac OS X
+Default Encoding: UTF-8
+Language: es
+Country: ES
+--></g></svg>

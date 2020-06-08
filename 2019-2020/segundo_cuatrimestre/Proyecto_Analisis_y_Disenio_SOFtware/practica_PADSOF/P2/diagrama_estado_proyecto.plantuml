@@ -1,0 +1,22 @@
+@startuml diagrama_estado_proyecto  
+hide empty description
+
+
+[*] --> Propuesto
+Propuesto --> RecibiendoApoyos: autorizarProyecto() [return == True] /\n recibirApoyo(A)
+RecibiendoApoyos --> RecibiendoApoyos: recibirApoyo(A) /\n apoyo += A
+RecibiendoApoyos --> DisponibleEnviar: [apoyo >= apoyosMinimos]
+RecibiendoApoyos -->  Caducado: [fechaAct - fechaUltimoApoyo >= 30 dias]
+DisponibleEnviar --> Enviado: enviarFinanciacion()
+
+Enviado --> [*]
+Caducado --> [*]
+Propuesto --> [*]: autorizarProyecto() \n[return == True]
+
+
+state DisponibleEnviar{
+    [*] --> NoCaducado
+    NoCaducado --> CaducadoConApoyo: [fechaAct - fechaUltimoApoyo >= 30 dias]
+}
+
+@enduml
