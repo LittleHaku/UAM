@@ -1,0 +1,94 @@
+/**
+	Supongo que cada enum y cada clase está en su propio paquete, por eso son public las clases.
+*/
+/**
+	Dificultad tematica
+*/
+public enum Dificultad {
+	CERO, BAJA, NORMAL, ALTA, MAXIMA;
+	
+	public Dificultad getSiguiente() {
+		switch(this.ordinal()) {
+			case 0: return BAJA;
+			case 1: return NORMAL;
+			case 2: return ALTA;
+			case 3: return MAXIMA;
+		}
+		return null;		
+	}
+}
+
+public abstract class Tarea implements Comparable<Tarea> {
+	private String nombre;
+	
+	public Tarea(String nombre) {
+		this.nombre = nombre;
+	}
+	public String getNombre() {return nombre;}
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof Tarea)) return false;
+		return nombre.equals(((Tarea)o).getNombre());	
+	}
+	public abstract Dificultad dificultadReal();
+	@Override
+	public String toString() {
+		return nombre;
+	}
+	@Override
+	public int compareTo(Tarea t) {
+		return nombre.compareTo(t.getNombre());
+	}
+}
+
+public class Ejercicio extends Tarea {
+	private Set<Tarea> set;
+	
+	public Ejercicio(String nombre) {
+		super(nombre);
+		set = new TreeSet<>();
+	}
+	public Ejercicio add(Tarea t) {
+		set.add(t);
+		return this;
+	}
+	public Dificultad dificultadReal() {
+		Dificultad d = Dificultad.CERO;
+		for(Tarea t : set) {
+			Dificultad d2 = t.dificultadReal();
+			if(d2.ordinal() > d.ordinal()) {
+				d = d2;
+			}
+		}
+		return d;
+	}
+	@Override
+	public String toString() {
+		return super.toString() + ": " +set;
+	}
+}
+
+public class Pregunta extends Tarea {
+	private int nOpciones;
+	private Dificultad dificultad;
+	
+	public Pregunta(String nombre, int nOpciones, Dificultad dificultad) {
+		super(nombre);
+		this.nOpciones = nOpciones;
+		this.dificultad = dificultad;
+	}
+	public Dificultad dificultadReal() {
+		if(nOpciones == 2) return dificultad;
+		return dificultad.getSiguiente();
+	}
+	@Override
+	public String toString() {
+		return super.toString() + "(" +nOpciones + "," + dificultad +  ")";
+	}
+}
+
+He usado el patrón de diseño Composite. El objecto Component es Tarea, que es una clase abstracta de la que heredan tanto Pregunta como Ejercicio. Como dificultadReal() de un Ejercicio es al final algo relacionado con la dificultadReal de una Pregunta, la Leaf es Pregunta, y el Composite es Ejercicio, ya que contiene varios Component (a varias Tareas). 
+
+
+
+

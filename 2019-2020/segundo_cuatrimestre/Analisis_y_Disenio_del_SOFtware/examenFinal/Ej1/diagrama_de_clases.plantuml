@@ -1,0 +1,66 @@
+@startuml diagrama_de_clases
+skinparam classAttributeIconSize 0
+skinparam padding 3
+
+
+class Aplicacion {
+}
+
+class Noticia {
+    -titutlo : String
+    -contenidoTextual : String
+    -fecha : Date
+    -horaPublicacion : int
+}
+
+class Tematica {
+    -nombre : String
+    -descripcion : String
+    +notify(Noticia : n) : void
+}
+
+interface Transmisor {
+    +update(Noticia : n) : void
+}
+
+class Email {
+    -email : String
+    +update(Noticia : n) : void
+}
+class SMS {
+    -numeroTelefonico : int
+    +update(Noticia : n) : void
+}
+class Twitter {
+    -nombreUsuario : String
+    +update(Noticia : n) : void
+}
+
+class Usuario {
+    -id : int
+    +solicitarReception() : bool
+    +modificarRegistro() : bool
+    +addTematica() : bool
+    +removeTematica() : bool
+    +addTransmisor() : bool
+    +removeTransmisor() : bool
+    +actualizarNuevaNoticia(Noticia : n) : void
+}
+
+Aplicacion "1" *-- "0..*" Usuario : usuarios
+Aplicacion "1" *-- "0..*" Transmisor : transmisores
+Aplicacion "1" *-- "0..*" Tematica : tematicas
+Aplicacion "1" *-- "0..*" Noticia : noticias
+Noticia "0..*" --> "1" Tematica : tematica
+
+Usuario "1" --> "0..*" Transmisor : transmisores
+
+Transmisor "0..*" --> "1" Tematica : observando
+
+Email .up.|> Transmisor
+SMS .up.|> Transmisor
+Twitter .up.|> Transmisor
+
+
+
+@enduml

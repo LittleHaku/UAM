@@ -1,0 +1,117 @@
+@startuml diagrama
+
+skinparam classAttributeIconSize 0
+hide circle
+
+class Aplicacion{
+
+}
+
+abstract class Electrodomestico{
+    -marca: String
+    -modelo: String
+    -precioBase: double
+    -claseEnergetica: ClaseEnergetica
+    +costesPorte(): double
+    +descuento(elecViejo: Electrodomestico): double
+}
+
+abstract class ElectrodomesticoCocina{
+    -peso: double
+}
+
+class Lavadora{
+    -kilosCarga: double
+    -rpm: double
+    +costePorte(): dobule
+}
+
+class Frigorifico{
+    -frost: boolean
+    +costePorte(): double
+}
+
+class Television{
+    -tamanio: double
+    +costePorte(): double
+}
+
+class TelevisionCurva{
+    -peso: double
+    +costePorte(): double
+}
+
+class Venta{
+    +precioTotal(): double
+    +getTicket(): String
+    +getProductoVendido(): String
+    +getPrecioProducto(): String
+    +getDescuentoEntrega(): String
+    +getTotal(): String
+    +resumenVentas(cantidad : int): String
+    +resumenVentas(marca: String): String
+    +anular(): Venta
+    +ultima(): Venta
+}
+
+class VentaDomicilio{
+    +precioTotal(): double
+    +getTicket(): String
+    +getTotal(): String
+    +getCoste(): String
+}
+
+class VentaCanarias{
+    +costes(): doble
+    +precioTotal(): double
+    +getTicket(): String
+    +getTotal(): String
+    +getCoste(): String
+    +getCosteVenta(): String
+}
+
+enum ClaseEnergetica <<enumeration>> {
+    +A: int
+    +B: int
+    +C: int
+    +D: int
+    +Desconocida: int
+}
+
+class Dimension{
+    -alto: double
+    -ancho: double
+    -fondo: double
+    +calcularVolumen(): double
+}
+
+class LecturaElectrodomesticos{
+    +leer(documento: String): List<Electrodomestico>
+}
+
+class Stock{
+    +mostrarCatalogoCompleto(): void
+    +mostrarCatalogoTipo(): void
+}
+
+Aplicacion *-- Venta
+Aplicacion *-- Electrodomestico
+Electrodomestico <|-- ElectrodomesticoCocina
+Electrodomestico <|-- Television
+ElectrodomesticoCocina <|-- Lavadora
+ElectrodomesticoCocina <|-- Frigorifico
+Venta <|-- VentaDomicilio
+Venta o-- "1" Electrodomestico: elec nuevo
+Venta o-- "0..1" Electrodomestico: elec viejo
+
+TelevisionCurva --|> Television
+VentaCanarias --|> VentaDomicilio
+Venta --* "0..*" Venta: ventas
+TelevisionCurva "0..*" *-- "1" Dimension: dimension
+ElectrodomesticoCocina "0..*" *-- "1" Dimension: dimension
+LecturaElectrodomesticos --* Aplicacion
+Stock --* Aplicacion
+Stock "1" --* "0..*" Electrodomestico: catalogo
+
+
+@enduml

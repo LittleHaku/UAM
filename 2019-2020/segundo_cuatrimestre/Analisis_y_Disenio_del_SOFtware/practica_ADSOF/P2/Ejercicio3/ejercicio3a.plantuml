@@ -1,0 +1,57 @@
+@startuml Diagrama
+skinparam classAttributeIconSize 0
+hide circle
+
+class Funcionario {
+  -regPersonal : int
+  -fechaIngreso: Date
+  -categoriaSalarial: int
+  +calcSueldo() : int
+}
+
+class Docente{
+  -DNI : String
+  -departamento: String
+  -esDoctor: boolean
+  +calcSueldo(): int
+}
+
+class Actividades{
+  -año : int
+  -cuatrimestre: int
+  -tipoDocencia: TipoDocencia
+  -nHoras: int
+}
+
+class AdministradorDeCentro{
+  -universidad: String
+  -centro: String
+  -complSalarial: int
+  +calcSueldo() : int
+}
+class ProfTitular{
+  -nQuinquenios: int
+  -nSexenios: int
+  +calcSueldo() : int
+}
+
+class ProfAsociado{
+  -nombreEmpresa: String
+  -nSeguridadSocial: String
+  -porcentaje: double
+  +calcSueldo() : int
+}
+
+class TipoDocencia <<enumeration>> {
+  teoria: int
+  practica: int
+  proyecto: int
+}
+
+Funcionario <|-- ProfTitular
+Funcionario <|-- AdministradorDeCentro
+Docente <|-- ProfTitular
+Docente <|-- ProfAsociado
+Docente "1" *-- "0..*" Actividades
+
+@enduml

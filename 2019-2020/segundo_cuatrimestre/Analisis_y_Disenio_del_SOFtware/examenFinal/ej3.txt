@@ -1,0 +1,78 @@
+/**
+	Supongo que cada enum y cada clase está en su propio paquete, por eso son public las clases.
+*/
+public interface IPriced <T extends Comparable<T>> {
+	public T getValue();
+	public String getDesc();
+}
+
+public class ItemNotFoundException extends Exception {
+	private String desc;
+	
+	public ItemNotFoundException(String desc) {
+		this.desc = desc;
+	}
+	@Override
+	public String toString() {
+		return desc + " not found";	
+	}
+}
+
+public class SalesCrawler <T extends Comparable<T>, IT extends IPriced<T>> {
+	private Map<IT, Predicate<T>> condicion; /**Se guarda la condicion por cada item añadido*/
+	private Map<IT, List<T>> ofertas; /** Se guardan los valores de las ofertas aceptadas*/
+	
+	public SalesCrawler() {
+		condicion = new TreeMap<>();
+		ofertas = new TreeMap<>();
+	}
+	public boolean addItem(IT item, Predicate<T> pred) {
+		if(condicion.containsKey(item)) return false;
+		condicion.put(item, pred);
+		ofertas.put(item, new ArrayList<>());
+		return true;
+	}
+	public boolean offer(String desc, T value) throws ItemNotFoundException {
+		for(IT e : condicion.keySet()) { /**Para cada entrada busca si hay un item que tenga igual desc*/
+			if(e.getDesc().equals(desc)) {
+				if(condicion.get(e).test(value)) { /**Si lo encuentra, prueba la condicion y lo añade si la condicion es true*/
+					ofertas.get(e).add(value);
+					return true;
+				}
+			}
+		}
+		throw new ItemNotFoundException(desc); /**Si no lo encuentra lanza una ItemNotFoundException*/
+	} 
+	@Override
+	public String toString() {return ""+ofertas;}
+}
+
+public class Item <T extends Comparable<T>> implements IPriced<T>, Comparable<Item<T>> {
+	private String desc;
+	private T maxValue;
+	
+	public Item(String desc, T maxValue) {
+		this.desc = desc;
+		this.maxValue = maxValue;
+	}
+	@Override
+	public T getValue() {return maxValue;}
+	@Override
+	public String getDesc() {return desc;}
+	@Override
+	public int compareTo(Item<T> otherValue) {
+		return maxValue.compareTo(otherValue.getValue());
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Item<?>)) return false;
+		return desc.equals(((Item<?>)obj).getDesc());
+	}
+	@Override
+	public String toString() {return desc;}
+}
+
+El hueco 1 se deja vacío. No hace falta añadir nada (ningún throws porque lo vamos a recoger con un try-catch).
+El hueco 2 es: try.
+El hueco 3 es catch (ItemNotFoundException exc).
+

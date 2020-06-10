@@ -1,0 +1,33 @@
+@startuml ejercicio1
+
+skinparam classAttributeIconSize 0
+hide circle
+abstract class Articulo{
+    -identificador: long
+    -descripcion: String
+    -precioUnitario: double
+    +tipoIva():d ouble
+    +descuento(unidades: double) : double
+    +totalPrice(unidades: double) : double
+}
+class Alimento{
+    -promo3x2 : boolean
+    +tipoIva(): double
+    +descuento(unidades: double) : double
+}
+
+class Libro{
+    -categoria: String
+    +tipoIva(): double
+    +descuento(unidades: double) : double
+}
+
+class Tabaco{
+    +descuento(unidades: double) : double
+}
+
+Articulo <|-- Alimento
+Articulo <|-- Libro
+Articulo <|-- Tabaco
+
+@enduml

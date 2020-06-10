@@ -1,0 +1,33 @@
+/**
+	Supongo que cada enum y cada clase está en su propio paquete, por eso son public las clases.
+*/
+public class BiStream <T1, T2> {
+	private int maxSize; /**Minimo size de la primera y segunda coleccion*/
+	private List<Object> l1; /**Lista dond se guardan los primeros masSize elementos de la primera coleccion*/
+	private List<Object> l2; /**Lista dond se guardan los primeros masSize elementos de la segunda coleccion*/
+	
+	public BiStream(Collection<? super T1> c1, Collection<? super T2> c2) {
+		int cont = 0;
+		maxSize = Math.min(c1.size(), c2.size());
+		l1 = new ArrayList<>();
+		l2 = new ArrayList<>();
+		for(Object t: c1) { /**Inserta los maxSize primeros en l1*/
+			if(cont >= maxSize) break;
+			l1.add(t);
+			cont++;
+		}
+		cont = 0;
+		for(Object t: c2) { /**Inserta los maxSize primeros en l2*/
+			if(cont >= maxSize) break;
+			l2.add(t);
+			cont++;
+		}
+	}
+	public <R> Stream<R> map(BiFunction<Object, Object, R> bf) {
+		List<R> respuesta = new ArrayList<>();
+		for(int i = 0; i < maxSize; i++) { /**Va cogiendo la i-esima pareja de elementos, los transforma, y los añade en la respuesta*/
+			respuesta.add(bf.apply(l1.get(i), l2.get(i)));
+		}
+		return respuesta.stream(); /**Convierte la respuesta en un stream*/
+	}
+}

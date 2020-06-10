@@ -1,0 +1,65 @@
+@startuml ejercicio2
+
+skinparam classAttributeIconSize 0
+hide circle
+
+class Aplicacion{
+
+}
+
+abstract class Electrodomestico{
+    -marca: String
+    -modelo: String
+    -precioBase: double
+    -claseEnergetica: TipoConsumo
+    +costesPorte(): double
+    +descuento(elecViejo: Electrodomestico): double
+}
+
+abstract class ElectrodomesticoCocina{
+    -alto: double
+    -ancho: double
+    -fondo: double
+    -peso: double
+}
+
+class Lavadora{
+    +costesPorte(): dobule
+}
+
+class Frigorifico{
+    +costesPorte(): double
+}
+
+class Television{
+    -tamanio: double
+    +costesPorte(): double
+}
+
+class Venta{
+    +precioTotal(): double
+}
+
+class VentaDomicilio{
+    +precioTotal(): double
+}
+
+enum TipoConsumo <<enumeration>> {
+    +A: int
+    +B: int
+    +C: int
+    +D: int
+    +desconocido: int
+}
+
+Aplicacion *-- Venta
+Aplicacion *-- Electrodomestico
+Electrodomestico <|-- ElectrodomesticoCocina
+Electrodomestico <|-- Television
+ElectrodomesticoCocina <|-- Lavadora
+ElectrodomesticoCocina <|-- Frigorifico
+Venta <|-- VentaDomicilio
+Venta o-- "1" Electrodomestico: elec nuevo
+Venta o-- "0..1" Electrodomestico: elec viejo
+
+@enduml

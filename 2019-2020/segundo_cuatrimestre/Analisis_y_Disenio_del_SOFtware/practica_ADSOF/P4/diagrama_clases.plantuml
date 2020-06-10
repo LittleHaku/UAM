@@ -1,0 +1,165 @@
+@startuml diagrama_clases
+
+skinparam classAttributeIconSize 0
+hide circle
+
+
+package magnitude {
+    interface IMagnitude {
+        + add(m : IMagnitude) : IMagnitude
+        + subs(m : IMagnitude) : IMagnitude
+        + transformTo(c : IPhysicalUnit) : IMagnitude
+        + getUnit() : IPhysicalUnit
+        + getValue() : double
+    }
+    class Magnitude {
+        - valor: double
+    }
+}
+
+
+package magnitude.exceptions {
+    class QuantityException {
+
+    }
+    class UnknownUnitException {
+
+    }
+}
+
+package metricSystems {
+    abstract class AbstractMetricSystem {
+        + converters
+    }
+    interface IMetricSystem {
+        + base() : IPhysicalUnit
+        + units() : Collection<IPhysicalUnit>
+        + getConverter(to : IMetricSystem) IMetricSystemConverter
+    }
+    interface IMetricSystemConverter {
+        + sourceSystem() : IMetricSystem
+        + targetSystem() : IMetricSystem
+        + transformTo(from : IMagnitude, to : IPhsicalUnit) : IMagnitude
+        + reverse() : IMetricSystemConverter
+    }
+}
+package metricSystems.imperial.length {
+    class Foot {
+
+    }
+    class ImperialLengthMetricSystem {
+        - tipoMedida : String
+    }
+    class Mile {
+
+    }
+    class Yard {
+
+    }
+}
+
+package metricSystems.si.length {
+    class Kilometer {
+
+    }
+    class Meter {
+
+    }
+    class Milimeter {
+
+    }
+    class SiLengthMetricSystem {
+        - tipoMedida : String
+    }
+}
+package  metricSystems.si.lengthconverters {
+    class SiImperial2LengthConverter {
+        - factor : double
+    }
+    class SiLength2ImperialConverter {
+        - factor : double
+    }
+}
+
+package metricSystems.si.time {
+    class Hour {
+
+    }
+    class Milisecond {
+
+    }
+    class Second {
+
+    }
+    class SiTimeMetricSystem {
+        - tipoMedida : String
+    }
+}
+
+package units {
+    interface IPhysicalUnit {
+        + canTransformTo(u : IPhysicalUnit) : bool
+        + transformTo(d : double, u : IPhysicalUnit) : double
+        + getQuantity() : Quantity
+        + abbrev() : String
+        + getMetricSystem() : IMetricSystem
+    }
+    class Quantity {
+        - tipoMedida : String
+        - value : double
+    }
+}
+
+Magnitude .up.|> IMagnitude
+Magnitude "1" --> "1" IPhysicalUnit : unit
+
+UnknownUnitException -up-|> QuantityException
+
+AbstractMetricSystem .up.|> IPhysicalUnit
+AbstractMetricSystem .up.|> IMetricSystem
+AbstractMetricSystem "1" --> "1" Quantity : q
+AbstractMetricSystem "1" --> "0..*" IMetricSystemConverter : converters
+
+Foot -up-|> ImperialLengthMetricSystem
+
+ImperialLengthMetricSystem -up-|> AbstractMetricSystem
+ImperialLengthMetricSystem "1" *-- "1" Foot : FOOT
+ImperialLengthMetricSystem "1" *-- "1" Mile : MILE
+ImperialLengthMetricSystem "1" *-- "1" Yard : YARD
+ImperialLengthMetricSystem "1" *-- "1" ImperialLengthMetricSystem : SYSTEM
+
+
+Mile -up-|> ImperialLengthMetricSystem
+
+Yard -up-|> ImperialLengthMetricSystem
+
+Kilometer -up-|> SiLengthMetricSystem
+
+Meter -up-|> SiLengthMetricSystem
+
+Milimeter -up-|> SiLengthMetricSystem
+
+SiLengthMetricSystem -up-|> AbstractMetricSystem
+SiLengthMetricSystem "1" *-- "1" Kilometer : KILOMETER
+SiLengthMetricSystem "1" *-- "1" Meter : METER
+SiLengthMetricSystem "1" *-- "1" Milimeter : MILIMETER
+SiLengthMetricSystem "1" *-- "1" SiLengthMetricSystem : SYSTEM
+
+SiImperial2LengthConverter .up.|> IMetricSystemConverter
+
+SiLength2ImperialConverter .up.|> IMetricSystemConverter
+
+Hour -up-|> SiTimeMetricSystem
+
+Milisecond -up-|> SiTimeMetricSystem
+
+Second -up-|> SiTimeMetricSystem
+
+SiTimeMetricSystem -up-|> AbstractMetricSystem
+SiTimeMetricSystem "1" *-- "1" Second : SECOND
+SiTimeMetricSystem "1" *-- "1" Milisecond : MILISECOND
+SiTimeMetricSystem "1" *-- "1" Hour : HOUR
+SiTimeMetricSystem "1" *-- "1" SiTimeMetricSystem : SYSTEM
+
+
+@enduml

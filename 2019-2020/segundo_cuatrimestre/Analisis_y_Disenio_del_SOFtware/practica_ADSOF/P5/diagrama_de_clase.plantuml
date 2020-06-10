@@ -1,0 +1,150 @@
+@startuml diagrama_de_clase
+skinparam classAttributeIconSize 0
+hide circle
+
+package element {
+    class Node<V> {
+        - index: int
+        - nodeValue: V
+        - {static} INDEX_COUNT: int
+
+        + isConnectedTo(other : V): boolean
+        + isConnectedTo(other : Node<V>): boolean
+        + neighbours() : List<Node<?>>
+        + getEdgeValues(other : Node<V>) : List<Object>
+    }
+
+    class Edge<E> {
+        - weight: E
+    }
+
+    class Graph<V,E> {
+        + addAll(l : List<Node<V>>): Graph<V,E>
+        + connect (from : Node<V>, weight : E, to : Node<V>) : Graph<V,E>
+        + isConnectedTo(n : Node<V>, other : V) : boolean
+        + isConnectedTo(n : Node<V>, other : Node<V>) : boolean
+        + neighbours(n : Node<V>): List<Node<?>>
+        + getEdgeValues(n : Node<V>, other : Node<V>) : List<Object>
+    }
+
+    class ConstrainedGraph<V,E> {
+        + forAll(pred : Predicate<Node<V>>): boolean
+        + one (pred : Predicate<Node<V>>) : boolean
+        + exists (pred : Predicate<Node<V>>) : boolean
+        + getWitness() : Optional<Node<V>>
+    }
+
+    interface Collection<Node<V>> {
+        + size() : int
+        + isEmpty() : boolean
+        + contains(obj : Object) : boolean
+        + iterator() : Iterator<Node<V>>
+        + toArray() : Object[]
+        + toArray(a : T[]) : <T> T[]
+        + add(e : Node<V>) : boolean
+        + remove(obj : Object) : boolean
+        + containsAll(c : Collection<?>) : boolean
+        + addAll(c : Collection<? extends Node<V>>) : boolean
+        + removeAll(c : Collection<?>) : boolean
+        + retainAll(c : Collection<?>) : boolean
+        + clear() : void
+    }
+}
+
+ConstrainedGraph -up-|> Graph
+Graph .up.|> Collection
+ConstrainedGraph "1" --> "1" Node : witness
+Node "1" --> "1" Graph : graph
+Graph "1" *-- "*" Node : lNode
+Graph "1" *-- "*" Edge : lEdge
+Edge "1" --> "1" Node : from
+Edge "1" --> "1" Node : to
+
+
+package producto {
+    class Producto {
+        - precio: double
+        - caducidad :Date
+
+        + getDateDiff(date1 : Date, date2 : Date, timeUnit : TimeUnit) : long
+    }
+}
+
+Producto -up-|> Observable
+
+package rules {
+    class Rule<T> {
+        - nombre : String
+        - rule : String
+
+        + <T> rule (nombre : String, rule : String) : Rule<T>
+        + when (pred : Predicate<T>) : Rule<T>
+        + exec (pred : Consumer<T>) : Rule<T>
+    }
+
+    class RuleSet<T> {
+        - elementos : Collection<T>
+
+        + setExecContext(str Collection<T>) : void
+        + process() : boolean
+        + add(exec : Rule<T>) : List<Rule<T>>
+    }
+
+    class RuleSetWithStrategy<T> {
+        + process() : boolean
+    }
+
+    class TriggeredRule<T extends Observable> {
+        - variable : T
+        - method : String
+
+        + <T extends Observable> trigRule(name : String) : TriggeredRule<T>
+        + trigger(variable : T, method : String) : TriggeredRule<T>
+    }
+}
+interface Observer {
+    + update(obs : Observable, arg : Object) : void
+}
+
+TriggeredRule -up-|> Rule
+RuleSetWithStrategy -up-|> RuleSet
+RuleSet "1" *-- "*" Rule : rules
+TriggeredRule .up.|> Observer
+
+package strategy {
+    interface Strategy<T> {
+        + executeMore(lastExecution : boolean) : boolean
+    }
+
+    class Sequence<T> {
+    }
+
+    class AsLongAsPossible<T> {
+    }
+}
+
+RuleSetWithStrategy "1" --> "1" Strategy : strategy
+Sequence .up.|> Strategy
+AsLongAsPossible .up.|> Strategy
+
+package util {
+    class BlackBoxComparator<T> {
+        - criterios : Map<Criteria, Predicate<Node<V>>>
+
+        + addCriteria(criterio : Criteria, pred : Predicate<Node<V>>) : BlackBoxComparator<T>
+    }
+
+    enum Criteria {
+        EXISTENTIAL,
+        UNITARY,
+        UNIVERSAL
+    }
+}
+
+interface Comparator{
+}
+
+BlackBoxComparator .up.|> Comparator
+
+
+@enduml

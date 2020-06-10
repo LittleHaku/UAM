@@ -1,0 +1,85 @@
+/*Supongo que cada clase va a su paquete correspondiente, con sus imports*/
+public enum Complexity {
+    BASICA(0.0, 1), MEDIA(12.5, 2), AVANZADA(12.5,3), EXTREMA(25,4);
+    private double val;
+    private int id;
+    private Complexity(double v, int num) {
+        val=v;
+        id=num;
+    }
+    public double getVal() {
+        return val;
+    }
+    public int getId() {return id;}
+}
+
+public abstract class Video {
+    private String name;
+    private double cant;
+    private Complexity compl;
+    private static List<Video> l = new ArrayList<>();
+    public Video(String n, double c) {
+        name=n;
+        cant=c;
+        compl=Complexity.BASICA;
+        l.add(this);
+    }
+    public Video(String n, double c, Complexity co) {
+        name=n;
+        cant=c;
+        compl=co;
+        l.add(this);
+    }
+    public String getName() {return name;}
+    public Complexity getComplexity() {return compl;}
+    public double getCant() {return cant;}
+    public static List<Video> select(Complexity c) {
+        return l.stream().filter(e -> e.getId()>=c.getId()).collect(Collectors.toList());
+    }
+    public static List<Video> select() {
+        return this.select(Complexity.BASICA);
+    }
+    @Override
+    public String toString() {
+        return getName()+", " + getComplexity();
+    }
+    public abstract double estimatedTime();
+}
+public class Exercise extends Video {
+    public Exercise(String n, double c) {
+        super(n, c);
+    }
+    public Exercise(String n, double c, Complexity co) {
+        super(n, c, co);
+    }
+    @Override
+    public abstract double estimatedTime() {
+        return getCant()*60*getComplexity().getVal();
+    }
+}
+public class Lecture extends Video {
+    private static int count=0;
+    private int id;
+    public Lecture(String n, double c) {
+        super(n, c);
+        cont++;
+        id=cont;
+    }
+    public Lecture(String n, double c, Complexity co) {
+        super(n, c, co);
+        cont++;
+        id=cont;
+    }
+    @Override
+    public double estimatedTime() {
+        double tot = getCant()*10;
+        tot = Math.max(tot, 100);
+        tot = Math.min(tot, 400);
+        return tot;
+    }
+    public static count() {return count;}
+    @Override
+    public String toString() {
+        return getName()+"#"+id+", " + getComplexity();
+    }
+}

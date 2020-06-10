@@ -1,0 +1,51 @@
+@startuml diagrama_de_clase
+skinparam classAttributeIconSize 0
+hide circle
+
+
+class Aplicacion {
+    +getRecetasVegetarianas(): List<Recetas>
+    +getUsa(in : Ingrediente) : List<Ingrediente>
+}
+enum Tipo {
+    -ENTRANTE
+    -PRINCIPAL
+    -POSTRE
+}
+class Receta{
+    -nombre : String
+    -numCalorias: double
+    -numPersonas: Integer
+    -cantidades: Map<Ingredientes, double>
+    -tipo: Tipo
+    +esVegetariano(): bool
+    +usa(in : Ingrediente) : boolreceta
+}
+class Ingredientes {
+    -desc: String
+    -esVegetariano: bool
+}
+abstract class Paso {
+    -duracion: double
+    -desc: String
+        +getTiempo(): double
+}
+class PasoSimple {
+    -requiereFuego: bool
+    -requiereCortar: bool
+    -minutos: double
+    +getTiempo(): double
+}
+class PasoCompuesto {
+    +getTiempo(): double
+
+}
+
+Aplicacion "1"*--"0..*" Receta
+Aplicacion "1"*--"0..*"Ingredientes
+Receta "1"*--"0..*" Paso
+PasoCompuesto-up-|>Paso
+PasoSimple-up-|>Paso
+Paso "0..*"--o "1"PasoCompuesto
+
+@enduml

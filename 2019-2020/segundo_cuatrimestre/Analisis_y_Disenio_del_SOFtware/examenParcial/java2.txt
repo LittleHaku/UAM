@@ -1,0 +1,98 @@
+Puedes escribir el código en esta caja, o subir un fichero de texto.
+Recuerda que el uso de un IDE (como Eclipse, NetBeans, IntelliJ, SublimeText, Visual Studio Code, etc) o el propio compilador de Java no está permitido, pero sí puedes usar editores de texto plano. Valoraremos especialmente el uso de buenos principios de diseño orientado a objetos (mucho más importante que pequeños errores sintácticos de codificación, que no penalizaremos).
+
+/*Supongo que cada clase va a su paquete correspondiente, con sus imports*/
+public class CarBreakdown implements IBreakDownInfo {
+    private String problem;
+    private boolean active;
+
+    public CarBreakdown (String issue, boolean active) {
+        this.problem = issue;
+        this.active = active;
+    }
+
+    @Override
+    public String info() {
+        return problem;
+    }
+
+    @Override
+    public void set(boolean v) {
+        active = v;
+    }
+    @Override
+    public String toString() {
+        return problem + active ? "ongoing" : "fixed";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof CarBreakdown == false) return false;
+        return problem.equals(((CarBreakdown)o).problem);
+    }
+
+    @Override
+    public int hashCode() {
+        return problem.hashCode;
+    }
+}
+
+public class Car {
+  private String model;
+  private String plate; // matricula
+
+  public Car (String m, String plate) {
+    this.model = m;
+    this.plate = plate;
+  }
+
+  public String toString() { return this.plate; }
+}
+
+/* completar el resto del programa */
+public class RepeatedCar extends Exception {
+    private String desc;
+
+    public RepeatedCar(String s) {
+        desc = s;
+    }
+    @Override
+    public String toString() {
+        return "Repeated car: " + desc;
+    }
+}
+public class GarageHistory<U, V> {
+    private U ultimoCar;
+    private Map<U, List<V>> m;
+            car = new ArrayList<>();
+
+    public GarageHistory() {
+        m = new HashMap<>();
+    }
+    public GarageHistory<U, V> addCar(U c) throws RepeatedCar {
+        if(m.containsKey(c)) {
+            throw new RepeatedCar(c.toString());
+        }
+        ultimoCar = c;
+        m.put(c, new ArrayList<>());
+        return this;
+    }
+    /**
+    Añade la lista a la que ya habia, al ultimo coche añadido
+    */
+    public GarageHistory<U, V> addAll(List c) {
+        m.put(ultimoCar, m.get(ultimoCar).addAll(c));
+        return this;
+    }
+
+    public List<V> getBreakdown(U car) {
+        return m.get(car)
+    }
+
+    public boolean fix(U u, V v) {
+        List l = m.get(u);
+        boolean ans = l.remove(v);
+        m.put(u, l);
+        return ans;
+    }
+}
