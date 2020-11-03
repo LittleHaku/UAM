@@ -1,3 +1,5 @@
+AGRADECERÍA QUE SI TE HA SIDO ÚTIL MARCARAS CON UNA ESTRELLA DE FAVORITOS AL REPOSITORIO, O INCLUSO ME SIGUIERAS, GRACIAS.
+
 # Universidad Autónoma de Madrid
 En este repositorio se guardarán las presentaciones recibidas, pdf's, capturas de pantalla, hojas de ejercicios, soluciones entregadas, anotaciones... 
 En definitiva, mi recorrido por el Doble Grado de Ingeniería Informática y Matemáticas de la [UAM](http://www.uam.es).
