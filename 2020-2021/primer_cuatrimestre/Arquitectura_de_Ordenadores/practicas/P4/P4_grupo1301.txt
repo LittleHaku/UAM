@@ -1,0 +1,25 @@
+Grupo: 1301
+Pareja: 05
+
+Integrantes: 
+Junco de las Heras Valenzuela junco.heras@estudiante.uam.es
+Marta Vaquerizo Núñez marta.vaquerizo@estudiante.uam.es
+
+Se entrega:
+-    Los subdirectorios pertenecientes a cada ejercicio.
+-    El enunciado en pdf.
+-    P4_grupo1301.txt, este .txt informativo.
+-    La memoria en pdf.
+
+NOTAS:
+En cada carpeta de los ejercicios, puede contener:
+ * El makefile para compilar los ficheros .c (en todas las carpetas menos en la del ejercicio0)
+ * Alguna captura de pantalla a modo de evidencia.
+ * Ficheros .sh utilizados para automatizar las ejecuciones y las graficas, así como para lanzar tareas al cluster.
+ * Los archivos .dat que contienen los datos para ser graficados o para meter en tablas.
+ * La carpeta "ejecucion_cluster" contiene datos que se han tomado del cluster, así que los cores de referencia, 
+   los tamaños de caché y las características del ordenador de los resultados contenidos en esa carpeta serán los 
+   de un equipo del clúster.
+
+En la carpeta ejercicio5, no se han incluido las imágenes usadas para la ejecución ya que pesaban mucho para enviar. Dentro
+de esta carpeta se ha incluido otra, llamada ejercicio5_con_O3, que se utiliza para el apartado 5 del ejercicio 5.

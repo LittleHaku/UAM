@@ -1,0 +1,38 @@
+Junco de las Heras <junco.heras@estudiante.uam.es> 
+Marta Vaquerizo <marta.vaquerizo@estudiante.uam.es>
+
+Pareja 05, grupo 1302.
+
+ARCHIVOS A ENTREGAR
+En el zip a entregar, va a contener los siguientes archivos:
+
+     * Los scripts arp.py y ethernet.py pedidos,
+     
+     * Los scripts practica2.py y la la librería rc1_pcap.
+
+     * La carpeta Evidencias con 2 capturas de las pruebas realizadas:
+	- comprobacion_con_wireshark.png: en Wireshark se comprueba que, al ejecutar wireshark con h1, y  el script en h2, el ARP gratuito funciona.
+
+	- fallo_arp_gratuito.png: Se inicializa h1 con el IP 10.0.0.1 y luego se intenta inicializar h2 con IP 10.0.0.1 pero da un fallo, como estaba previsto.
+ 
+VALIDACIÓN
+
+    *Normativa de entrega cumplida en su totalidad: Realizado: Hemos releido varias veces el enunciado. 
+
+    * Fichero leeme.txt: Realizado, hemos rellenado este txt con la información pedida.
+
+    * Enviar, recibir y procesar tramas Ethernet: Realizado,  se ha comprobado con Wireshark que las tramas sean correctas y que se envían y reciben correctamente.
+
+    *Enviar, recibir y procesar correctamente peticiones ARP: Realizado: Se ha comprobado en Wireshark que se envian y procesan correctamente
+						     las peticiones (en la imagen comprobacion_con_wireshark.png se puede observar en la cuarta línea que se envía petición: Who has 10.0.0.1? Tell 10.0.0.2). 
+
+    *Enviar, recibir y procesar correctamente respuestas ARP: Realizado:  Se ha comprobado en Wireshark que se envian y procesan correctamente
+						     las respuestas (en la imagen comprobacion_con_wireshark.png se puede observar en la quinta línea que se recibe respuesta de la MAC por parte del host que tiene la IP = 10.0.0.1). 
+
+    *Manejo correcto de la caché ARP: Realizado: Se ha comprobado que se guardan correctamente las MAC resueltas de las IP solicitadas pulsando a la tecla p antes de que el diccionario temporal borre la 
+
+    *Uso correcto de Locks: Realizado: Cada vez que se accede a la caché, se protege con el semáforo cacheLock, y al acceder a las variables
+			    globales resolvedMAC, awaitingResponse y requestedIP, se protegen con el semáforo globalLock.
+ 
+    *Realiza correctamente el ARP gratuito: Realizado: Se ha comprobado en Wireshark que al inicializar los dos host (h1 y h2), ver la imagen comprobacion_con_wireshark.png. y fallo_arp_gratuito.png.
+

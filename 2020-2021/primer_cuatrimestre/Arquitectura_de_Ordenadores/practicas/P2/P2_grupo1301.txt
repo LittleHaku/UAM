@@ -1,0 +1,25 @@
+Grupo: 1301
+Pareja: 05
+
+Integrantes: 
+Junco de las Heras Valenzuela junco.heras@estudiante.uam.es
+Marta Vaquerizo Núñez marta.vaquerizo@estudiante.uam.es
+
+Se entrega:
+-    2 carpetas de los respectivos apartados.
+-    el enunciado en pdf.
+-    P2_grupo1301.txt este txt informativo.
+
+Ejercicio 1:
+Se ha desarrollado el pipelined en el microprocesador siguiendose los pasos del enunciado.
+Se adelantan los datos a la ALU y a los registros pertinentes. Se ha revisado el correcto
+funcionamiento de las ondas con el programa programa.asm en ensamblador.
+
+Ejercicio 2:
+Se ha partido del ejercicio 1, y se ha adelantado el jump a la etapa ID, el beq se decide en la etapa MEM,
+y si salta, se borran las instrucciones del pipelined y se ejecuta la del salto. Para implementar este ejercicio,
+se han usado dos reset síncronos, uno para el jump (elimina la instrucción de la etapa IF, para capturar la del
+salto), y uno para el beq (elimina las instrucciones del pipelined).
+Se ha revisado el correcto funcionamiento de las ondas con el programa programa.asm en ensamblador.
+En el ensamblador se han añadido instrucciones tipo beq y tipo j para comprobar los saltos, aparte de 
+las instrucciones que había del apartado 1.

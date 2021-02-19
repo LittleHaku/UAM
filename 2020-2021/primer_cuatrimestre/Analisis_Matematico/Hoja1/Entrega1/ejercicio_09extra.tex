@@ -1,0 +1,119 @@
+\documentclass[12pt]{article}
+
+%\input xy
+%\xyoption{all}
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+\usepackage{amsfonts,amsmath,amssymb,indentfirst,mathrsfs,amscd}
+\usepackage[mathscr]{eucal}
+%\usepackage[active]{srcltx}
+\usepackage{graphicx}
+\usepackage{nicefrac}
+\usepackage{cases}
+
+
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[utf8]{inputenc}
+%\usepackage[spanish]{babel}
+%\usepackage[clock]{ifsym}
+
+
+\newcommand{\CC}{\mathbb{C}} %Complex numbers%
+\newcommand{\QQ}{\mathbb{Q}} %Rational numbers%
+\newcommand{\PP}{\mathbb{P}} %Projective space%
+\newcommand{\HH}{\mathbb{H}} %Hypercohomology, quaternions..%
+\newcommand{\RR}{\mathbb{R}} %Real numbers%
+\newcommand{\ZZ}{\mathbb{Z}} %Integer numbers%
+\newcommand{\NN}{\mathbb{N}} %Natural numbers%
+
+\usepackage{enumerate}
+
+\pagestyle{empty}
+\oddsidemargin 0pt
+\topmargin -2.5cm
+\evensidemargin 0pt
+\textwidth 16.5cm
+\textheight 24cm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\hrule\hrule
+\vspace{2mm}
+
+\noindent {\bf Análisis Matemático, curso 2020-21 \hfill{Matemáticas-Ingeniería informática}}
+
+\vspace{3mm}
+
+ \noindent {\bf Ejercicio adicional}: debilitando hipótesis\hfill {\it 
+ Nombre: Junco de las Heras Valenzuela}
+
+\vspace{2mm}
+
+\hrule\hrule
+
+\vspace{2mm}
+
+\
+
+\noindent  {\bf Problema 9 extra.} Sea $D:X\times X\to \RR$ una función tal que:
+\begin{itemize}
+	\item $D(x,y)=0 \iff x = y$.
+	\item $D(x,y) \leq D(z,x) + D(z,y)$ para todo $x,y,z$.
+\end{itemize}
+Demostrar que $D$ es una distancia en $X$.
+
+\noindent {\bf{\underline{Observación}: }}Aquí, a diferencia de en la hoja de problemas, no se está asumiendo que los valores de $D$ sean no negativos.
+
+\vspace{2mm}
+\hrule
+\vspace{2mm}
+
+
+\noindent Sustituyendo en la segunda ecuación $z$ por $y$ obtenemos:
+\[
+D(x, y) \leq D(y, x) + D(y, y)
+\] 
+Usando que $D(y, y)$ = 0:
+\[
+D(x, y) \leq D(y, x)
+\]
+Análogamente tomando $x$ como $y$, $y$ como $x$ y $z$ como $x$ obtenemos:
+\[D(y, x) \leq D(x, x) + D(x, y)
+\]
+Usando que $D(x, x) = 0$:
+\[
+D(y, x) \leq D(x, y)
+\]
+Uniendo las desigualdades:
+\[
+D(x, y) \leq D(y, x) \leq D(x, y)
+\]
+Implica que $D(x, y) = D(y, x)$, y $D$ es simétrica.\\\\
+Tomando $y$ como $x$, y $z$ como $y$ queda:
+\[
+D(x, x) \leq D(y, x) + D(y, x)
+\]
+$D(x, x) = 0$, y $D$ es simétrica:
+
+\[
+\begin{aligned}
+	0 &\leq 2*D(x, y) \\
+	0 &\leq D(x, y)	
+\end{aligned}
+\]
+Cumpliendo todas las propiedades para que D sea una función distancia.
+
+ 
+ \end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

@@ -1,0 +1,394 @@
+\documentclass[12pt]{article}
+\usepackage{tikz}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{lscape}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{enumerate}
+\usepackage{graphics}
+\usepackage[spanish]{babel} %Traduce todo al espaniol.
+
+\hypersetup{
+    %colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    %linkcolor=blue,  %choose some color if you want links to stand out
+}
+\setcounter{secnumdepth}{0} %no numera las secciones y aparecen en el índice
+\begin{document}
+\iffalse
+\title{Práctica 3}
+\author{Junco de las Heras, Marta Vaquerizo}
+
+\maketitle
+\medskip
+\fi
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+ 
+        \Huge
+        \textbf{Práctica 3}
+        
+        \vspace{1 cm}
+        
+        \textbf{Memoria Caché y Rendimiento}
+        
+        \vspace{2 cm}
+        \LARGE
+        Junco de las Heras y  Marta Vaquerizo
+    \end{center}
+\end{titlepage}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Ejercicio 0}
+La captura de pantalla se encuentra en la carpeta \texttt{ejercicio0}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.43]{getconf_lstopo.png}
+    \caption{A la izquierda, el gráfico con lstopo. A la derecha, la salida del comando getconf -a filtrando las líneas que contienen la palabra cache.}
+\end{figure}
+
+Se puede observar que en la máquina donde se ha ejecutado hay $3$ niveles de caché.\\
+En el nivel $1$ hay una parte de instrucciones y otra de datos, ambas con $32768$ Bytes en total, de $8$ vías con tamaño de línea de $64$ Bytes.\\
+El nivel $2$ de caché tiene $262144$ Bytes en total, de $8$ vías con tamaño de línea de $64$ Bytes.\\
+El nivel $3$ tiene $3145728$ Bytes en total, de $12$ vías y $64$ Bytes por línea.
+\paragraph{}
+El caché de nivel $4$ muestra que tiene un tamaño de $0$, y en el lstopo no lo muestra, eso quiere indicar que no hay caché de nivel $4$.
+\paragraph{}
+Se puede apreciar como a medida que el nivel de caché aumenta, el tamaño del caché también lo hace, así como del número de vías. Eso es porque a más tamaño de caché, o a más vías, más tiempo le cuesta en conseguir el dato del caché. La longitud de la línea es constante de $64$ Bytes siempre.
+
+
+
+\newpage
+\section{Ejercicio 1}
+Los ficeros, scripts, y gráficas generados en este ejercicio se encuentran en la carpeta \texttt{ejercicio1}.
+\paragraph{}
+Para todos los ejercicios, nuestro número P es $9$, ya que somos la pareja $5$ y $5\%7+4 = 9$.
+\begin{enumerate}[(1)]
+    \item Se toman las medidas con un script bash llamado $slow\_fast\_time.sh$, ejecutando por cada tamaño de matriz $3$ veces el programa slow y el programa fast, intercalándolos para que no se guarde el caché entre una ejecución y otra. El tiempo resultante de cada programa para un tamaño dado es la suma de los tiempos que han tardado para ese tamaño dividido entre el número de ejecuciones con el mismo tamaño.
+    \paragraph{}
+    En vez de que N variase entre $10000+1024*P$ hasta $10000+1024*(P+1)$ se ha optado porque valiese entre $1+8*P$ y $1+256*(P+1)$ para que la gráfica fuese más informativa, ya que a números muy grandes las gráficas salían casi líneas paralelas y separadas.
+    
+    \item Hay que realizar varias repeticiones de la ejecución de un mismo programa para un número fijo de tamaño de la matriz porque sino el sistema operativo podría usar el caché de una ejecución para la siguiente, y no mediríamos los tiempos de acceso a caché que nos interesa, sino un tiempo bastante menor.
+    
+    \item Se guardan los datos en el fichero $time\_slow\_fast.dat$.
+    
+    \item Se guarda la gráfica en el fichero $time\_slow\_fast.png$.
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.75]{time_slow_fast.png}
+        \caption{Gráfica de \textbf{time\_slow\_fast.png}}
+    \end{figure}
+    \newpage
+    \item Cuando el tamaño de la matriz es pequeño (Antes de $500$ de tamaño), se acceden a menos posiciones de memoria, así que aunque un programa sea más óptimo que el otro, la diferencia no puede ser mucha, pero a medida que aumenta el tamaño, el número de fallos en caché empieza a tomar relevancia.
+    
+    \paragraph{}
+    En la matriz mat[nFilas][nColumnas] tienen nFilas y nColumnas, cada fila tiene sus elementos (columnas) consecutivas. mat[0] es la fila con sus columnas  $0$ \dots nColumnas $-1$ consecutivas. Se puede apreciar cuando se reserva la memoria para la matriz en el programa $arqo3.c$ que la matriz se guarda por filas.
+    
+\end{enumerate}
+
+
+\newpage
+\section{Ejercicio 2}
+Los ficeros, scripts, y gráficas generados en este ejercicio se encuentran en la carpeta \texttt{ejercicio2}.
+\begin{enumerate}[(1)]
+    \item Para este apartado, se ha creado un script ``slow\_fast\_misses.sh'' en el que, para cada N variando entre $2000+512*P=6608$  y $2000+512*(P+1)=7120$ y con un incremento en saltos de $64$ unidades (salen nueve N distintas), se obtienen los fallos de caché de datos del nivel $1$, dependiendo del tamaño de ésta ($1024$, $2048$, $4096$, y $8192$ Bytes).
+    
+    \item En este apartado, los datos generados en el anterior, se guardan en un fichero \\ \textit{cache\_$<$tamaño$>$.dat} tal y como se indica en el enunciado:\\
+    \hspace*{0.1 cm} $<$ \texttt{N} $>$ \hspace*{0.09 cm}  $<$ \texttt{D1mr "slow"} $>$ \hspace*{0.09 cm} $<$ \texttt{D1mw "slow"} $>$  \hspace*{0.09 cm} $<$ \texttt{D1mr "fast"} $>$ \hspace*{0.09 cm} $<$ \texttt{D1mw "fast"} $>$\\
+    para cada tamaño de la caché ($1024$, $2048$, $4096$, y $8192$ Bytes). Es por eso, que en este apartado se han generado cuatro ficheros .dat.
+    
+    \item Para este apartado, se ha creado un script, llamado ``slow\_fast\_misses\_graphics.sh'', en el que se generan cuatro ficheros .dat, y cuatro gráficas:
+    \paragraph{}
+    \textbf{Ficheros:}
+    \begin{itemize}
+        \item cache\_slow\_reads.dat 
+        \item cache\_slow\_write.dat
+        \item cache\_fast\_read.dat
+        \item cache\_fast\_write.dat
+    \end{itemize}
+    \paragraph{}
+    \textbf{Gráficas:}
+    \begin{itemize}
+        \item cache\_lectura\_slow.png (número de fallos de lectura al ejecutar \texttt{slow.c})
+        \item cache\_escritura\_slow.png (número de fallos de escritura al ejecutar \texttt{slow.c})
+        \item cache\_lectura\_fast.png (número de fallos de lectura al ejecutar \texttt{fast.c})
+        \item cache\_escritura\_fast.png (número de fallos de escritura al ejecutar \texttt{fast.c})
+    \end{itemize}
+    \paragraph{} Se han generado cuatro gráficas, y no dos, para que se pueda visualizar mejor cada gráfica, ya que sino se tendrían $16$ "líneas" por cada gráfica.
+    \paragraph{}El objetivo de este script es generar los ficheros con un formato cómodo para generar las gráficas posteriormente en ese mismo script. El formato que tienen los ficheros es el siguiente:\\
+    \hspace*{4.5 cm} $<$ \texttt{TamCache} $>$ \hspace*{0.4 cm} $<$ \texttt{array\_datos} $>$
+    \paragraph{}
+    donde \texttt{TamCache} es el tamaño de la caché (varía entre los valores: $1024$, $2048$, $4096$, y $8192$ Bytes), y \texttt{array\_datos} es un  array que contiene en cada posición el número de fallos de caché de datos cuando N toma un valor, es decir, que cada posición de \texttt{array\_datos} corresponde a un N de los nueve que toma. Dependiendo del fichero en el que se guardan estos datos, el número de fallos de caché de datos puede ser de ejecutar el programa \texttt{slow} o \texttt{fast}, y a su vez pueden ser de lectura (read) o escritura (write). Para obtener el número de fallos, se utilizan los ficheros cache\_$<$TamCache$>$.dat generados en el apartado anterior, es por ello, que antes de ejecutar el script de este apartado, es necesario ejecutar el script de los apartados anteriores (``slow\_fast\_misses.sh'').
+    
+    \paragraph{}
+    A continuación se van a mostrar las gráficas:
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.84]{cache_lectura_slow.png}
+        \caption{Gráfica de \textbf{cache\_lectura\_slow.png}}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.68]{cache_escritura_slow.png}
+        \caption{Gráfica de \textbf{cache\_escritura\_slow.png}}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.84]{cache_lectura_fast.png}
+        \caption{Gráfica de \textbf{cache\_lectura\_fast.png}}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.7]{cache_escritura_fast.png}
+        \caption{Gráfica de \textbf{cache\_escritura\_fast.png}}
+    \end{figure}
+    \newpage
+    \paragraph{}
+    Una cosa que se puede observar en las gráficas es que el número de fallos de caché de lectura es muy grande, del orden de $350$ millones en el caso del programa \texttt{slow}, y de $300$ millones, con el programa \texttt{fast}, mientras que el de escritura sigue siendo grande, del orden de $80$ millones, pero mucho menor que el de lectura. Esto se debe: por una parte, a que se está trabajando de matrices N*N donde N toma valores cercanos al $7000$; y por otra parte, a que las cachés son de correspondencia directa, es decir, a la hora de reemplazar un bloque, solo hay una opción. 
+
+    \item Por un lado, se puede observar que las gráficas de las Figuras $3$ y $5$, correspondientes a los fallos de lectura de \texttt{slow} y \texttt{fast}, son inversamente proporcionales al tamaño de la caché. Se puede destacar en estas dos gráficas una bajada bastante brusca, debido a que cuando la caché tiene tamaño $1024$ Bytes, el número de fallos de cachés es muy grande, del orden de $350$ millones, y cuando el tamaño del caché se duplica a $2048$ Bytes, el número de fallos baja a un valor de alrededor de $150$ millones en la gráfica $3$ y a $100$ millones en la gráfica $5$. 
+    
+    \paragraph{}
+    Por otro lado, las gráficas de las Figuras $4$ y $6$, correspondientes a los fallos de escritura de \texttt{slow} y \texttt{fast}, tienen una tendencia más suave, en el sentido de que entre los valores de los diferentes tamaños de caché no hay tanta diferencia, pero aún así a medida que el tamaño de caché aumenta, el nímero de fallos disminuye. 
+    Las gráficas son exáctamente iguales porque el tanto el $slow.c$ como el $fast.c$ acceden a la matriz para escribir en el mismo orden, solo cambia el acceso a lectura.
+    
+    \newpage
+    \paragraph{}
+    Al fijar el tamaño de la caché, si comparamos ambos programas, nos encontramos con dos casos:
+    
+    \begin{enumerate}[1.]
+        \item Comparando las gráficas del número de fallos de escritura (Figuras $4$ y $6$). Ambos programas tienen la misma gráfica, se producen el mismo número de fallos porque el tanto el $slow.c$ como el $fast.c$ acceden a la matriz para escribir en el mismo orden, solo cambia el acceso a lectura.
+        
+        \item Comparando las gráficas del número de fallos de lectura (Figuras $3$ y $5$) se puede observar que el número de fallos en el programa \texttt{fast} es $50$ millones de fallos menor que el del programa \texttt{slow} al principio, y a medida que el tamaño de caché aumenta la diferencia de $50$ millones va disminuyendo. Esto ocurre ya que el programa \texttt{slow} realiza la suma de los elementos  columna por columna, y como las matrices en C se guardan en memoria como arrays contiguos (filas de la matriz), el programa tiene que acceder a la primera posición de cada array para sumarlo por columnas. El problema es que tenemos N arrays de tamaño N (varía entre $6608$ y $7120$), es decir, cada array ocupa N números de $4$ Bytes cada uno (N*$4$ Bytes), que es mucho mayor que el tamaño de bloque ($64$ B $=$ $16$ enteros). Esto implica que cada array está repartido por varios bloques. Por otro lado, el programa \texttt{fast}  realiza la suma de los elementos fila por fila, entonces, los fallos de caché que se producen son debido a que el array está repartido en varios bloques bloques. La diferencia del número de fallos tenderá a cero pues el número de fallos tiende a cero a medida que aumenta el tamaño del caché\\
+    \end{enumerate}
+    
+\end{enumerate} 
+
+\newpage
+\section{Ejercicio 3}
+Los ficeros, scripts, y gráficas generados en este ejercicio se encuentran en la carpeta \texttt{ejercicio3}.
+
+\paragraph{}
+En este ejercicio se han implementado dos nuevos programas: \texttt{multiplicaction\_slow.c} y \texttt{multiplication\_fast.c}. Por un lado, el primer programa realiza la multiplicación de matrices normal, es decir, fila por columna. Y por otro lado, el segundo programa realiza la multiplicación que llamamos traspuesta. Primero traspone la segunda matriz y de esta manera, el cálculo se realiza fila por fila, lo que permite un cálculo más eficientemente.
+
+\paragraph{}
+Se ha implementado la función void printMatrix(Tipo **, int) en el fichero $arqo3.c$, una función auxiliar, que sirve para imprimir por la salida estándar el contenido de la matriz. Su uso es para debugear, y en el código entregado no se hace ninguna llamada a esta función, pero se ha usado para comprobar que la multiplicación efectivamente funciona.
+
+\begin{enumerate}[(1)]
+    \item Para este apartado, se ha creado un script \textit{mult\_time.sh}, que calcula y guarda los tiempos de ejecución de cada uno de los programas en el fichero \textit{mult\_time.dat}. Este fichero se utiliza en este mismo script para gráficar estos datos. Se ha elegido un intervalo para tamaño de las matrices N, que varía entre $1+8*(P) = 73$ y $1+8*(P+1) = 270$. Se ha considerado este intervalo de tamaños, ya que el especificado en el enunciado era de tamaños muy grandes y las gráficas quedaban líneas paralelas y separadas, no muy informativas.
+    
+    \item En este apartado, se ha creado un script \textit{mult\_misses.sh}, que obtiene los fallos de caché de datos de lectura y de escritura al ejecutar ambos programas.
+    
+    \item Los datos generados en los apartados (1) y (2) se guardan en el fichero \textit{mult.dat}, que está generado por el script \textit{mult\_misses.sh} del apartado (2). Este utiliza el fichero \textit{mult\_time.dat} del apartado (1), y los datos que genera él mismo y los guarda tal y como se piden en el enunciado: \\
+    \hspace*{0.5 cm} $<$ \texttt{N} $>$ \hspace*{0.4 cm} $<$ \texttt{tiempo "normal"} $>$ \hspace*{0.4 cm} $<$ \texttt{D1mr "normal"} $>$ \hspace*{0.4 cm} $<$ \texttt{D1mw "normal"} $>$ \hspace*{0.4 cm} $<$ \texttt{tiempo "trasp"} $>$ \hspace*{0.4 cm} $<$ \texttt{D1mr "trasp"} $>$ \hspace*{0.4 cm} $<$ \texttt{D1mw "trasp"} $>$
+    
+    \item En este apartado se han generado tres gráficas:
+    \begin{itemize}
+        \item mult\_time.png
+        \item mult\_cache\_lectura.png
+        \item mult\_cache\_escritura.png
+    \end{itemize}
+    \paragraph{} 
+    La primera se ha genera con el script \textit{mult\_time.sh} del apartado (1) a partir de los datos generados en el mismo (\textit{mult\_time.dat}), y las otras dos se generan con el script \textit{mult\_misses.sh} del apartado (2), a partir del fichero \textit{mult.dat}.
+    \newpage
+    \hspace*{0.5 cm} A continuación se van a mostrar las gráficas:
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.75]{mult_time.png}
+        \caption{Gráfica de \textbf{mult\_time.png}}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.75]{mult_cache_read.png}
+        \caption{Gráfica de \textbf{mult\_cache\_lectura.png}}
+    \end{figure}
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.75]{mult_cache_write.png}
+        \caption{Gráfica de \textbf{mult\_cache\_escritura.png}}
+    \end{figure}
+    \item En este apartado se va a tener en cuenta lo que se ha observado en el ejercicio $2$. \\
+    \hspace*{0.3 cm}\textbf{Observación 1:} las matrices en C se guardan fila por fila, de manera contigua. Se van a comentar las distintas gráficas del apartado anterior, respectivamente:
+    \begin{enumerate}[1.]
+        \item Figura 7.\\
+        En ambos programas, se ve claramente que a medida que se aumenta el tamaño de las matrices, aumenta el tiempo de ejecución. Para tamaños medianamente pequeños (menor que $300$), ambos programas tardan más o menos lo mismo, pero si se sigue aumentando el tamaño de las matrices(N mayor que $300$), se observa que la diferencia de tiempo de ejecución entre ambos programas aumenta cada vez más. Esto se debe a lo que ocurre en la \textbf{Observación 1}. Como el programa \texttt{multiplication\_slow.c} accede a la segunda matriz por columnas, tarda más que el programa \texttt{multiplication\_fast.c} que accede a ambas matrices por filas. Cabe destacar que en el programa \texttt{multiplication\_fast.c} la acción de trasponer la segunda matriz consume tiempo, pero es despreciable respecto al consumo de tiempo de la multiplicación como tal ya que transponer tiene una complejidad de $O(N^2)$ frente al $O(N^3)$ de la multiplicación.
+        
+        \item Figura 8.\\
+        En esta gráfica se puede apreciar que el programa \texttt{multiplication\_slow.c} presenta muchos más fallos de lectura que el programa \texttt{multiplication\_fast.c}. Esto es así como consecuencia de la \textbf{Observación 1}, es decir, el programa \texttt{multiplication\_slow.c} tiene que acceder a muchos más bloques de memoria (para leer las columnas) distintas, y a medida que el tamaño de las matrices aumenta, los fallos de caché de lectura para este programa crecen potencialmente. 
+        
+        \item Figura 9.\\
+        En esta gráfica se puede apreciar que el programa \texttt{multiplication\_fast.c} presenta más fallos de escritura que el programa \texttt{multiplication\_slow.c}. Esto es debido a que en la multiplicación se accede para la escritura a las mismas posiciones de la matriz resultado, pero el programa fast además transpone la matriz, obteniendo más fallos de caché.
+    \end{enumerate}
+\end{enumerate}
+\newpage
+\section{Ejercicio 4}
+Los ficeros, scripts, y gráficas generados en este ejercicio se encuentran en la carpeta \texttt{ejercicio4}.
+
+\paragraph{}
+Para este ejercicio se han creado los siguientes scripts:
+\begin{itemize}
+    \item mult\_cache\_misses.sh
+    \item mult\_cache\_misses\_graphics.sh
+    \item mult\_cache\_misses\_asociative\_graphics.sh
+\end{itemize}
+
+\paragraph{}
+El primer script, obtiene y guarda el número de fallos de caché de datos tanto de escritura como de lectura para caché asociativa de hasta n-vías (n tiene que ser múltiplo de $2$), que incluye la de acceso directo ($1$-vía) de distintos tamaños. Por ejemplo, si n $= 4$ y el tamaño de caché es de $2048$ Bytes, se van a generar $3$ ficheros: \textit{cache\_Directa\_$2048$.dat}, \textit{cache\_Asociatividad\_vias\_$2$\_$2048$.dat} y \textit{cache\_Asociatividad\_vias\_$4$\_$2048$.dat}.
+\paragraph{}
+El segundo script, cambia el formato del fichero como se hacía en el ejercicio $2$, y genera $4$ gráficas para la caché de acceso directo. Y el tercer script, es igual que es segundo solo que para la cache de s-vías (siendo s un número entre $2$ a n). Para ejecutar estos scripts, es necesario ejecutar el primer script.
+\paragraph{}
+Con estos scripts, hemos decidido variar los tamaños de caché entre: $1024$, $2048$, $4096$ y $8192$ Bytes. Además, se van a comparar para estos tamaños, las cachés directa, de $2$-vías y de $4$-vías para distintos tamaños de matriz. Primeramente, se ha ejecutado el primer script, generando los siguientes ficheros:\\
+\\
+\begin{tabular}{ccc}
+    \textbf{Directa} & \textbf{2-vías} & \textbf{4-vías} \\ \hline
+    cache\_Directa\_$1024$.dat &  cache\_Asociatividad\_vias\_$2$\_$1024$.dat &  cache\_Asociatividad\_vias\_$4$\_$1024$.dat\\
+    cache\_Directa\_$2048$.dat &  cache\_Asociatividad\_vias\_$2$\_$2048$.dat &  cache\_Asociatividad\_vias\_$4$\_$2048$.dat\\
+    cache\_Directa\_$4096$.dat &  cache\_Asociatividad\_vias\_$2$\_$4096$.dat &  cache\_Asociatividad\_vias\_$4$\_$4096$.dat\\
+    cache\_Directa\_$8192$.dat &  cache\_Asociatividad\_vias\_$2$\_$8192$.dat &  cache\_Asociatividad\_vias\_$4$\_$8192$.dat
+\end{tabular}
+\paragraph{}
+Posteriormente, se han ejecutado el segundo y el tercer script, dando lugar a las siguientes gráficas:\\
+\\
+\begin{tabular}{ll}
+    \textbf{Multiplicación Normal} &  \textbf{Multiplicación Traspuesta}\\ \hline
+    cache\_Directa\_escritura\_normal.png & cache\_Directa\_escritura\_trasp.png\\ cache\_Asociatividad\_vias\_$2$\_escritura\_normal.png & cache\_Asociatividad\_vias\_$2$\_escritura\_trasp.png \\ cache\_Asociatividad\_vias\_$4$\_escritura\_normal.png & cache\_Asociatividad\_vias\_$4$\_escritura\_trasp.png\\
+    cache\_Directa\_lectura\_normal.png & cache\_Directa\_lectura\_trasp.png \\ cache\_Asociatividad\_vias\_$2$\_lectura\_normal.png &  cache\_Asociatividad\_vias\_$2$\_lectura\_trasp.png \\ cache\_Asociatividad\_vias\_$4$\_lectura\_normal.png & cache\_Asociatividad\_vias\_$4$\_lectura\_trasp.png
+\end{tabular}
+\paragraph{}
+A continuación se van a mostrar estas gráficas:
+\paragraph{}
+\textbf{CACHÉ DIRECTA}
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.53\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Directa_lectura_normal.png}
+  \caption{Fallos de lectura (normal)}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Directa_lectura_trasp.png}
+  \caption{Fallos de lectura (trasp)}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.53\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Directa_escritura_normal.png}
+  \caption{Fallos de escritura (normal)}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Directa_escritura_trasp.png}
+  \caption{Fallos de escritura (trasp)}
+\end{minipage}
+\end{figure}
+
+\newpage
+\textbf{CACHÉ ASOCIATIVA 2-VÍAS}
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.53\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Asociativa_vias_2_lectura_normal.png}
+  \caption{Fallos de lectura (normal)}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Asociativa_vias_2_lectura_trasp.png}
+  \caption{Fallos de lectura (trasp)}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.53\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Asociativa_vias_2_escritura_normal.png}
+  \caption{Fallos de escritura (normal)}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Asociativa_vias_2_escritura_trasp.png}
+  \caption{Fallos de escritura (trasp)}
+\end{minipage}
+\end{figure}
+
+\newpage
+\textbf{CACHÉ ASOCIATIVA 4-VÍAS}
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.53\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Asociativa_vias_4_lectura_normal.png}
+  \caption{Fallos de lectura (normal)}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Asociativa_vias_4_lectura_trasp.png}
+  \caption{Fallos de lectura (trasp)}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.53\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Asociativa_vias_4_escritura_normal.png}
+  \caption{Fallos de escritura (normal)}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.53]{cache_Asociativa_vias_4_escritura_trasp.png}
+  \caption{Fallos de escritura (trasp)}
+\end{minipage}
+\end{figure}
+
+\newpage
+\section{Ejercicio extra, ejecución en cluster}
+Los ficeros, scripts, y gráficas generados en este ejercicio se encuentran en la carpeta \texttt{ejercicio1\_en\_cluster}.
+
+En este ejercicio se muestran los resultados del ejercicio $1$ ejecutado en el clúster. Como la ejecución en el clúster es optativa, solo hemos ejecutado el ejercicio $1$ a modo de ejemplo. Para realizar las gráficas de los ejercicios $2$, $3$ y $4$ sería seguir el mismo procedimiento, dado que ya tenemos los .sh creados.
+
+\begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.6]{ejecucion_cluster.png}
+        \caption{Prueba de la ejecución del ejercicio 1 en el clúster.}
+    \end{figure}
+    
+\begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.5]{time_slow_fast_cluster.png}
+        \caption{Gráfica de la ejecución del ejercicio 1 en el clúster.}
+    \end{figure}
+
+\paragraph{}
+Comparando esta gráfica con la presentada en el ejercicio $1$ se puede ver que los tiempos son ligeramente menores en nuestra máquina que en la del clúster. La gráfica del slow y del fast muestran los mismos crecimientos y diferencias entre una y otra que los descritos en el ejercicio $1$.
+
+\end{document}
+

@@ -1,0 +1,479 @@
+\documentclass[12pt]{article}
+\usepackage{tikz}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{lscape}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{diagbox}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{enumerate}
+\usepackage{graphics}
+\usepackage[spanish]{babel} %Traduce todo al espaniol.
+
+\hypersetup{
+    %colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    %linkcolor=blue,  %choose some color if you want links to stand out
+}
+\setcounter{secnumdepth}{0} %no numera las secciones y aparecen en el índice
+
+\begin{document}
+\iffalse
+\title{Práctica 4}
+\author{Junco de las Heras, Marta Vaquerizo}
+
+\medskip
+\fi
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+ 
+        \Huge
+        \textbf{Práctica 4}
+        
+        \vspace{1 cm}
+        
+        \textbf{Explotar el	Potencial de las Arquitecturas Modernas}
+        
+        \vspace{2 cm}
+        \LARGE
+        Junco de las Heras y  Marta Vaquerizo
+    \end{center}
+\end{titlepage}
+\tableofcontents
+
+\newpage
+\phantomsection
+\section{Ejercicio 0}
+La captura de pantalla se encuentra en la carpeta \texttt{ejercicio0}.
+\paragraph{}
+A continuación se muestra la ejecución de cat /proc/cpuinfo en el clúster:
+    \paragraph{}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.9]{cores_en_cluster.PNG}
+        \caption{Ejecución de \texttt{cat /proc/cpuinfo} en el clúster.}
+    \end{figure}
+    \paragraph{}
+    En este caso, se puede observar que el campo \texttt{cpu cores} tiene el valor $4$, y el campo \texttt{siblings} tiene el valor $4$. Esto indica que no hay htperthreading. Podemos ver también que el nodo que ha ejecutado nuestro script es un nodo Intel (por el número de cores que tiene y por el vendor\_id).
+
+\newpage
+\phantomsection{}
+\section{Ejercicio 1}
+El código y el \textit{makefile}, para este apartado se encuentra en la carpeta \texttt{ejercicio1}.
+\paragraph{}
+Para todos los ejercicios, nuestro número P es $6$, ya que somos la pareja $5$ y $5 \% 8 + 1 = 6$.
+
+\begin{enumerate}[1.]
+    \item Sí se pueden lanzar más hilos que cores tenga el sistema, pero no tiene sentido hacerlo. Esto se debe a que en cada core se puede ejecutar como máximo un hilo a la vez, entonces si se tiene $x$ cores físicos (y si el hyperthreading está activado, $2*x$ cores), se prodrá ejecutar en paralelo $x$ (o $2*x$) hilos. Aunque, en un programa de cálculo intensivo, si hay más de estos $x$ hilos, no se producirá el paralelismo buscado, ya que los hilos que sobran tendrían que esperar a que terminase alguno de los otros hilos.
+    
+    \item El número optimo de hilos a lanzar para un programa de cálculo intensivo es el número de cores físicos, ya que si hubiese más estos hilos tendrían que estarse alternando, no produciendo eficiencia. Para un programa que requiera de entrada y salida, se pueden lanzar más hilos (con ayuda del hyperthreading por ejemplo) ya que cuando un hilo se bloquee otro podrá estarse ejecutando.
+    \paragraph{}
+    A continuación se muestra la ejecución en un ordenador del laboratorio:
+    \paragraph{}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.8]{Captura de pantalla de 2020-12-11 12-18-20.png}
+        \caption{Ejecución de \texttt{cat /proc/cpuinfo} en el ordenador del laboratorio.}
+    \end{figure}
+    
+    Se puede observar que el campo \texttt{cpu cores}, que se refiere a los cores físicos, tiene el valor $4$, y el campo \texttt{siblings}, que se refiere a los cores virtuales, tiene el valor $4$. Esto indica que no hay posibilidad de hyperthreading. El número óptimo de hilos a lanzar sería $4$, el número de cores físicos.
+    
+    \newpage
+    \paragraph{}
+    A continuación se muestra la ejecución en un equipo local:
+    \paragraph{}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=1]{cores_ordenador_propio.PNG}
+        \caption{Ejecución de \texttt{cat /proc/cpuinfo} en el ordenador de uno de los integrantes.}
+    \end{figure}
+    
+    Se puede observar que el campo \texttt{cpu cores} tiene el valor $4$, y el campo \texttt{siblings} tiene el valor $8$. Esto indica que hay posibilidad de activar el hyperthreading. El número óptimo de hilos a lanzar es $4$, el número de cores físicos.
+    
+    \paragraph{}
+    Como hemos comentado en el ejercicio $0$, el clúster tiene $4$ cores físicos y $4$ cores virtuales, así que el número óptimo de hilos a lanzar es $4$, el número de cores físicos.
+    
+    
+    \item Para deducir la prioridad entre las tres formas de elegir el número de hilos, se ha modificado el programa tal que se elegen un par de esas tres formas, a una se le pone el número de hilos que el usuario pasa por pantalla, y a otra ese número más $1$. De esta manera se ve cual tiene prioridad sobre la otra en función del número de hilos que se lanzaban en la región paralela. Con estas modificaciones, se llegó a la conclusión que el orden de las prioridades (de mayor a menor) es el siguiente:
+    \begin{enumerate}[\hspace*{0.5 cm} 1)]
+        \item Con la clausula \texttt{\#pragma omp parallel num\_threads(numthr)}
+        \item  Con la función \texttt{omp\_set\_num\_threads(int num\_threads)}
+        \item Con variable de entorno (\textbf{OMP\_NUM\_THREADS})
+    \end{enumerate}
+    Tiene sentido, ya que las variables de entorno son variables generales, que no dependen del .c que vayamos a ejecutar, y si en el .c en concreto queremos cambiar el número de threads a lanzar se pueda cambiar. Luego dentro del .c tambíen pasa lo mismo, la función \texttt{omp\_set\_num\_treads} es general y afecta a todo el .c, pero si queremos cambiar el número de threads en un bloque en concreto podamos.
+    
+    \item \texttt{OpenMP} distingue dos tipos de variables privadas (\texttt{private} y \texttt{firstprivate}). En ambas \texttt{OpenMP} hace una copia de esa variable a cada hilo, así que si un hilo modifica una variable privada, no va a tener efecto en la misma variable para otro hilo. Cuando acabe la región paralela, las variables privadas contendrán el mismo valor con el que entraron.
+    
+    \item El valor de la variable \texttt{private}, al comenzar la región paralela está indefinido, aunque normalmente toma el valor $0$. Compilando con gcc nos salta el warning: -Wuninitialized. El valor de la variable \texttt{firstprivate} es el valor que tenía la variable antes de entrar a la región.
+    
+    \item Al finalizar la región paralela, el valor, tanto de la variable \texttt{private} como de la \texttt{firstprivate}, es el que tenía antes de entrar en ésta.
+    
+    \item No, no ocurre lo mismo con las variables públicas, ya que éstas son comunes a todos los hilos, y no cada uno tiene su propia copia. Además, al comenzar la región paralela, ya están inicializadas con el valor que tenía la variable antes de la región, y cualquiera que sea la operación que se realiza con ellas, el resultado será su valor al finalizar la región.
+\end{enumerate}
+
+\newpage
+\phantomsection{}
+\section{Ejercicio 2}
+El código y el \textit{makefile}, para este apartado se encuentra en la carpeta \texttt{ejercicio2}.
+\begin{enumerate}[1.]
+    \item El resultado va a ser el tamaño del vector M, ya que se trata de la suma de los productos de cada posición de los vectores (del mismo tamaño, M), que tienen un $1$ en cada posición, por lo que es sumar tantos unos como posiciones tengan los vectores. En \texttt{arqo4.h} M es una macro definida como $1$ millón.
+    
+    \item El resultado es distinto al obtenido en el serie, y esto no debe ser así, deberían dar el mismo resultado. El problema que tiene el programa \texttt{pescalar\_par1.c} es que todos los hilos escriben en la variable \texttt{sum} y no hay nada que controle el acceso a la variable, lo que provoca que el resultado no sea el mismo (data races).
+    
+    \item Para este apartado se ha implementado el programa \texttt{pescalar\_par2.c}.\\
+    Sí se puede realizar con ambos pragmas, tanto con \texttt{\#pragma atomic} como con \texttt{\#pragma critical}. Y el cambio que se ha relizado (para ambos pragmas) es añadir el pragma antes de la sentencia \texttt{sum = sum + A[k] * B[k]}. La diferencia entre ellas es que usando critical se puede hacer crítica un bloque entero (varias líneas) mientras que con atomic solo se puede hacer crítica una sentencia atómica (una suma en este caso) por lo que si se va a utilizar para solo una suma es mejor ya que está optimizado. Se ha elegido \texttt{\#pragma atomic}.
+    
+    \item Para este apartado se ha implementado el programa \texttt{pescalar\_par3.c}.\\
+    Comparando con el punto anterior, la opción elegida será la de este apartado \texttt{\#pragma omp parallel for reduction}, ya que al ejecutar ambas, dan el mismo resultado, pero la elegida tarda en ejecutar bastante menos que la del apartado anterior (de hasta 1 orden de magnitud). Esto es debido a que usando una región crítica, solo un hilo puede ejecutar la suma, mientras que usando reduction varios pueden ejecutar la suma, combinando el resultado con la operación puesta en reduction, siendo más paralelo que en el \texttt{pescalar\_par2.c}.
+    
+    \item Para este apartado, se ha implementado el programa \texttt{pescalar\_par4.c}, que es el programa \texttt{pescalar\_par3.c} (se considera que es la mejor opción), pero se ha añadido que se le pueda pasar los argumentos: tamaño del vector y el número de hilos a lanzar. En la región crítica se ha añadido una cláusula \texttt{tamanio $>$  MIN\_TAMANIO}, la cual solo paraleliza en caso de que el tamaño del vector sea mayor que MIN\_TAMANIO, en nuestro caso una constante con valor a $1000$. Esto optimiza el caso de cuando el vector tiene un tamaño pequeño, ya que inicializar los hilos tiene un coste, no despreciable cuando el tamaño del vector es pequeño.
+    \paragraph{}
+    A partir de este programa, se han creado dos scripts:
+    \begin{itemize}
+        \item \textit{pescalar.sh}
+        \item \textit{pescalar\_graphics.sh}
+    \end{itemize}
+    \paragraph{}
+    El primer script, calcula los tiempos de ejecución al ejecutar el programa \texttt{pescalar\_par4.c} variando el tamaño de vector entre $30000000$ y $150000000$, con un salto de $30000000$ unidades, y variando el número de hilos entre $1$ y $2$*C de una unidad en una unidad, donde C es el número de cores del clúster, ya que es donde se va a ejecutar, por lo que C $= 4$, ya que el hyperthreading no está activado.
+    \paragraph{}
+    El segundo script se encarga de generar las siguientes dos gráficas:
+    \begin{itemize}
+        \item \textit{pescalar\_serie\_graphic.png}
+        \item \textit{pescalar\_par\_graphic.png}
+    \end{itemize} 
+    la primera es la gráfica de los tiempos de ejecución del programa \texttt{pescalar\_serie.c}, y la segunda es la gráfica de los tiempos del programa \texttt{pescalar\_par4.c} variando el número de hilos de $1$ a $2$*C, donde C $= 4$ (por lo que hay $8$ líneas en la gráfica). A continuación se muestran las gráficas:
+    
+    \paragraph{}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.8]{pescalar_serie_graphic.png}
+        \caption{\textbf{pescalar\_serie\_graphic.png}}
+    \end{figure}
+    \newpage
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.8]{pescalar_par_graphic.png}
+        \caption{\textbf{pescalar\_par\_graphic.png}}
+    \end{figure}
+    
+    \paragraph{}
+    Se puede ver que la gráfica \texttt{pescalar\_serie\_graphic.png} es la misma que la gráfica \texttt{pescalar\_par\_graphic.png} al ejecutar el programa \texttt{pescalar\_par4.c} con $1$ hilo de ejecución en la región. Esto es lo que se esperaba, ya que en el programa \texttt{pescalar\_serie.c} solo hay $1$ hilo de ejecución. 
+    \paragraph{}
+    En nuestro caso hemos ejecutado con tamaños de vectores muy grandes (más de $1$ millón de elementos), y es un programa de cálculo intensivo. Sabemos que compensa lanzar hilos siempre que no supere el número físico de cores, una vez superado (y como podemos ver en la gráfica) la mejora casi no es apreciable. Para tamaños muy pequeños (menor que $1000$ elementos, por ejemplo), el coste de lanzar un hilo implica una carga de reserva de recursos nada despreciable, lo que implica un aumento del tiempo de ejecución considerable frente al tiempo de ejecución del algoritmo para un solo hilo, así que para tamaños menores que $1000$ sería mejor usar la versión serie.
+    \paragraph{}
+    Podemos comprobar con la gráfica y con la ayuda de la terminal que hemos ejecutado el script, que hay 3 gráficas (con 1, 2, y 3 hilos) separadas, y luego a partir de 4 hilos están todas juntas. Esto es debido a que se han ejecutado en un solo procesador que tenía 4 cores físicos, y a partir del cuarto hilo ya no se nota mejora.
+\end{enumerate}
+\newpage
+\phantomsection{}
+\section{Ejercicio 3}
+El código y el \textit{makefile}, para este apartado se encuentra en la carpeta \texttt{ejercicio3}.
+\paragraph{}
+En este ejercicio se han implementado los siguientes cuatro programas:
+\begin{itemize}
+    \item \textit{multiplication\_slow.c} (de la práctica anterior)
+    \item \textit{multiplication\_slow\_par1.c} (paralelización del bucle más interno)
+    \item \textit{multiplication\_slow\_par2.c} (paralelización del bucle intermedio)
+    \item \textit{multiplication\_slow\_par3.c} (paralelización del bucle más externo)
+\end{itemize}
+\paragraph{}
+Para poder completar las tablas que se piden, y automatizar el proceso, se ha creado un script \textit{tablas.sh}, que calcula los tiempos de ejecución para los cuatro programas, y las aceleraciones, tomando como referencia la versión serie. Los datos se guardarán en un fichero \textit{multiplication\_time\_N.dat} y \textit{multiplication\_speed\_N.dat}, donde N es el tamaño de matriz.
+\paragraph{}
+\textbf{TABLAS:}
+\paragraph{}
+Para un tamaño de matriz N $= 1000$:
+\newline
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|c|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|}
+\hline
+\rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Versión}{\# hilos}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{1}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{2}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{3}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{4}}} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Serie} &  \makebox[2 cm][c]{$12.850608$} & \makebox[2 cm][c]{$12.850608$} & \makebox[2 cm][c]{$12.850608$} & \makebox[2 cm][c]{$12.850608$} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle1} &  \makebox[2 cm][c]{$10.841369$} & \makebox[2 cm][c]{$7.282123$} & \makebox[2 cm][c]{$7.995398$} & \makebox[2 cm][c]{$5.201010$}\\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle2} &  \makebox[2 cm][c]{$15.213245$} & \makebox[2 cm][c]{$6.980360$} & \makebox[2 cm][c]{$8.409289$} & \makebox[2 cm][c]{$3.547559$} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle3} & \makebox[2 cm][c]{$14.201083$} & \makebox[2 cm][c]{$9.175650$} & \makebox[2 cm][c]{$6.908171$} & \makebox[2 cm][c]{$3.785163$} \\ \hline
+\end{tabular}
+\caption{\textbf{Tiempos de ejecución (s)}.}
+\end{center}
+\end{table}
+
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|c|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|}
+\hline
+\rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Versión}{\# hilos}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{1}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{2}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{3}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{4}}} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Serie} &  \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle1} &  \makebox[2 cm][c]{$1.185330$} & \makebox[2 cm][c]{$1.764678$} & \makebox[2 cm][c]{$1.607250$} & \makebox[2 cm][c]{$2.470790$}\\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle2} &  \makebox[2 cm][c]{$0.844698$} & \makebox[2 cm][c]{$1.840966$} & \makebox[2 cm][c]{$1.528144$} & \makebox[2 cm][c]{$3.622380$} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle3} & \makebox[2 cm][c]{$0.904903$} & \makebox[2 cm][c]{$1.400512$} & \makebox[2 cm][c]{$1.860204$} & \makebox[2 cm][c]{$3.394994$} \\ \hline
+\end{tabular}
+\caption{\textbf{Speedup}.}
+\end{center}
+\end{table}
+\newpage
+\paragraph{}
+Para un tamaño de matriz N $= 2000$:
+\newline
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|c|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|}
+\hline
+\rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Versión}{\# hilos}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{1}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{2}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{3}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{4}}} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Serie} &  \makebox[2 cm][c]{$118.018862$} & \makebox[2 cm][c]{$118.018862$} & \makebox[2 cm][c]{$118.018862$} & \makebox[2 cm][c]{$118.018862$} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle1} &  \makebox[2 cm][c]{$108.188828$} & \makebox[2 cm][c]{$64.791838$} & \makebox[2 cm][c]{$47.105276$} & \makebox[2 cm][c]{$39.925859$}\\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle2} &  \makebox[2 cm][c]{$174.017335$} & \makebox[2 cm][c]{$92.025022$} & \makebox[2 cm][c]{$61.228575$} & \makebox[2 cm][c]{$45.905626$} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle3} & \makebox[2 cm][c]{$160.149591$} & \makebox[2 cm][c]{$78.053119$} & \makebox[2 cm][c]{$53.276837$} & \makebox[2 cm][c]{$40.707765$} \\ \hline
+\end{tabular}
+\caption{\textbf{Tiempos de ejecución (s)}.}
+\end{center}
+\end{table}
+
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|c|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|}
+\hline
+\rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Versión}{\# hilos}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{1}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{2}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{3}}} & \makebox[2 cm][c]{\textcolor{white}{\textbf{4}}} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Serie} &  \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle1} &  \makebox[2 cm][c]{$1.090859$} & \makebox[2 cm][c]{$1.821508$} & \makebox[2 cm][c]{$2.505427$} & \makebox[2 cm][c]{$2.955950$}\\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle2} &  \makebox[2 cm][c]{$0.678201$} & \makebox[2 cm][c]{$1.282464$} & \makebox[2 cm][c]{$1.927512$} & \makebox[2 cm][c]{$2.570901$} \\ \hline
+
+\cellcolor[gray]{0.8}\textbf{Paralela-bucle3} & \makebox[2 cm][c]{$0.736928$} & \makebox[2 cm][c]{$1.512032$} & \makebox[2 cm][c]{$2.215200$} & \makebox[2 cm][c]{$2.899173$} \\ \hline
+\end{tabular}
+\caption{\textbf{Speedup}.}
+\end{center}
+\end{table}
+\begin{enumerate}
+    \item Como se puede observar en las tablas, para el tamaño de matriz N $= 1000$, la versión con peor rendimiento está claro que es la de la paralelización del bucle más interno, pero la versión con mejor rendimiento no se ve claro cuál es para este tamaño de matriz. Ahora bien, si se observan las tablas para el tamaño de matriz N $= 2000$, la versión con peor rendimiento es la misma que para el tamaño N $=1000$, pero la que mejor rendimiento tiene es la de la paralelización del bucle más externo, superando a la versión de la paralelización del bucle intermedio en todas las ejecuciones. Con estos datos, se puede concluir que la versión con peor rendimiento es la del bucle interno, y la de mejor rendimiento es la del bucle externo.
+    \paragraph{}
+    Estos resultados se deben a que en la paralelización del bucle más interno, se tiene que crear la región paralela $N*N$ veces, por lo tanto los hilos, siendo N el número de iteraciones tanto del bucle externo como del intermedio. Además, debido a la sincronización de los hilos en la región, el programa tiene que esperar a que todos los hilos acaben hasta la siguiente iteración. 
+    \newpage
+    \paragraph{}
+    Por otro lado, en la paralelización del bucle más externo, la región paralela, y por tanto los hilos, solo se crean una vez, y los hilos no tienen que esperar a que acaben los otros hilos para poder hacer las iteraciones más internas (de los bucles intermedio e interno). Se puede destacar que, en la paralelización del bucle intermedio, la región paralela, y por tanto los hilos, se crean N veces, que son bastantes menos que en la del bucle interno, pero más que en la del bucle externo, por lo que su rendimiento, si el tamaño de matriz es suficientemente grande, es intermedio respecto a los rendimientos de las otras dos versiones, pero más cercano al rendimiento de la versión del bucle exterior.
+    
+    \item En base a los resultados, se puede concluir que, en general, la mejor paralelización va a ser la de grano grueso, cuando se trata de paralelizar bucles anidados, debido a lo comentado en el apartado anterior. El hecho de que en la paralelización de grano fino se tenga que crear la región paralela, y por tanto los hilos, tantas veces como iteraciones haya en los bucles más externos, así como que los hilos tengan que esperar a que acaben todos antes de hacer la siguiente iteración, hace que su rendimiento disminuya lo suficiente para que la paralelización de grano grueso tenga mejor rendimiento.
+    
+    \item Para este apartado, se ha creado el script \textit{multiplication.sh}, que calcula los tiempos de ejecución de los programas \texttt{multiplication\_slow.c} y \texttt{multiplication\_slow\_par3.c}, y la aceleración (\textit{speedup}) entre ambos tiempos de ejecución $\frac{TiempoSerie}{TiempoParalelo}$ para tamaños de matriz N entre $1$ y $124 + 248*$P, y $4$ hilos a lanzar en la región paralela en el programa \texttt{multiplication\_slow\_par3.c}, ya que en las tablas se ve que es la mejor paralelización.
+    \paragraph{}
+    Este script genera las siguientes dos gráficas a partir de los datos que calcula anteriormente:
+    \begin{itemize}
+        \item \textit{multiplication\_time.png}
+        \item \textit{multiplication\_speed.png}
+    \end{itemize}
+    \newpage
+    A continuación se mostrarán las gráficas:
+    \paragraph{}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.65]{multiplication_time.png}
+        \caption{ \textbf{multiplication\_time.png}}
+    \end{figure}
+    \paragraph{}
+    Se puede observar en la gráfica que para tamaños de matriz relativamente pequeños los tiempos de ejecución son bastante parecidos para ambas versiones (serie y paralelo), pero a medida que el tamaño de matriz aumenta, la diferencia de tiempos es significativa. Mientras que con el programa \texttt{multiplication\_slow\_par3.c} con $4$ hilos en la región, el tiempo de ejecución más alto es casi los $30$ segundos, con el programa \texttt{multiplication\_slow.c} llega casi a los $80$ segundos.
+    \newpage
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[scale=0.65]{multiplication_speed.png}
+        \caption{ \textbf{multiplication\_speed.png}}
+    \end{figure}
+    
+    \paragraph{}
+    En esta segunda gráfica, se puede observar que para un tamaño de matriz muy pequeños, hay una ``gran'' aceleración ($\sim 6.3$), y va disminuyendo, a medida que se aumenta el tamaño de la matriz, hasta que se estabiliza en una aceleración de $3$, aproximadamente, a partir del tamaño de matriz N $= 1000$. 
+\end{enumerate}
+\newpage
+\phantomsection{}
+\section{Ejercicio 4}
+El código y el \textit{makefile}, para este apartado se encuentra en la carpeta \texttt{ejercicio4}.
+\paragraph{}
+Para este ejercicio hay que tener en cuenta que en cada bloque de caché en el clúster, cuyo tamaño es $64$ Bytes, puede haber hasta $\frac{64 B}{8 B} = 8$ elementos de tipo \texttt{double}, sabiendo que un elemento de tipo \texttt{double} ocupa $8$ Bytes; y que el clúster tiene $4$ cores, en el equipo en el que se ha ejecutado este ejercicio, ya que el hyperthreading está desactivado. 
+\paragraph{}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1]{cache_cluster.PNG}
+    \caption{ \textbf{Información sobre la caché de un equipo del clúster}}
+\end{figure}
+\paragraph{}
+Se ha ejecutado en el clúster el comando \texttt{getconf -a | grep cache}, y ha salido la información anterior. Se observa que el tamaño de bloque en cualquier caché (independientemente del nivel) es $64$ Bytes. Se va a usar esta información para justificar los apartados de este ejercicio, ya que este ejercicio se ha ejecutado en ese equipo del clúster.
+    
+\begin{enumerate}
+    \item En el programa \texttt{pi\_serie.c} se utilizan $100000000$ rectángulos (lo que se llama \texttt{n} en el programa). Esto se sabe ya que el intervalo $[0,1]$, donde se quiere integrar, se divide por \texttt{n}, para sacar la anchura de los rectángulos. Además, \texttt{n} es el número total de iteraciones en el bucle \texttt{for}, equivaliendo una iteración por rectángulo.
+    
+    \item La diferencia entre los programas \texttt{pi\_par1.c} y \texttt{pi\_par4.c} es que en el primer programa, en la región paralela, se realiza la suma de cada hilo accediendo a la variable compartida \texttt{sum}, mientras que en el segundo programa, se declara una variable dentro de la región, y la suma se realiza con esa variable, y luego se guarda en la posición del número de hilo en la variable compartida \texttt{sum}. Esto propicia que en el primer programa va a haber muchos más fallos de caché que en el segundo, por el \textit{false sharing}.
+    
+    \item Al ejecutar ambas versiones (\texttt{pi\_par1.c} y \texttt{pi\_par4.c}), el resultado es el mismo, pero el primer programa tarda más que el segundo. Esta diferencia de rendimiento se debe al \textit{false sharing}. En \texttt{pi\_par1.c}, cada hilo que se lanza en la región paralela accede a la variable compartida \texttt{sum} (con false sharing) $1 +$ $\frac{n-tid}{numThreads}$ veces, donde el \textit{tid} es el número de hilo, y el \textit{numThreads}, el número de hilos que se han lanzado; mientras que en \texttt{pi\_par4.c}, cada hilo accede una única vez a esta variable compartida. 
+    
+    \item Al ejecutar ambas versiones (\texttt{pi\_par2.c} y \texttt{pi\_par3.c}), el resultado es el mismo, pero el primer programa tarda más que el segundo. Esto es debido a que en el segundo programa cada hilo tiene su propia linea de caché, lo que implica que el efecto \textit{false sharing} desaparece, mientras que en el primer programa dos hilos pueden tener posiciones de memoria en la misma línea de caché, así que cada vez que un hilo escriba, le producirá un \textit{false sharing} al otro.
+    
+    \item Al ejecutar el programa \texttt{pi\_par3.c} con un \texttt{padding} de valores: $1$, $2$, $3$, $4$, $5$, $6$, $7$, $8$, $9$, $10$, $11$, y $12$, se observa que el tiempo de ejecución va disminuyendo a medida que se aumenta el valor del padding. Esto ocurre debido a que cuando se aumenta el \texttt{padding}, el vector \texttt{sum} reserva memoria para \texttt{nprocs*padding} elementos, donde \texttt{nprocs} es el número de cores del equipo, y las sumas de cada hilo se guardan en la posición \texttt{tid*padding}, donde \texttt{tid} es el número de hilo. Esto produce que cada vez haya menos sumas de hilos por bloque en la caché, lo que reduce el efecto de \textit{false sharing}, hasta que casi desaparece, cuando el \texttt{padding} es lo suficientemente grande para que en cada bloque de caché solo haya una suma de algún hilo.
+    
+    \paragraph{} 
+    Para el caso en el que se ejecuta el programa en el clúster, teniendo en cuenta los datos sobre el clúster mencionados al principio del ejecicio, se puede sacar cuántos bloques son necesarios para albergar el vector \texttt{sum}, y cuántos elementos hay en cada bloque. Para un valor \texttt{x} de padding, el número de bloques para guardar el vector \texttt{sum} es $\lceil\frac{x*4}{8}\rceil$, donde $4$ es el número de cores del equipo donde se está ejecutando, y la cantidad e elementos por bloque es $\lceil\frac{8}{x}\rceil$. Para los valores mencionados anteriormente:
+    
+    \paragraph{}
+    \begin{table}[htbp]
+    \begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
+    \rowcolor[gray]{0.8}\textbf{Padding} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{11} & \textbf{12} \\ \hline
+    
+    \cellcolor[gray]{0.8}\textbf{\# Bloques para guardar el vector} &  $1$ & $1$ & $2$ & $2$ & $3$ & $3$ & $4$ & $4$ & $5$ & $5$ & $6$ & $6$\\ \hline
+    
+    \cellcolor[gray]{0.8}\textbf{\# Elementos por bloque} &  $8$ & $4$ & $3$ & $2$ & $2$ & $2$ & $2$ & $1$ & $1$ & $1$ & $1$ & $1$\\ \hline
+    \end{tabular}
+    \caption{\textbf{Tabla de valores}.}
+    \end{center}
+    \end{table}
+    
+    \newpage
+    \item Al usar \textit{critical} en el programa \texttt{pi\_par5.c}, solo un hilo puede acceder a la vez a la variable \texttt{pi}, esto produce que mientras que un hilo accede a la variable, los demás están esperando a acceder a ella, que disminuye el rendimiento, pero, por otra parte, en el programa \texttt{pi\_par4.c}, se produce el efecto \textit{false sharing}, que también disminuye el rendimiento, por lo que se ``compensan'', y es por ellos que tienen más o menos el mismo rendimiento.
+    
+    \item En \texttt{pi\_par6.c}, las directivas utilizadas son: \texttt{\#pragma omp parallel default(shared) private(numThreads)} y dentro de ésta \texttt{\#pragma omp for}. Estas directivas tienen el siguiente efecto: cuando el hilo máster llega a la primera de ellas, lanza tanto hilos como se le ha indicado anteriormente de manera paralela, y cuando pasan por la segunda directiva, a cada uno de ellos se le asigna un número de iteraciones del \texttt{for} que hay tras la segunda directiva.
+    \paragraph{}
+    Por otro lado, se tiene el programa \texttt{pi\_par7.c},  en el que se usa una sola directiva: \texttt{\#pragma omp parallel for reduction(+: sum) private(i,x) default(shared)}. Con esta directiva, se lanzan tantos hilos como se le haya indicado anteriormente, asignándoles iteraciones del \texttt{for} que sigue a la directiva. Además, en la variable \texttt{sum}, mediante reducción, se van sumando los distintos resultados de cada uno de los hilos.
+    \paragraph{}
+    Se aprecia que el primer program (\texttt{pi\_par6.c}) tarda más que el segundo (\texttt{pi\_par7.c}), y esto se debe a que en el segundo programa se utiliza la cláusula \texttt{reduction(+: sum)}, que agiliza el proceso de cálculo. Además,  el primero tiene \textit{false sharing}, lo que puede producir un aumento del tiempo de ejecución, debido a que se tienen que escribir en memoria bloques a los que un hilo quiere acceder, después de que otro hilo haya accedido.
+\end{enumerate}
+\newpage
+\phantomsection{}
+\section{Ejercicio 5}
+El código y el \textit{makefile}, para este apartado se encuentra en la carpeta \texttt{ejercicio5}. En esta carpeta también se han incluido las imágenes para las pruebas.
+
+\begin{enumerate}
+    \item Este no es el bucle óptimo para paralelizarlo. Es mejor ir procesando una imagen por vez, y por cada imagen paralelizar alguno de los bucles que tiene el algoritmo a procesar varias imágenes a la vez.
+    \begin{enumerate}[a)]
+        \item Si se pasan menos argumentos que número de cores, entonces como mucho va a haber un número de hilos igual al número de argumentos de entrada, por lo que habrá algún core que no esté ejecutando nada, perdiendo productividad.
+        \item Esta es otra de las desventajas de paralelizar el bucle de los argumentos de entrada. Como los hilos tienen memoria compartida, y cada hilo tiene que procesar una imagen, cada hilo necesita tener un espacio de $6GB$ para poder tener en memoria toda la imagen, por lo que va a haber varias imagenes cargadas en memoria principal y eso ocupa mucho espacio, en vez de ir procesando imagen por imagen ocupando como mucho hasta $6GB$.
+    \end{enumerate} 
+    
+    \item Sí, se han encontrado bucles que no accedían de forma óptima. El primero es el bucle $1$ que es \texttt{for (int i = 0; i < width; i++) for (int j = 0; j < height; j++) grey\_image[j * width + i]}. Podemos ver que está accediendo por columnas, pero se modificar cambiando el orden de iteración, primero iterando sobre \texttt{j} y luego sobre \texttt{i}.
+    \paragraph{}
+    Una cosa similar pasa con el bucle $4$, primero se itera sobre la variable p1 y luego la variable p2, pero se accede a la posición \texttt{kernel[p1 + p2 * (2 * radius + 1)]}, es decir que se itera sobre las columnas. Cambiamos el orden de iteración, primero sobre \texttt{p2} y luego sobre \texttt{p1}.
+    \begin{enumerate}[a)]
+    \item Como lo de dentro de los bucles que hemos intercambiado el orden, no dependía del orden, el resultado siguie siendo correcto. Aún así hemos vuelto a ejecutar con todas las imágenes el código y seguía dando el mismo resultado.
+    \item Se entiende que preguntan por qué el orden no es correcto buscando la eficiencia (ya que el orden sí es correcto en el sentido que da un resultado correcto). No es correcto debido a que se accede en ambos casos al array por columnas, en el caso de \texttt{j * width + i} incrementando la \texttt{i} $1$ unidad, se accede a la dirección de memoria contigua, pero incrementando la \texttt{j} se incrementa la dirección de memoria \texttt{width} unidades.
+    \end{enumerate}
+    
+    \item 
+    \begin{enumerate}[a)]
+        \item Mientras se iba probando cuánto se podía optimizar cada hilo, se iba ejecutando y probando que diese el mismo resultado. Una vez acabado de optimizar se han vuelto a generar todas las imágenes para comprobar que funcionase el programa correctamente.
+        
+        \item Para este apartado, se han paralelizado los bloques de bucles anidados para mejorar el rendimiento, y se han nombrado en el código del $1$ al $4$. Para ello, se ha paralelizado en todos los bloques el segundo bucle empezando por el más externo. En nuestro caso esta paralelización es la más óptima, probada empíricamente. Sabemos que optimizar los bucles más externos son los que dan mayor speedup (Gracias al ejercicio de la optimizar la multiplicación de matrices). Además, en nuestro caso las imágenes eran todas horizontales, es decir que son más anchas que altas, por lo que paralelizar la anchura nos ha dado buenos resultados.
+        \paragraph{}
+        Este programa con las paralelizaciones y las mejoras, se ha llamado \texttt{edgeDetector\_par.c}.
+    \end{enumerate}
+    \item Para este apartado, se ha creado un script, llamado \texttt{tablas\_edgeDetector.sh}, que genera los datos para completar la tablas que se piden. Este script genera los siguientes ficheros:
+    \begin{itemize}
+        \item \textit{edgeDetector\_time.dat}
+        \item \textit{edgeDetector\_speed.dat}
+    \end{itemize}
+    \paragraph{}
+    En el primer fichero, se guardan los tiempos de ejecución de ambas versiones del programa para cada imagen, y en el segundo fichero, se guardan las aceleraciones del programa paralelizado para cada imagen respecto a la versión serie.
+    \paragraph{}
+    A la tabla de tiempos de ejecución,se añade una columna, la tasa de fps de cada programa, que se calcula directamente. Para calcularla, como se calcula el tiempo de $5$ imágenes, será $\frac{5}{TiempoTotal}$, siendo el \textit{TiempoTotal} la suma de tiempos de ejecución de las $5$ imágenes.  \\
+    \newline
+    \textbf{TABLAS:}
+    \newline
+    \begin{table}[htbp]
+    \begin{center}
+    \begin{tabular}{|c|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|}
+    \hline
+    \rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Versión}{Imagen}} & \makebox[2 cm][c]{\textcolor{white}{SD}} & \makebox[2 cm][c]{\textcolor{white}{HD}} & \makebox[2 cm][c]{\textcolor{white}{FHD}} & \makebox[2 cm][c]{\textcolor{white}{4k}} & \makebox[2 cm][c]{\textcolor{white}{8k}} & \makebox[2 cm][c]{\textcolor{white}{fps}}\\ \hline
+    
+    \cellcolor[gray]{0.8}\textbf{Serie} &  \makebox[2 cm][c]{$0.079054$} & \makebox[2 cm][c]{$0.322083$} & \makebox[2 cm][c]{$0.735048$} & \makebox[2 cm][c]{$3.029175$} & \makebox[2 cm][c]{$12.787320$}& \makebox[2 cm][c]{$0.294938$} \\ \hline
+    
+    \cellcolor[gray]{0.8}\textbf{Paralela} &  \makebox[2 cm][c]{$0.022671$} & \makebox[2 cm][c]{$0.070197$} & \makebox[2 cm][c]{$0.1430437$} & \makebox[2 cm][c]{$0.517378$} & \makebox[2 cm][c]{$1.993275$}& \makebox[2 cm][c]{$1.822189$} \\ \hline
+    \end{tabular}
+    \caption{\textbf{Tiempos de ejecución (s)}.}
+    \end{center}
+    \end{table}
+
+    \begin{table}[htbp]
+    \begin{center}
+    \begin{tabular}{|c|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|}
+    \hline
+    \rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Versión}{Imagen}} & \makebox[2 cm][c]{\textcolor{white}{SD}} & \makebox[2 cm][c]{\textcolor{white}{HD}} & \makebox[2 cm][c]{\textcolor{white}{FHD}} & \makebox[2 cm][c]{\textcolor{white}{4k}} & \makebox[2 cm][c]{\textcolor{white}{8k}} \\ \hline
+    
+     \cellcolor[gray]{0.8}\textbf{Serie} &  \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} \\ \hline
+    
+    \cellcolor[gray]{0.8}\textbf{Paralela} &  \makebox[2 cm][c]{$3.487009$} & \makebox[2 cm][c]{$4.588273$} & \makebox[2 cm][c]{$5.138650$} & \makebox[2 cm][c]{$5.854858$} & \makebox[2 cm][c]{$6.415231$} \\ \hline
+    \end{tabular}
+    \caption{\textbf{Speedup}.}
+    \end{center}
+    \end{table}
+    
+    \paragraph{}
+    Como se puede observar en la tabla de las aceleraciones, al paralelizar los bloques de bucles anidados, se ha mejorado bastante el rendimiento de la versión serie del programa, teniendo aceleraciones del orden de $3$, $4$, $5$ y $6$. 
+    \paragraph{}
+    Esta mejora también se puede observar en la tabla de los tiempos de ejecución, en la tasa de fps, ya que en la versión serie, la media de \textit{frames per second} es de $0.3$ imágenes, es decir, ni una imagen por segundo; mientras que en la versión paralela, el programa puede procesar casi $2$ imágenes por segundo. 
+
+    \item Para este apartado, se ha creado un script, llamado \texttt{tablas\_edgeDetector\_O$3$.sh}, que genera los datos para completar la tablas que se piden. \\
+    \newline
+    \textbf{TABLAS:}
+    \newline
+    \begin{table}[htbp]
+    \begin{center}
+    \begin{tabular}{|c|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|}
+    \hline
+    \rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Versión}{Imagen}} & \makebox[2 cm][c]{\textcolor{white}{SD}} & \makebox[2 cm][c]{\textcolor{white}{HD}} & \makebox[2 cm][c]{\textcolor{white}{FHD}} & \makebox[2 cm][c]{\textcolor{white}{4k}} & \makebox[2 cm][c]{\textcolor{white}{8k}} & \makebox[2 cm][c]{\textcolor{white}{fps}} \\ \hline
+    
+    \cellcolor[gray]{0.8}\textbf{Serie} &  \makebox[2 cm][c]{$0.039712$} & \makebox[2 cm][c]{$0.168779$} & \makebox[2 cm][c]{$0.401620$} & \makebox[2 cm][c]{$1.612481$} & \makebox[2 cm][c]{$7.128492$} & \makebox[2 cm][c]{$0.534901$}\\ \hline
+    
+    \cellcolor[gray]{0.8}\textbf{Paralela} &  \makebox[2 cm][c]{$0.013984$} & \makebox[2 cm][c]{$0.041741$} & \makebox[2 cm][c]{$0.076236$} & \makebox[2 cm][c]{$0.261074$} & \makebox[2 cm][c]{$0.939798$} & \makebox[2 cm][c]{$3.751407$}\\ \hline
+    \end{tabular}
+    \caption{\textbf{Tiempos de ejecución (s)}.}
+    \end{center}
+    \end{table}
+
+    \begin{table}[htbp]
+    \begin{center}
+    \begin{tabular}{|c|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|p{2 cm}|}
+    \hline
+    \rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Versión}{Imagen}} & \makebox[2 cm][c]{\textcolor{white}{SD}} & \makebox[2 cm][c]{\textcolor{white}{HD}} & \makebox[2 cm][c]{\textcolor{white}{FHD}} & \makebox[2 cm][c]{\textcolor{white}{4k}} & \makebox[2 cm][c]{\textcolor{white}{8k}} \\ \hline
+    
+     \cellcolor[gray]{0.8}\textbf{Serie} &  \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} & \makebox[2 cm][c]{$1$} \\ \hline
+    
+    \cellcolor[gray]{0.8}\textbf{Paralela} &  \makebox[2 cm][c]{$2.839816$} & \makebox[2 cm][c]{$4.043482$} & \makebox[2 cm][c]{$5.268114$} & \makebox[2 cm][c]{$6.176336$} & \makebox[2 cm][c]{$7.585132$} \\ \hline
+    \end{tabular}
+    \caption{\textbf{Speedup}.}
+    \end{center}
+    \end{table}
+    \paragraph{}
+    Como se puede observar en la tablas, al paralelizar los bloques de bucles anidados y usar en la compilación la bandera $-$O$3$, los tiempos de ejecución han mejorado respecto a los tiempos de ejecución sin usar la bandera $-$O$3$ en la compilación. También se ha mejorado la tasa fps, respecto a la anterior tabla, en ambas versiones, pero sobre todo se nota en la versión paralela, que, para este apartado, puede procesar casi $4$ imágenes por segundo (más o menos el doble que del anterior apartado).
+    \paragraph{}
+    En cuanto a las aceleraciones, para las imágenes que menos pesan, la aceleración en este apartado es menos, pero para las imágenes más pesadas, la aceleración es bastante mayor que en el anterior apartado. 
+    \paragraph{}
+    Se ha mirado en el man qué tipo de optimizaciones usaba $-$O$3$, y se ha comprobado que sí ha implementado algún tipo de vectorización. Está activada en la optimización $-$O$2$, así que en la $-$O$3$ que es una versión más agresiva que la anterior todavía más. También se utiliza un desenrollado de bucles. Esta técnica es muy efectiva, ya que aunque hace que el ejecutable pese más, disminuye notablemente el número de saltos que tiene que dar. 
+    \paragraph{}
+    Compilado con $-$O$3$ la salida sigue siendo la misma, las imágenes generadas son las mismas que sin la bandera, lo que confirma que el programa sigue ejecutándose correctamente.
+    
+\end{enumerate}
+
+\end{document}
+

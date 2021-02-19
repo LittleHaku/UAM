@@ -1,0 +1,1 @@
+sudo python3 practica3.py --trace traza.pcap --mac 00:11:88:CC:33:79 --ip_flujo_tcp 89.223.72.193 --port_flujo_udp 39

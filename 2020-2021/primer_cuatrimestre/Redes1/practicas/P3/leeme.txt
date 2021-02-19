@@ -1,0 +1,35 @@
+Junco de las Heras <junco.heras@estudiante.uam.es> 
+Marta Vaquerizo <marta.vaquerizo@estudiante.uam.es>
+
+Pareja 05, grupo 1302.
+
+ARCHIVOS A ENTREGAR
+En el zip a entregar, va a contener los siguientes archivos:
+
+     * El script practica3.py, donde se calculan todas las gráficas y porcentajes pedidos.
+
+     * El script lanzador.sh, que ejecuta el script practica3.py con nuestros datos generados por la traza.
+
+     * Una carpeta resultados, que contiene las gráficas.
+
+     * El tráfico analizado en el fichero traza.pcap.
+
+     * La memoria con las cuestiones pedidas en el memoriaP3.pdf
+  
+VALIDACIÓN
+
+    * Normativa de entrega cumplida en su totalidad: Realizado: Hemos releido varias veces el enunciado. 
+
+    * Fichero leeme.txt: Realizado, hemos rellenado este txt con la información pedida.
+
+    * Memoria pdf: Realizado, hemos rellenado todos los campos pedidos, con su respectiva gráfica y su comentario.
+
+     * Obtener porcentaje de paquetes IP y NO IP y dentro de los IP si es UDP, TCP u otros: Realizado, al ejecutar el script practica3.py se muestra en la terminal, tambien se puede ver en el recorte porcentajes.PNG en la carpeta resultados.
+
+     * Graficar las tartas: Realizado, se pueden ver las tartas en la carpeta resultados, y el codigo que las genera en el script practica3.py
+
+     * Graficar la ECDF: Realizado, se pueden ver las ECDF en la carpeta resultados, y el codigo que las genera en el script practica3.py
+
+     * Graficar la serie temporal: Realizado, se pueden ver la serie temporal en la carpeta resultados, y el codigo que las genera en el script practica3.py
+
+ 

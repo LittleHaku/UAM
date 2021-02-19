@@ -1,0 +1,14 @@
+Grupo: 1301
+Pareja: 05
+
+Integrantes: 
+Junco de las Heras Valenzuela junco.heras@estudiante.uam.es
+Marta Vaquerizo Núñez marta.vaquerizo@estudiante.uam.es
+
+Se entrega:
+-    Los subdirectorios pertenecientes a cada ejercicio.
+-    Un subdirectorio con el código de los programas .c
+-    El enunciado en pdf.
+-    P3_grupo1301.txt, este .txt informativo.
+-    La memoria en pdf.
+

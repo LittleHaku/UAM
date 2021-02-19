@@ -1,0 +1,24 @@
+Grupo: 1301
+Pareja: 05
+
+Integrantes: 
+Junco de las Heras Valenzuela junco.heras@estudiante.uam.es
+Marta Vaquerizo Núñez marta.vaquerizo@estudiante.uam.es
+
+Se entrega:
+-    3 carpetas de los respectivos apartados.
+-    el enunciado en pdf.
+-    P1_grupo1301.txt este txt informativo.
+
+Ejercicio 1:
+Se han desarrollado las instrucciones que faltaban, en concreto: Addi, Slti, J.
+También se ha corregido las instrucciones xor y lui.
+
+Ejercicio 2:
+Se han añadido unas cuantas líneas para comprobar las instrucciones añadidas en el ejercicio 1.
+Con el .bat se han generado los datos y la memoria que usa el procesador tanto en el ejercicio 1 como en el 3.
+
+Ejercicio 3:
+Se ha implementado el procesador MIPS segmentado. Debido a que esta implementación
+no comtempla los riesgos, en el .asm se han añadido instrucciones NOP para
+que en la simulación no se produzcan riesgos.

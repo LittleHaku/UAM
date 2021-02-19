@@ -1,0 +1,33 @@
+Junco de las Heras <junco.heras@estudiante.uam.es> 
+Marta Vaquerizo <marta.vaquerizo@estudiante.uam.es>
+
+Pareja 05, grupo 1302.
+
+ARCHIVOS A ENTREGAR
+En el zip a entregar, va a contener los siguientes archivos:
+	* El pdf practica1.pdf: contiene las respuestas al cuestionario "Ejercicios de captura de tráfico".
+	* El fichero practica1.pcap: contiene la traza generada en Wireshark.
+	* La carpeta materialP1V2: Contiene el script practica1.py pedido y la librería rc1_pcap.py
+	* El fichero "captura.ens33.1601759056.pcap": contiene la traza generada al ejecutar el programa con la interfaz.
+	* La captura de pantalla "practica1captura.png" de la comprobacion de los bytes de los paquetes con nuestro código y con Wireshark. NOTA: es el 1º paquete capturado.
+
+
+VALIDACIÓN
+	*Normativa de entrega cumplida en su totalidad: Realizado: Hemos releido varias veces el enunciado.
+
+	*Contar paquetes de una traza: Realizado: Hemos comprobado que el número de paquetes que muestra nuestro programa coincide con el que indica Wireshark.
+
+	*Contar paquetes de la interfaz de red: Realizado. Hemos comprobado que el número de paquetes de la traza que se ha guardado al ejecutar nuestro programa coincide con el que indica Wireshark.
+
+	*Almacenar en una traza el tráfico capturado en vivo: Realizado: Hemos comprobado que todos los bytes de la traza capturado coincide con lo que indica Wireshark en un conjunto diverso de paquetes.
+
+	*Modificar fecha correctamente: Realizado: Se ha comprobado que al abrir el fichero "captura.nombreitf.FECHA.pcap" en Wireshark, la fecha de captura es 30 min más tarde que la hora de captura que aparece en la ejcución del programa.
+
+	*Imprimir los N primeros bytes de un paquete y validarlo con Wireshark (captura de pantalla): Realizado: Se imprimen correctamente los N  bytes. Se adjunta captura de pantalla.
+
+	*Cuestionario "Ejercicios de captura de tráfico": Realizado: Se adjunta "pratica1.pdf"
+
+COMENTARIOS:
+	Si no se introduce --nbytes, se considera el de por defecto 14.
+
+	En la comparación de "practica1captura.png", el paquete mostrado en Wireshark corresponde con los primeros 20 Bytes capturados.
