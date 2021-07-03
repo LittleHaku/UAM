@@ -1,0 +1,5 @@
+Estoy de acuerdo, los avances médicos se benefician mucho de los datos personales. 
+Por ejemplo, para descubrir una nueva enfermedad, es necesario recopilar multitud de sintomatologías de los pacientes, para que luego un modelo usando IA infiera qué síntomas son comunes y así poder detectar la enfermedad de forma precoz.
+
+¿Equilibrio entre privacidad individual o beneficio de la investigación médica? 
+Quizá se podría compensar al individuo que comparta los datos, por ejemplo, si un sujeto tiene que someterse a una operación muy costosa, le podrían abaratar la misma, por ejemplo. Aunque esto tiene un inconveniente, que se haga una subida de precios generalizada para que así los pacientes para recibir los mismos servicios que antes paguen más a no ser de que cedan los datos... Al final todo se basa en una buena regulación.

@@ -1,0 +1,16 @@
+
+Hay un tema muy interesante sobre el uso ético de los datos en IA que es el usado por las máquinas de los casinos.
+En la mayor parte de los juegos que ofrecen los casinos, la ventaja para ellos (para la casa) es >= 50%, es decir, que jugando suficientemente tiempo (y considerando que somos humanos, por lo que no podremos jugar perfecto) vamos a perder todo nuestro dinero. Ahora bien, la casa tiene algunas estrategias para conseguir más beneficios a largo plazo, por ejemplo dando bonos o recompensas para que el jugador sienta que está ganando más dinero del que ha invertido, pero es solo a corto plazo.
+
+Antiguamente esta serie de bonos era algo fijo, pero con la entrada de la Inteligencia Artificial se ha hecho que el software de la máquina utilice los datos del jugador (como frecuencia de uso de una máquina en concreto, número favorito en la ruleta, probabilidad de apostar según el resultado de la ronda anterior) y los utilice para incentivar el consumo del juego. Por ejemplo, si un jugador es sabido que cada día que va a la ruleta apuesta tres veces, y si gana entonces apuesta un all-in (todas las fichas conseguidas hasta el momento), entonces cuando gane dos veces quizá la IA le facilita un bono para que se anime a jugar una tercera vez, ya que si gana, muy probablemente juegue ese all-in.
+
+Ahora la pregunta es, ¿Es ético utilizar un algoritmo que absorba todos los datos posibles y los utilice con el objetivo de sacarte el máximo beneficio (es decir el máximo dinero) posible?
+¿Aceptarías que la IA se pudiera guardar los datos de tu juego? ¿Tendría que estar regulado?
+¿Qué pensáis vosotros?
+
+Fuentes:
+https://www.sectordeljuego.com/noticia.php?id=97119 
+http://www.sectordeljuego.com/noticia.php?id=91709
+
+APA:
+Yadisaputra, M. (2015). The role of emotional intelligence and emotional labor among frontline employees in casino hotel Macao. International Journal of Tourism Sciences, 15(1-2), 44-58.
