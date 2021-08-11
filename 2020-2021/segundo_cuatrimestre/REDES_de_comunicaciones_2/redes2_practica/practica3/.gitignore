@@ -1,0 +1,8 @@
+
+# Ficheros del IDE Idea.
+.idea
+.idea/*
+
+# Ficheros temporales de Python
+__pycache__
+__pycache__/*

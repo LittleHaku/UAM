@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>INDEX</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+                var timerStart = Date.now();
+        </script>
+        
+        <p>Hello world!</p>
+
+        <p></p>        
+        <img src="hello.jpeg" alt="Texto de saludo 1">
+        <p></p>
+        <img src="saludo.gif" alt="Texto de saludo 2">
+        <p></p>
+            
+        <p></p>
+        Link no existente: <a href="directoal404.html">enlace</a>
+        <p></p>
+        Nota importante: <a href="nota.txt">enlace</a>
+        <p></p>
+        <p>Scripts:</p>
+        
+            <table>
+                <tr>
+                    <td>
+                        <form action="scripts/test.py" method="get">
+                        <input type="hidden" name="variableGET" value="hola mundo GET">
+                        <input type="submit" value="GET .py">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="scripts/test.py" method="post">
+                        <input type="hidden" name="variablePOST" value="hola mundo POST">
+                        <input type="submit" value="POST .py">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="scripts/test.py?variableGET=hola+mundo+GET&var2=hasta+luego&var3=google" method="post">
+                        <input type="hidden" name="variablePOST" value="hola mundo POST">
+                        <input type="submit" value="GET/POST .py">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="scripts/test.py" method="get">
+                        <input type="text" name="variableGET" value="Escribe un texto ...">
+                        <input type="submit" value="GET .py custom text">
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            
+            <table>
+                <tr>
+                    <td>
+                        <form action="scripts/test.php" method="get">
+                        <input type="hidden" name="variableGET" value="hola mundo GET">
+                        <input type="submit" value="GET .php">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="scripts/test.php" method="post">
+                        <input type="hidden" name="variablePOST" value="hola mundo POST">
+                        <input type="submit" value="POST .php">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="scripts/test.php?variableGET=hola+mundo+GET" method="post">
+                        <input type="hidden" name="variablePOST" value="hola mundo POST">
+                        <input type="submit" value="GET/POST .php">
+                        </form>
+                    </td>
+                    <td>
+                        <form action="scripts/test.php" method="get">
+                        <input type="text" name="variableGET" value="Escribe un texto ...">
+                        <input type="submit" value="GET .php custom text">
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        <p></p>
+        
+        <span id="texto_timing" style="font-size: 26px;">Cargando...</span>
+
+        <script type="text/javascript">
+                window.onload = function () {
+                    document.getElementById("texto_timing").textContent="Web ready in  "+(Date.now()-timerStart)+"ms";
+                }
+        </script>
+    </body>
+</html>
+

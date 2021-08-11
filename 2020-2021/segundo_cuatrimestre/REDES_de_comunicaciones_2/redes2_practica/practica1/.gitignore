@@ -1,0 +1,8 @@
+# Formato de librerias.
+*.a
+
+# Formato de codigo objeto.
+*.o
+
+# El ejecutable del server.
+server
