@@ -1,0 +1,209 @@
+Turbo Assembler	 Version 2.0	    03/05/21 23:00:37	    Page 1
+alumno.asm
+
+
+
+      1				     ;_______________________________________________________________
+      2				     ; DEFINICION DEL SEGMENTO DE DATOS
+      3	0000			     DATOS SEGMENT
+      4	0000  1B 5B 32 4A 24		     CLR_PANT	     DB	     1BH,"[2","J$"
+      5	0005  1B 34 3B 32 37 66	54+	     CUR_MICRO	     DB	     1BH,"4;27fTECNOLOGIA DE COMPUTADORES$"
+      6	      45 43 4E 4F 4C 4F	47+
+      7	      49 41 20 44 45 20	43+
+      8	      4F 4D 50 55 54 41	44+
+      9	      4F 52 45 53 24
+     10	0026  1B 5B 31 35 3B 31	66+	     PREG_NOM	     DB	     1BH,"[15;1fESCRIBE	TU NOMBRE ? $"
+     11	      45 53 43 52 49 42	45+
+     12	      20 54 55 20 4E 4F	4D+
+     13	      42 52 45 20 3F 20	24
+     14					     ; Texto para preguntar sobre el primer apellido.
+     15	0042  1B 5B 31 36 3B 31	66+	     PREG_AP1	     DB	     1BH,"[16;1fESCRIBE	TU PRIMER APELLIDO ? $"
+     16	      45 53 43 52 49 42	45+
+     17	      20 54 55 20 50 52	49+
+     18	      4D 45 52 20 41 50	45+
+     19	      4C 4C 49 44 4F 20	3F+
+     20	      20 24
+     21					     ; Texto para preguntar sobre el segundo apellido.
+     22	0067  1B 5B 31 37 3B 31	66+	     PREG_AP2	     DB	     1BH,"[17;1fESCRIBE	TU SEGUNDO APELLIDO? $"
+     23	      45 53 43 52 49 42	45+
+     24	      20 54 55 20 53 45	47+
+     25	      55 4E 44 4F 20 41	50+
+     26	      45 4C 4C 49 44 4F	3F+
+     27	      20 24
+     28	008C  50*(00)			     NOMBRE	     DB	     80	DUP (0)
+     29					     ; Reservamos 80 Bytes para	el primer apellido.
+     30	00DC  50*(00)			     APELLIDO1	     DB	 80 DUP	(0)
+     31					     ; Reservamos 80 Bytes para	el segundo apellido.
+     32	012C  50*(00)			     APELLIDO2	     DB	 80 DUP	(0)
+     33	017C  1B 5B 32 32 3B 31	66+	     TEXTO	     DB	     1BH,"[22;1fDON","$"
+     34	      44 4F 4E 24
+     35	0187  20 45 53 20 41 4C	55+	     TEXTO2	     DB	     " ES ALUMNO DE 2 CURSO DE "
+     36	      4D 4E 4F 20 44 45	20+
+     37	      32 20 43 55 52 53	4F+
+     38	      20 44 45 20
+     39	01A0  49 4E 47 45 4E 49	45+			     DB	     "INGENIERIA INFORMATICA",13,10,"$"
+     40	      52 49 41 20 49 4E	46+
+     41	      4F 52 4D 41 54 49	43+
+     42	      41 0D 0A 24
+     43	01B9			     DATOS ENDS
+     44				     ;_______________________________________________________________
+     45				     ; DEFINICION DEL SEGMENTO DE PILA
+     46	0000			     PILA SEGMENT STACK	"STACK"
+     47	0000  40*(00)			     DB	40H DUP	(0)
+     48	0040			     PILA ENDS
+     49				     ;_______________________________________________________________
+     50				     ; DEFINICION DEL SEGMENTO DE CODIGO
+     51	0000			     CODE SEGMENT
+     52				     ASSUME CS:CODE,DS:DATOS,SS:PILA
+     53				     ; COMIENZO	DEL PROCEDIMIENTO PRINCIPAL (START)
+     54	0000			     START PROC	FAR
+     55				     ;INICIALIZACION DE	LOS REGISTROS DE SEGMENTO
+     56	0000  B8 0000s			     MOV AX,DATOS
+     57	0003  8E D8			     MOV DS,AX	     ;FIN DE LAS INICIALIZACIONES
+Turbo Assembler	 Version 2.0	    03/05/21 23:00:37	    Page 2
+alumno.asm
+
+
+
+     58
+     59	0005  B4 09			     MOV AH,9	     ; BORRA LA	PANTALLA
+     60	0007  BA 0000r			     MOV DX, OFFSET CLR_PANT
+     61	000A  CD 21			     INT 21H
+     62
+     63	000C  BA 0005r			     MOV DX,OFFSET CUR_MICRO	     ;ESCRIBE "CURSO ...
+     64	000F  CD 21			     INT 21H
+     65
+     66					     ; Nombre.
+     67	0011  BA 0026r			     MOV DX,OFFSET PREG_NOM	     ;MUESTRA "ESCRIBE ...
+     68	0014  CD 21			     INT 21H
+     69
+     70	0016  B4 0A			     MOV AH,0AH			     ;ALMACENA EL NOMBRE TECLEADO
+     71	0018  BA 008Cr			     MOV DX,OFFSET NOMBRE
+     72
+     73	001B  C6 06 008Cr 3C		     MOV NOMBRE[0],60		     ;MAXIMO NUMERO DE CARACTERES
+     74	0020  CD 21			     INT 21H
+     75
+     76					     ; Primer apellido.
+     77	0022  B4 09			     MOV AH,9
+     78	0024  BA 0042r			     MOV DX,OFFSET PREG_AP1	     ;MUESTRA "ESCRIBE ...
+     79	0027  CD 21			     INT 21H
+     80
+     81	0029  B4 0A			     MOV AH,0AH			     ;ALMACENA EL NOMBRE TECLEADO
+     82	002B  BA 00DCr			     MOV DX,OFFSET APELLIDO1
+     83
+     84	002E  C6 06 00DCr 3C		     MOV APELLIDO1[0],60	     ;MAXIMO NUMERO DE CARACTERES
+     85	0033  CD 21			     INT 21H
+     86
+     87					     ; Segundo apellido.
+     88	0035  B4 09			     MOV AH,9
+     89	0037  BA 0067r			     MOV DX,OFFSET PREG_AP2	     ;MUESTRA "ESCRIBE ...
+     90	003A  CD 21			     INT 21H
+     91
+     92	003C  B4 0A			     MOV AH,0AH			     ;ALMACENA EL NOMBRE TECLEADO
+     93	003E  BA 012Cr			     MOV DX,OFFSET APELLIDO2
+     94
+     95	0041  C6 06 012Cr 3C		     MOV APELLIDO2[0],60	     ;MAXIMO NUMERO DE CARACTERES
+     96	0046  CD 21			     INT 21H
+     97
+     98	0048  B4 09			     MOV AH,9			     ;ESCRIBE "DON ...
+     99	004A  BA 017Cr			     MOV DX, OFFSET TEXTO
+    100	004D  CD 21			     INT 21H
+    101
+    102					     ; Escribe el nombre.
+    103	004F  BB 0000			     moV BX,0
+    104	0052			     OTRO:
+    105	0052  8A 97 008Er		     MOV DL,NOMBRE[BX+2]	     ;ESCRIBIR UN CARACTER DEL NOMBRE
+    106	0056  B4 02			     MOV AH,2
+    107	0058  CD 21			     INT 21H
+    108
+    109	005A  43			     INC BX
+    110	005B  3A 1E 008Dr		     CMP BL, NOMBRE[1]		     ;COMPARA CON EL NUMERO DE CARACTERES
+    111	005F  75 F1			     JNE OTRO
+    112
+    113					     ; Escribe un espacio.
+    114	0061  B2 20			     MOV DL,' '
+Turbo Assembler	 Version 2.0	    03/05/21 23:00:37	    Page 3
+alumno.asm
+
+
+
+    115	0063  B4 02			     MOV AH,2
+    116	0065  CD 21			     INT 21h
+    117
+    118					     ; Escribe el primer apellido.
+    119	0067  BB 0000			     MOV BX,0
+    120	006A			     ESCRIBE_APPELLIDO1:
+    121	006A  8A 97 00DEr		     MOV DL,APELLIDO1[BX+2]	     ;ESCRIBIR UN CARACTER DEL NOMBRE
+    122	006E  B4 02			     MOV AH,2
+    123	0070  CD 21			     INT 21h
+    124
+    125	0072  43			     INC BX
+    126	0073  3A 1E 00DDr		     CMP BL, APELLIDO1[1]	     ;COMPARA CON EL NUMERO DE CARACTERES
+    127	0077  75 F1			     JNE ESCRIBE_APPELLIDO1
+    128
+    129					     ; Escribe un espacio.
+    130	0079  B2 20			     MOV DL,' '
+    131	007B  B4 02			     MOV AH,2
+    132	007D  CD 21			     INT 21h
+    133
+    134					     ; Escribe el segundo apellido.
+    135	007F  BB 0000			     MOV BX,0
+    136	0082			     ESCRIBE_APPELLIDO2:
+    137	0082  8A 97 012Er		     MOV DL,APELLIDO2[BX+2]	     ;ESCRIBIR UN CARACTER DEL NOMBRE
+    138	0086  B4 02			     MOV AH,2
+    139	0088  CD 21			     INT 21h
+    140
+    141	008A  43			     INC BX
+    142	008B  3A 1E 012Dr		     CMP BL, APELLIDO2[1]	     ;COMPARA CON EL NUMERO DE CARACTERES
+    143	008F  75 F1			     JNE ESCRIBE_APPELLIDO2
+    144
+    145
+    146
+    147	0091  BA 0187r			     MOV DX, OFFSET TEXTO2	     ; ESCRIBE "ES ALUMNO ...
+    148	0094  B4 09			     MOV AH,9
+    149	0096  CD 21			     INT 21H
+    150
+    151	0098  B8 4C00			     MOV AX,4C00H		     ; FIN DE PROGRAMA Y VUELTA	AL DOS
+    152	009B  CD 21			     INT 21H
+    153	009D			     START ENDP
+    154				     ;FIN DEL SEGMENTO DE CODIGO
+    155	009D			     CODE ENDS
+    156				     ;FIN DE PROGRAMA INDICANDO	DONDE COMIENZA LA EJECUCION
+    157				     END START
+Turbo Assembler	 Version 2.0	    03/05/21 23:00:37	    Page 4
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "03/05/21"
+??FILENAME			  Text	 "alumno  "
+??TIME				  Text	 "23:00:37"
+??VERSION			  Number 0200
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 ALUMNO
+@WORDSIZE			  Text	 2
+APELLIDO1			  Byte	 DATOS:00DC
+APELLIDO2			  Byte	 DATOS:012C
+CLR_PANT			  Byte	 DATOS:0000
+CUR_MICRO			  Byte	 DATOS:0005
+ESCRIBE_APPELLIDO1		  Near	 CODE:006A
+ESCRIBE_APPELLIDO2		  Near	 CODE:0082
+NOMBRE				  Byte	 DATOS:008C
+OTRO				  Near	 CODE:0052
+PREG_AP1			  Byte	 DATOS:0042
+PREG_AP2			  Byte	 DATOS:0067
+PREG_NOM			  Byte	 DATOS:0026
+START				  Far	 CODE:0000
+TEXTO				  Byte	 DATOS:017C
+TEXTO2				  Byte	 DATOS:0187
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  009D Para	  none
+DATOS				  16  01B9 Para	  none
+PILA				  16  0040 Para	  Stack	  STACK
+

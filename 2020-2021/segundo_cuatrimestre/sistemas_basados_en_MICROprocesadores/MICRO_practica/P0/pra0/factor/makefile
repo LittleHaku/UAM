@@ -1,0 +1,12 @@
+all: factor.exe
+
+factor.exe: factor.obj
+    tlink /v factor.obj
+
+factor.obj: factor.asm
+    tasm /zi factor.asm,,factor.lst
+
+clean:
+    del factor.obj
+    del factor.exe
+    del factor.map

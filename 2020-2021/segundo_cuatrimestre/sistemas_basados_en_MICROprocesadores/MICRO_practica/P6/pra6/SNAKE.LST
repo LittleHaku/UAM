@@ -1,0 +1,966 @@
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 1
+snake.asm
+
+
+
+      1				     ; Autor Junco de las Heras	Valenzuela. junco.heras@estudiante.uam.es
+      2				     ; Grupo: Doble Grado 2301
+      3
+      4				     ;**************************************************************************
+      5				     ; DEFINICION DEL SEGMENTO DE DATOS
+      6	0000			     DATA SEGMENT
+      7	0000  00			     MODO_VIDEO	DB 0
+      8					     ; Longitud	de la serpiente.
+      9	0001  0000			     LEN1 DW 0
+     10					     ; Primer byte de la serpiente. (Se	incrementa de 2	en 2).
+     11	0003  0000			     FIRST1 DW 0
+     12					     ; Todos los cuadrados que componen	de la serpiente. Es una
+     13					     ; lista en	la que se inserta al final y se	borra al principio.
+     14					     ; 2000 elementos es suficiente pues el modo de video es 320x200 y cada
+     15					     ; cuadrado	es de 10x10 pixeles asi	que como mucho (es una cota superior) hay 320*2	= 640
+     16					     ; bloques,	y cada bloque se puede representar como	un word.
+     17	0005  07D0*(0000)		     BUFFER1 DW	2000 DUP(0H)
+     18					     ; Ultima direccion	de movimiento, 'w','a','s','d'.
+     19	0FA5  00			     LAST_DIR1 DB 0
+     20					     ; Lo mismo	pero para el segundo jugador.
+     21	0FA6  0000			     LEN2 DW 0
+     22	0FA8  0000			     FIRST2 DW 0
+     23	0FAA  07D0*(0000)		     BUFFER2 DW	2000 DUP(0H)
+     24					     ; Ultima direccion	de movimiento, 'i','j','k','l'.
+     25	1F4A  00			     LAST_DIR2 DB 0
+     26					     ; Segundos	que han	transcurrido, cuando llegue a 10 se resetea.
+     27	1F4B  0000			     SECONDS_ELAPSED_MOD10 DW 0
+     28					     ; Segundos	que han	transcurrido, cuando llegue a 15 se resetea.
+     29	1F4D  0000			     SECONDS_ELAPSED_MOD15 DW 0
+     30					     ; 0 Si todavia no se sabe quien gana, 1 si	gana el	jugador	1, 2 si	gana el	jugador	2.
+     31	1F4F  00			     JUGADOR_GANADOR DB	0
+     32					     ; String del jugador ganador.
+     33	1F50  47 61 6E 61 20 65	6C+	     GANA1 DB 'Gana el primer jugador (Azul).',	13, 10,	'$'
+     34	      20 70 72 69 6D 65	72+
+     35	      20 6A 75 67 61 64	6F+
+     36	      72 20 28 41 7A 75	6C+
+     37	      29 2E 0D 0A 24
+     38	1F71  47 61 6E 61 20 65	6C+	     GANA2 DB 'Gana el segundo jugador (Rojo).', 13, 10, '$'
+     39	      20 73 65 67 75 6E	64+
+     40	      6F 20 6A 75 67 61	64+
+     41	      6F 72 20 28 52 6F	6A+
+     42	      6F 29 2E 0D 0A 24
+     43	1F93  45 6C 20 6A 75 67	61+	     PUNTUACION_1_STR DB 'El jugador uno (Azul)	tiene una puntuacion de: ', '$'
+     44	      64 6F 72 20 75 6E	6F+
+     45	      20 28 41 7A 75 6C	29+
+     46	      20 74 69 65 6E 65	20+
+     47	      75 6E 61 20 70 75	6E+
+     48	      74 75 61 63 69 6F	6E+
+     49	      20 64 65 3A 20 24
+     50	1FC3  00			     PUNTUACION_1 DB 0
+     51	1FC4  0D 0A 45 6C 20 6A	75+	     PUNTUACION_2_STR DB 13, 10, 'El jugador dos (Rojo)	tiene una puntuacion de: ', '$'
+     52	      67 61 64 6F 72 20	64+
+     53	      6F 73 20 28 52 6F	6A+
+     54	      6F 29 20 74 69 65	6E+
+     55	      65 20 75 6E 61 20	70+
+     56	      75 6E 74 75 61 63	69+
+     57	      6F 6E 20 64 65 3A	20+
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 2
+snake.asm
+
+
+
+     58	      24
+     59	1FF6  00			     PUNTUACION_2 DB 0
+     60					     ; Numero de recompensas activas en	la pantalla.
+     61	1FF7  0000			     NUMERO_RECOMPENSAS	DW 0
+     62					     ; Para mostrar el numero de la puntuacion se convierte a ASCII.
+     63	1FF9  06*(00)			     converted_str DB 6	DUP(0);	2^16 = 65536, 5	CHARS +	'$'
+     64					     ; Ticks que se necesitan para hacer un desplazamiento automatico.
+     65					     ; Al principio empieza como 18 ticks que corresponden a un	segundo, pero luego
+     66					     ; se va decrementando, para que 17	ticks sean un segundo etc, eso simula subir la	    +
+     67				     velocidad.
+     68					     ; Aproximadamente 1/17, 1/16... es	0.1, por lo que	aumenta	un 10% la velocidad.
+     69	1FFF  0012			     VELOCIDAD DW 18
+     70	2001			     DATA ENDS
+     71
+     72				     ;**************************************************************************
+     73				     ; DEFINICION DEL SEGMENTO DE CODIGO
+     74	0000			     CODIGO SEGMENT
+     75					     ASSUME CS:	CODIGO,	DS: DATA
+     76
+     77	0000				     MAIN PROC
+     78	0000  B8 0000s				     MOV AX, DATA
+     79	0003  8E D8				     MOV DS, AX
+     80
+     81						     ; Guardamos modo video para restaurarlo.
+     82						     ; usamos interrupción 10h	para entrar en modo video
+     83	0005  B4 0F				     MOV AH,0Fh	; Peticion de obtencion	de modo	de video
+     84	0007  CD 10				     INT 10h ; Llamada al BIOS
+     85	0009  A2 0000r				     MOV MODO_VIDEO,AL ; SALVO EL MODO VIDEO Y LO ALMACENO EN AL
+     86
+     87						     ; Ponemos modo video.
+     88	000C  B4 00				     mov ah, 00h ; configuramos	entrada	a modo video
+     89	000E  B0 0D				     mov al, 0Dh ; 320x200 16 color graphics (VGA)
+     90	0010  CD 10				     int 10h
+     91
+     92
+     93						     ; Se guarda la pos	del jugador uno	en BX.
+     94	0012  B7 64				     MOV BH, 100 ; Y.
+     95	0014  B3 32				     MOV BL, 50	; X.
+     96	0016  8B C3				     MOV AX, BX
+     97	0018  CD 55				     INT 55H
+     98						     ; Se guarda la primera posicion.
+     99	001A  A3 0005r				     MOV WORD PTR BUFFER1, AX
+    100						     ; Se guarda que la	serpiente comienza con 1 cuadrado de longitud.
+    101	001D  B8 0001				     MOV AX, 1
+    102	0020  A3 0001r				     MOV WORD PTR LEN1,	AX
+    103						     ; Se guarda la direccion inicial, 'd'.
+    104	0023  B0 64				     MOV AL, 'd'
+    105	0025  A2 0FA5r				     MOV BYTE PTR LAST_DIR1, AL
+    106
+    107						     ; Se guarda la pos	del jugador dos	en CX.
+    108	0028  B5 64				     MOV CH, 100 ; Y.
+    109	002A  B1 C8				     MOV CL, 200 ; X.
+    110	002C  8B C1				     MOV AX, CX
+    111	002E  CD 57				     INT 57H
+    112						     ; Se guarda la primera posicion.
+    113	0030  A3 0FAAr				     MOV WORD PTR BUFFER2, AX
+    114						     ; Se guarda que la	serpiente comienza con 1 cuadrado de longitud.
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 3
+snake.asm
+
+
+
+    115	0033  B8 0001				     MOV AX, 1
+    116	0036  A3 0FA6r				     MOV WORD PTR LEN2,	AX
+    117						     ; Se guarda la direccion inicial, 'i'.
+    118	0039  B0 69				     MOV AL, 'i'
+    119	003B  A2 1F4Ar				     MOV BYTE PTR LAST_DIR2, AL
+    120
+    121						     ; Genera 2	recompensas al inicio.
+    122	003E  E8 0313				     CALL GENERATE_REWARD
+    123	0041  E8 0310				     CALL GENERATE_REWARD
+    124
+    125						     ; Un bucle	que lee	teclas hasta que se pulse la q.
+    126						     ; Nota, es	case sensitive.
+    127	0044					     BUCLE_TECLADO:
+    128							     ; Comprueba si un jugador ha ganado.
+    129	0044  A0 1F4Fr					     MOV AL, JUGADOR_GANADOR
+    130	0047  3C 00					     CMP AL, 0
+    131	0049  74 03					     JE	CHECK_TECLA_PULSADA ; El salto a FIN_BUCLE_TECLADO es largo.
+    132	004B  E9 00A5					     JMP FIN_BUCLE_TECLADO
+    133
+    134	004E						     CHECK_TECLA_PULSADA:
+    135
+    136							     ; Comprueba si ha habido un keystroke.
+    137	004E  B4 01					     MOV AH, 01H
+    138	0050  CD 16					     INT 16H
+    139							     ; Si no, repetir la espera.
+    140	0052  74 03					     JZ	NO_TECLA_PULSADA ; Convertir salto en incondicional.
+    141	0054  E9 0081					     JMP TECLA_PULSADA
+    142	0057						     NO_TECLA_PULSADA:
+    143
+    144							     ; Se comprueba si ha pasado un segundo o no.
+    145							     ; Se lee el vector	de interrupcion.
+    146	0057  B8 0000					     MOV AX, 0
+    147	005A  8E C0					     MOV ES, AX
+    148	005C  26: 8B 36	0154				     MOV SI, WORD PTR ES:[55H*4]
+    149	0061  26: A1 0156				     MOV AX, WORD PTR ES:[55H*4+2]
+    150
+    151							     ; Se lee la variable CONTADOR_1CH en AL.
+    152							     ; Se quitan las interrupciones para evitar	problemas de concurrencia
+    153	0065  FA					     CLI
+    154	0066  8E C0					     MOV ES, AX
+    155	0068  26: 8A 44	FD				     MOV AL, BYTE PTR ES:[SI-3]
+    156	006C  FB					     STI
+    157
+    158	006D  8B 16 1FFFr				     MOV DX, WORD PTR VELOCIDAD
+    159
+    160							     ; Si ha habido 18 ticks aproximadamente habra pasado 1 segundo.
+    161							     ; Si no ha	pasado se repite el bucle, y si	ha pasado entonces se simula
+    162							     ; la ultima tecla en LAST_DIR1 y LAST_DIR2.
+    163	0071  3A C2					     CMP AL, DL
+    164	0073  72 CF					     JNAE BUCLE_TECLADO
+    165
+    166							     ; Aqui ha pasado un segundo.
+    167
+    168	0075  A1 1F4Dr					     MOV AX, WORD PTR SECONDS_ELAPSED_MOD15
+    169	0078  40					     INC AX
+    170	0079  3D 000F					     CMP AX, 15	; Cada 15 Secs se incrementa la	velocidad.
+    171	007C  7C 0D					     JNGE NO_HA_PASADO_15_SEC
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 4
+snake.asm
+
+
+
+    172	007E  B8 0000					     MOV AX, 0
+    173	0081  A3 1F4Dr					     MOV WORD PTR SECONDS_ELAPSED_MOD15, AX
+    174	0084  A1 1FFFr					     MOV AX, WORD PTR VELOCIDAD
+    175	0087  48					     DEC AX ; Se supone	que AX nunca va	a bajar	de 0 ya	que cuando
+    176							     ; AX sea muy bajo la serpiente se movera muy rapido y se chocara	    +
+    177				     inevitablemente.
+    178	0088  A3 1FFFr					     MOV WORD PTR VELOCIDAD, AX
+    179
+    180	008B						     NO_HA_PASADO_15_SEC:
+    181	008B  A1 1F4Dr					     MOV AX, WORD PTR SECONDS_ELAPSED_MOD15
+    182
+    183	008E  A1 1F4Br					     MOV AX, WORD PTR SECONDS_ELAPSED_MOD10
+    184	0091  40					     INC AX
+    185	0092  3D 000A					     CMP AX, 10	; Cada 10 Secs se incrementa el	tamanio.
+    186	0095  7C 0C					     JNGE NO_HA_PASADO_10_SEC
+    187
+    188							     ; Se resetea el contador SECONDS_ELAPSED_MOD10.
+    189	0097  B8 0000					     MOV AX, 0
+    190	009A  A3 1F4Br					     MOV WORD PTR SECONDS_ELAPSED_MOD10, AX
+    191
+    192	009D  E8 01B6					     CALL INCREMENTA_1
+    193	00A0  E8 01D0					     CALL INCREMENTA_2
+    194
+    195
+    196
+    197	00A3						     NO_HA_PASADO_10_SEC:
+    198							     ; Se actualiza SECONDS_ELAPSED_MOD10
+    199	00A3  A3 1F4Br					     MOV WORD PTR SECONDS_ELAPSED_MOD10, AX
+    200
+    201							     ; Se simula que se	ha pulsado una tecla en	la ultima posicion.
+    202	00A6  A0 0FA5r					     MOV AL, BYTE PTR LAST_DIR1
+    203	00A9  E8 00AC					     CALL EJECUTA_TECLA_1
+    204	00AC  8B C3					     MOV AX, BX
+    205	00AE  E8 0151					     CALL MUEVE_1
+    206
+    207	00B1  A0 1F4Ar					     MOV AL, BYTE PTR LAST_DIR2
+    208	00B4  E8 00F6					     CALL EJECUTA_TECLA_2
+    209	00B7  8B C1					     MOV AX, CX
+    210	00B9  E8 0170					     CALL MUEVE_2
+    211
+    212							     ; Se escribe un 0 en el contador de ticks.
+    213							     ; Se lee el vector	de interrupcion.
+    214	00BC  B8 0000					     MOV AX, 0
+    215	00BF  8E C0					     MOV ES, AX
+    216	00C1  26: 8B 36	0154				     MOV SI, WORD PTR ES:[55H*4]
+    217	00C6  26: A1 0156				     MOV AX, WORD PTR ES:[55H*4+2]
+    218
+    219							     ; Se lee la variable CONTADOR_1CH en AL.
+    220							     ; Se quitan las interrupciones para evitar	problemas de concurrencia
+    221	00CA  FA					     CLI
+    222	00CB  8E C0					     MOV ES, AX
+    223	00CD  B8 0000					     MOV AX, 0
+    224	00D0  26: 88 44	FD				     MOV BYTE PTR ES:[SI-3], AL
+    225	00D4  FB					     STI
+    226
+    227
+    228	00D5  E9 FF6C					     JMP BUCLE_TECLADO
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 5
+snake.asm
+
+
+
+    229
+    230	00D8						     TECLA_PULSADA:
+    231							     ; Si si, leer la tecla en AL y quitarla del bufer.
+    232	00D8  B4 00					     MOV AH, 00H
+    233	00DA  CD 16					     INT 16H
+    234
+    235	00DC  E8 0079					     CALL EJECUTA_TECLA_1
+    236	00DF  E8 00CB					     CALL EJECUTA_TECLA_2
+    237
+    238							     ; Se acaba	el bucle.
+    239	00E2  3C 71					     CMP AL, 'q'
+    240	00E4  74 0D					     JE	FIN_BUCLE_TECLADO
+    241
+    242							     ; Vuelve a	pintar al jugador 1.
+    243	00E6  8B C3					     MOV AX, BX
+    244	00E8  E8 0117					     CALL MUEVE_1
+    245
+    246
+    247							     ; Vuelve a	pintar al jugador 2.
+    248	00EB  8B C1					     MOV AX, CX
+    249	00ED  E8 013C					     CALL MUEVE_2
+    250
+    251	00F0  E9 FF51					     JMP BUCLE_TECLADO
+    252	00F3					     FIN_BUCLE_TECLADO:
+    253
+    254						     ; Restauramos el modo de video.
+    255	00F3  B4 00				     mov ah, 00h ; restaurar configuracion entrada a modo video
+    256	00F5  A0 0000r				     mov al, MODO_VIDEO	;
+    257	00F8  CD 10				     int 10h
+    258
+    259						     ; Mira si el jugador uno ha ganado.
+    260	00FA  A0 1F4Fr				     MOV AL, BYTE PTR JUGADOR_GANADOR
+    261	00FD  3C 01				     CMP AL, 1
+    262	00FF  75 0A				     JNE FIN_GANA2
+    263
+    264						     ; Escribe el ganador 1.
+    265	0101  B4 09				     MOV AH, 09H
+    266	0103  BA 1F50r				     MOV DX, OFFSET GANA1
+    267	0106  CD 21				     INT 21H
+    268	0108  EB 0F 90				     JMP FIN_PROGRAMA
+    269
+    270	010B					     FIN_GANA2:
+    271						     ; Mira si el jugador dos ha ganado.
+    272	010B  A0 1F4Fr				     MOV AL, BYTE PTR JUGADOR_GANADOR
+    273	010E  3C 02				     CMP AL, 2
+    274	0110  75 07				     JNE FIN_PROGRAMA
+    275
+    276						     ; Escribe el ganador 2.
+    277	0112  B4 09				     MOV AH, 09H
+    278	0114  BA 1F71r				     MOV DX, OFFSET GANA2
+    279	0117  CD 21				     INT 21H
+    280
+    281	0119					     FIN_PROGRAMA:
+    282
+    283						     ; Escribe la puntuacion del jugador 1.
+    284	0119  B4 09				     MOV AH, 09H
+    285	011B  BA 1F93r				     MOV DX, OFFSET PUNTUACION_1_STR
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 6
+snake.asm
+
+
+
+    286	011E  CD 21				     INT 21H
+    287
+    288						     ; Convierte el valor a ASCII.
+    289	0120  A0 1FC3r				     MOV AL, BYTE PTR PUNTUACION_1
+    290	0123  B4 00				     MOV AH, 0
+    291	0125  E8 028C				     CALL CONVERT_BIN_ASCII
+    292	0128  8C D8				     MOV AX, DS
+    293	012A  1E				     PUSH DS
+    294						     ; Imprime el resultado.
+    295	012B  8E DA				     MOV DS, DX
+    296	012D  B4 09				     MOV AH, 09H
+    297	012F  8B D3				     MOV DX, BX
+    298	0131  CD 21				     INT 21H
+    299
+    300	0133  58				     POP AX
+    301	0134  8E D8				     MOV DS, AX
+    302
+    303						     ; Escribe la puntuacion del jugador 2.
+    304	0136  B4 09				     MOV AH, 09H
+    305	0138  BA 1FC4r				     MOV DX, OFFSET PUNTUACION_2_STR
+    306	013B  CD 21				     INT 21H
+    307
+    308						     ; Convierte el valor a ASCII.
+    309	013D  A0 1FF6r				     MOV AL, BYTE PTR PUNTUACION_2
+    310	0140  B4 00				     MOV AH, 0
+    311	0142  E8 026F				     CALL CONVERT_BIN_ASCII
+    312	0145  8C D8				     MOV AX, DS
+    313	0147  1E				     PUSH DS
+    314						     ; Imprime el resultado.
+    315	0148  8E DA				     MOV DS, DX
+    316	014A  B4 09				     MOV AH, 09H
+    317	014C  8B D3				     MOV DX, BX
+    318	014E  CD 21				     INT 21H
+    319
+    320	0150  58				     POP AX
+    321	0151  8E D8				     MOV DS, AX
+    322
+    323						     ; FIN DEL PROGRAMA
+    324	0153  B8 4C00				     MOV AX, 4C00H
+    325	0156  CD 21				     INT 21H
+    326
+    327	0158				     MAIN ENDP
+    328
+    329					     ; Mueve el	cuadrado siguiendo la tecla que	se ha pulsado, introducida en AL.
+    330					     ; Mueve el	primer jugador.
+    331	0158				     EJECUTA_TECLA_1 PROC
+    332						     ; Se comprueba pulsacion del primer jugador.
+    333	0158  3C 61				     CMP AL, 'a'
+    334	015A  75 0E				     JNE NO_A
+    335	015C  A2 0FA5r				     MOV BYTE PTR LAST_DIR1, AL	; La ultima tecla pulsada es 'a'.
+    336	015F  80 FB 0A				     CMP BL, 10
+    337	0162  76 43				     JBE VA_A_GANAR2 ; BL <= 10	.
+    338	0164  80 C3 F6				     ADD BL, -10 ; Numeros de X	mas bajos.
+    339	0167  EB 38 90				     JMP TECLA_FUE_PULSADA_1
+    340	016A					     NO_A:
+    341	016A  3C 64				     CMP AL, 'd'
+    342	016C  75 0E				     JNE NO_D
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 7
+snake.asm
+
+
+
+    343	016E  A2 0FA5r				     MOV BYTE PTR LAST_DIR1, AL
+    344	0171  80 FB E6				     CMP BL, 230
+    345	0174  73 31				     JAE VA_A_GANAR2 ; BL >= 230.
+    346	0176  80 C3 0A				     ADD BL, 10	; Numeros de X mas altos.
+    347	0179  EB 26 90				     JMP TECLA_FUE_PULSADA_1
+    348	017C					     NO_D:
+    349	017C  3C 77				     CMP AL, 'w'
+    350	017E  75 0E				     JNE NO_W
+    351	0180  A2 0FA5r				     MOV BYTE PTR LAST_DIR1, AL
+    352	0183  80 FF 0A				     CMP BH, 10
+    353	0186  76 1F				     JBE VA_A_GANAR2 ; BH <= 10.
+    354	0188  80 C7 F6				     ADD BH, -10 ; Numeros de Y	mas bajos.
+    355	018B  EB 14 90				     JMP TECLA_FUE_PULSADA_1
+    356	018E					     NO_W:
+    357	018E  3C 73				     CMP AL, 's'
+    358	0190  75 0E				     JNE NO_S
+    359	0192  A2 0FA5r				     MOV BYTE PTR LAST_DIR1, AL
+    360	0195  80 FF AA				     CMP BH, 170
+    361	0198  73 0D				     JAE VA_A_GANAR2 ; BH >= 170.
+    362	019A  80 C7 0A				     ADD BH, 10	; Numeros de Y mas altos.
+    363	019D  EB 02 90				     JMP TECLA_FUE_PULSADA_1
+    364	01A0					     NO_S:
+    365	01A0  C3				     RET
+    366	01A1					     TECLA_FUE_PULSADA_1:
+    367						     ; Comprueba, en un	movimiento legal, si ha	habido una interseccion.
+    368	01A1  E8 00EC				     CALL CHECK_INTERSECTION_1
+    369
+    370	01A4  EB 06 90				     JMP FIN_EJECUTA_TECLA_1
+    371
+    372	01A7					     VA_A_GANAR2:
+    373	01A7  B0 02				     MOV AL, 2
+    374	01A9  A2 1F4Fr				     MOV BYTE PTR JUGADOR_GANADOR, AL
+    375
+    376	01AC					     FIN_EJECUTA_TECLA_1:
+    377
+    378	01AC  C3				     RET
+    379	01AD				     EJECUTA_TECLA_1 ENDP
+    380
+    381					     ; Mueve el	cuadrado siguiendo la tecla que	se ha pulsado, introducida en AL.
+    382					     ; Mueve el	segundo	jugador.
+    383	01AD				     EJECUTA_TECLA_2 PROC
+    384						     ; Se comprueba pulsacion del segundo jugador.
+    385	01AD  3C 6A				     CMP AL, 'j'
+    386	01AF  75 0E				     JNE NO_J
+    387	01B1  A2 1F4Ar				     MOV BYTE PTR LAST_DIR2, AL	; La ultima tecla pulsada es 'j'.
+    388	01B4  80 F9 0A				     CMP CL, 10
+    389	01B7  76 43				     JBE VA_A_GANAR1 ; CL <= 10.
+    390	01B9  80 C1 F6				     ADD CL, -10 ; Numeros de X	mas bajos.
+    391	01BC  EB 38 90				     JMP TECLA_FUE_PULSADA_2
+    392	01BF					     NO_J:
+    393	01BF  3C 6C				     CMP AL, 'l'
+    394	01C1  75 0E				     JNE NO_L
+    395	01C3  A2 1F4Ar				     MOV BYTE PTR LAST_DIR2, AL
+    396	01C6  80 F9 E6				     CMP CL, 230
+    397	01C9  73 31				     JAE VA_A_GANAR1; CL >= 230.
+    398	01CB  80 C1 0A				     ADD CL, 10	; Numeros de X mas altos.
+    399	01CE  EB 26 90				     JMP TECLA_FUE_PULSADA_2
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 8
+snake.asm
+
+
+
+    400	01D1					     NO_L:
+    401	01D1  3C 69				     CMP AL, 'i'
+    402	01D3  75 0E				     JNE NO_I
+    403	01D5  A2 1F4Ar				     MOV BYTE PTR LAST_DIR2, AL
+    404	01D8  80 FD 0A				     CMP CH, 10
+    405	01DB  76 1F				     JBE VA_A_GANAR1 ; CH <= 10.
+    406	01DD  80 C5 F6				     ADD CH, -10 ; Numeros de Y	mas bajos.
+    407	01E0  EB 14 90				     JMP TECLA_FUE_PULSADA_2
+    408	01E3					     NO_I:
+    409	01E3  3C 6B				     CMP AL, 'k'
+    410	01E5  75 0E				     JNE NO_K
+    411	01E7  A2 1F4Ar				     MOV BYTE PTR LAST_DIR2, AL
+    412	01EA  80 FD AA				     CMP CH, 170
+    413	01ED  73 0D				     JAE VA_A_GANAR1 ; CH >= 170.
+    414	01EF  80 C5 0A				     ADD CH, 10	; Numeros de Y mas altos.
+    415	01F2  EB 02 90				     JMP TECLA_FUE_PULSADA_2
+    416	01F5					     NO_K:
+    417	01F5  C3				     RET
+    418
+    419	01F6					     TECLA_FUE_PULSADA_2:
+    420						     ; Comprueba, en un	movimiento legal, si ha	habido una interseccion.
+    421	01F6  E8 00FA				     CALL CHECK_INTERSECTION_2
+    422
+    423	01F9  EB 06 90				     JMP FIN_EJECUTA_TECLA_2
+    424
+    425	01FC					     VA_A_GANAR1:
+    426	01FC  B0 01				     MOV AL, 1
+    427	01FE  A2 1F4Fr				     MOV BYTE PTR JUGADOR_GANADOR, AL
+    428
+    429	0201					     FIN_EJECUTA_TECLA_2:
+    430
+    431	0201  C3				     RET
+    432	0202				     EJECUTA_TECLA_2 ENDP
+    433
+    434					     ; Mueve una posicion la serpiente del jugador 1.
+    435					     ; Pinta la	nueva posicion que se ha movido	(la apuntada en	AX) de color
+    436					     ; y la ultima posicion, que se va a borrar	del buffer, de color negro.
+    437	0202				     MUEVE_1 PROC
+    438	0202  50				     PUSH AX
+    439	0203  53				     PUSH BX
+    440	0204  56				     PUSH SI
+    441
+    442
+    443	0205  8B 36 0003r			     MOV SI, WORD PTR FIRST1
+    444	0209  8B 1E 0001r			     MOV BX, WORD PTR LEN1
+    445	020D  03 DB				     ADD BX, BX	; Cada posicion	ocupa dos bytes.
+    446	020F  03 F3				     ADD SI, BX
+    447	0211  89 84 0005r			     MOV WORD PTR BUFFER1[SI], AX ; La nueva posicion.
+    448	0215  CD 55				     INT 55H ; La pinta	de color.
+    449
+    450	0217  8B 36 0003r			     MOV SI, WORD PTR FIRST1
+    451	021B  8B 84 0005r			     MOV AX, WORD PTR BUFFER1[SI] ; La primera posicion, se borra.
+    452	021F  CD 56				     INT 56H ; La pinta	de negro.
+    453	0221  83 C6 02				     ADD SI, 2
+    454	0224  89 36 0003r			     MOV WORD PTR FIRST1, SI ; Actualizas la primera posicion.
+    455
+    456	0228  5E				     POP SI
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 9
+snake.asm
+
+
+
+    457	0229  5B				     POP BX
+    458	022A  58				     POP AX
+    459
+    460	022B  C3				     RET
+    461	022C				     MUEVE_1 ENDP
+    462
+    463					     ; Mueve una posicion la serpiente del jugador 2.
+    464					     ; Pinta la	nueva posicion que se ha movido	(la apuntada en	AX) de color
+    465					     ; y la ultima posicion, que se va a borrar	del buffer, de color negro.
+    466	022C				     MUEVE_2 PROC
+    467	022C  50				     PUSH AX
+    468	022D  53				     PUSH BX
+    469	022E  56				     PUSH SI
+    470
+    471
+    472	022F  8B 36 0FA8r			     MOV SI, WORD PTR FIRST2
+    473	0233  8B 1E 0FA6r			     MOV BX, WORD PTR LEN2
+    474	0237  03 DB				     ADD BX, BX	; Cada posicion	ocupa dos bytes.
+    475	0239  03 F3				     ADD SI, BX
+    476	023B  89 84 0FAAr			     MOV WORD PTR BUFFER2[SI], AX ; La nueva posicion.
+    477	023F  CD 57				     INT 57H ; La pinta	de color.
+    478
+    479	0241  8B 36 0FA8r			     MOV SI, WORD PTR FIRST2
+    480	0245  8B 84 0FAAr			     MOV AX, WORD PTR BUFFER2[SI] ; La primera posicion, se borra.
+    481	0249  CD 56				     INT 56H ; La pinta	de negro.
+    482	024B  83 C6 02				     ADD SI, 2
+    483	024E  89 36 0FA8r			     MOV WORD PTR FIRST2, SI ; Actualizas la primera posicion.
+    484
+    485	0252  5E				     POP SI
+    486	0253  5B				     POP BX
+    487	0254  58				     POP AX
+    488
+    489	0255  C3				     RET
+    490	0256				     MUEVE_2 ENDP
+    491
+    492					     ; Aumenta en 1 la longitud	de la snake del	primer jugador.
+    493	0256				     INCREMENTA_1 PROC
+    494	0256  56				     PUSH SI
+    495	0257  50				     PUSH AX
+    496
+    497	0258  8B 36 0003r			     MOV SI, WORD PTR FIRST1
+    498						     ; Pinta el	ultimo cuadrado	borrado	(hay almenos uno pues se ha desplazado
+    499						     ; varios movimientos al menos).
+    500	025C  8B 84 0003r			     MOV AX, WORD PTR BUFFER1[SI-2]
+    501	0260  CD 55				     INT 55H
+    502
+    503						     ; Actualizas la posicion del primer cuadrado.
+    504	0262  83 C6 FE				     ADD SI, -2
+    505	0265  89 36 0003r			     MOV WORD PTR FIRST1, SI
+    506
+    507						     ; Aumentas	en 1 la	longitud de la snake.
+    508	0269  A1 0001r				     MOV AX, WORD PTR LEN1
+    509	026C  40				     INC AX
+    510	026D  A3 0001r				     MOV WORD PTR LEN1,	AX
+    511
+    512	0270  58				     POP AX
+    513	0271  5E				     POP SI
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 10
+snake.asm
+
+
+
+    514
+    515	0272  C3				     RET
+    516	0273				     INCREMENTA_1 ENDP
+    517
+    518					     ; Aumenta en 1 la longitud	de la snake del	segundo	jugador.
+    519	0273				     INCREMENTA_2 PROC
+    520	0273  56				     PUSH SI
+    521	0274  50				     PUSH AX
+    522
+    523	0275  8B 36 0FA8r			     MOV SI, WORD PTR FIRST2
+    524						     ; Pinta el	ultimo cuadrado	borrado	(hay almenos uno pues se ha desplazado
+    525						     ; varios movimientos al menos).
+    526	0279  8B 84 0FA8r			     MOV AX, WORD PTR BUFFER2[SI-2]
+    527	027D  CD 55				     INT 55H
+    528
+    529						     ; Actualizas la posicion del primer cuadrado.
+    530	027F  83 C6 FE				     ADD SI, -2
+    531	0282  89 36 0FA8r			     MOV WORD PTR FIRST2, SI
+    532
+    533						     ; Aumentas	en 1 la	longitud de la snake.
+    534	0286  A1 0FA6r				     MOV AX, WORD PTR LEN2
+    535	0289  40				     INC AX
+    536	028A  A3 0FA6r				     MOV WORD PTR LEN2,	AX
+    537
+    538	028D  58				     POP AX
+    539	028E  5E				     POP SI
+    540
+    541	028F  C3				     RET
+    542	0290				     INCREMENTA_2 ENDP
+    543
+    544					     ; Comprueba si la cabeza del primer jugador va a colisionar su propia serpiente o con la
+    545					     ; serpiente del rival.
+    546	0290				     CHECK_INTERSECTION_1 PROC
+    547	0290  56				     PUSH SI
+    548	0291  50				     PUSH AX
+    549	0292  51				     PUSH CX
+    550	0293  52				     PUSH DX
+    551	0294  53				     PUSH BX
+    552
+    553						     ; Se lee un pixel de la pantalla.
+    554	0295  B4 0D				     MOV AH, 0Dh ; Lectura de pixel.
+    555	0297  B5 00				     MOV CH, 0 ; La X.
+    556	0299  8A CB				     MOV CL, BL
+    557	029B  B6 00				     MOV DH, 0 ; La Y.
+    558	029D  8A D7				     MOV DL, BH
+    559	029F  B7 00				     MOV BH, 0H	; Page number, always 0.
+    560	02A1  CD 10				     INT 10H
+    561	02A3  3C 00				     CMP AL, 0
+    562						     ; Si el pixel leido es el negro (0) entonces no ha	habido interseccion.
+    563	02A5  74 46				     JE	FIN_CHECK_INTERSECTION_1
+    564
+    565	02A7  3C 0E				     CMP AL, 0EH ; Si el pixel es amarillo gana	una recompensa.
+    566	02A9  75 1D				     JNE NO_RECOMPENSA_1
+    567
+    568	02AB  A0 1FC3r				     MOV AL, BYTE PTR PUNTUACION_1
+    569	02AE  04 0A				     ADD AL, 10; Gana 10 puntos.
+    570	02B0  A2 1FC3r				     MOV BYTE PTR PUNTUACION_1,	AL
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 11
+snake.asm
+
+
+
+    571
+    572	02B3  A1 1FF7r				     MOV AX, WORD PTR NUMERO_RECOMPENSAS
+    573	02B6  48				     DEC AX
+    574	02B7  A3 1FF7r				     MOV WORD PTR NUMERO_RECOMPENSAS, AX
+    575	02BA  3D 0000				     CMP AX, 0
+    576	02BD  75 2E				     JNZ FIN_CHECK_INTERSECTION_1 ; Si AX != 0 acaba.
+    577						     ; Si AX ==	0 generar dos nuevas recompensas.
+    578
+    579	02BF  E8 0092				     CALL GENERATE_REWARD
+    580	02C2  E8 008F				     CALL GENERATE_REWARD
+    581	02C5  EB 26 90				     JMP FIN_CHECK_INTERSECTION_1
+    582
+    583
+    584	02C8					     NO_RECOMPENSA_1:
+    585
+    586						     ; Carga en	CX la posicion actual.
+    587	02C8  5B				     POP BX
+    588	02C9  53				     PUSH BX
+    589	02CA  8B CB				     MOV CX, BX
+    590
+    591						     ; Carga en	AX la ultima posicion en el bufer.
+    592	02CC  8B 36 0003r			     MOV SI, WORD PTR FIRST1
+    593	02D0  8B 1E 0001r			     MOV BX, WORD PTR LEN1
+    594	02D4  03 DB				     ADD BX, BX	; Cada posicion	ocupa dos bytes.
+    595	02D6  03 F3				     ADD SI, BX
+    596						     ; Si no ha	habido todavia movimiento y el buffer esta vacio
+    597	02D8  83 FE 02				     CMP SI, 2
+    598	02DB  7C 10				     JNGE FIN_CHECK_INTERSECTION_1
+    599	02DD  83 C6 FE				     ADD SI, -2	; La ultima posicion usada.
+    600	02E0  8B 84 0005r			     MOV AX, WORD PTR BUFFER1[SI]
+    601
+    602	02E4  3B C1				     CMP AX, CX	; Compara AX (la ultima	posicion) con CX (la posicion actual).
+    603	02E6  74 05				     JE	FIN_CHECK_INTERSECTION_1 ; Si son iguales acabas, no se	ha movido ahora	la  +
+    604				     cabeza.
+    605
+    606						     ; Sino, gana el jugador dos, ya que el uno	se ha chocado.
+    607	02E8  B0 02				     MOV AL, 2
+    608	02EA  A2 1F4Fr				     MOV BYTE PTR JUGADOR_GANADOR, AL
+    609
+    610
+    611	02ED					     FIN_CHECK_INTERSECTION_1:
+    612	02ED  5B				     POP BX
+    613	02EE  5A				     POP DX
+    614	02EF  59				     POP CX
+    615	02F0  58				     POP AX
+    616	02F1  5E				     POP SI
+    617
+    618	02F2  C3				     RET
+    619	02F3				     CHECK_INTERSECTION_1 ENDP
+    620
+    621					     ; Comprueba si la cabeza del segundo jugador va a colisionar su propia serpiente o	con +
+    622				     la
+    623					     ; serpiente del rival.
+    624	02F3				     CHECK_INTERSECTION_2 PROC
+    625	02F3  56				     PUSH SI
+    626	02F4  50				     PUSH AX
+    627	02F5  53				     PUSH BX
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 12
+snake.asm
+
+
+
+    628	02F6  52				     PUSH DX
+    629	02F7  51				     PUSH CX
+    630
+    631						     ; Se lee un pixel de la pantalla.
+    632	02F8  B4 0D				     MOV AH, 0Dh ; Lectura de pixel.
+    633	02FA  8A C9				     MOV CL, CL
+    634	02FC  B6 00				     MOV DH, 0 ; La Y.
+    635	02FE  8A D5				     MOV DL, CH
+    636	0300  B5 00				     MOV CH, 0 ; La X.
+    637	0302  B7 00				     MOV BH, 0H	; Page number, always 0.
+    638	0304  CD 10				     INT 10H
+    639	0306  3C 00				     CMP AL, 0
+    640						     ; Si el pixel leido es el negro (0) entonces no ha	habido interseccion.
+    641	0308  74 44				     JE	FIN_CHECK_INTERSECTION_2
+    642
+    643	030A  3C 0E				     CMP AL, 0EH ; Si el pixel es amarillo gana	una recompensa.
+    644	030C  75 1D				     JNE NO_RECOMPENSA_2
+    645
+    646	030E  A0 1FF6r				     MOV AL, BYTE PTR PUNTUACION_2
+    647	0311  04 0A				     ADD AL, 10; Gana 10 puntos.
+    648	0313  A2 1FF6r				     MOV BYTE PTR PUNTUACION_2,	AL
+    649
+    650	0316  A1 1FF7r				     MOV AX, WORD PTR NUMERO_RECOMPENSAS
+    651	0319  48				     DEC AX
+    652	031A  A3 1FF7r				     MOV WORD PTR NUMERO_RECOMPENSAS, AX
+    653	031D  3D 0000				     CMP AX, 0
+    654	0320  75 2C				     JNZ FIN_CHECK_INTERSECTION_2 ; Si AX != 0 acaba.
+    655						     ; Si AX ==	0 generar dos nuevas recompensas.
+    656
+    657	0322  E8 002F				     CALL GENERATE_REWARD
+    658	0325  E8 002C				     CALL GENERATE_REWARD
+    659	0328  EB 24 90				     JMP FIN_CHECK_INTERSECTION_2
+    660
+    661
+    662	032B					     NO_RECOMPENSA_2:
+    663						     ; Carga en	CX la posicion actual.
+    664	032B  59				     POP CX
+    665	032C  51				     PUSH CX
+    666
+    667						     ; Carga en	AX la ultima posicion en el bufer.
+    668	032D  8B 36 0FA8r			     MOV SI, WORD PTR FIRST2
+    669	0331  8B 1E 0FA6r			     MOV BX, WORD PTR LEN2
+    670	0335  03 DB				     ADD BX, BX	; Cada posicion	ocupa dos bytes.
+    671	0337  03 F3				     ADD SI, BX
+    672						     ; Si no ha	habido todavia movimiento y el buffer esta vacio
+    673	0339  83 FE 02				     CMP SI, 2
+    674	033C  7C 10				     JNGE FIN_CHECK_INTERSECTION_2
+    675	033E  83 C6 FE				     ADD SI, -2	; La ultima posicion usada.
+    676	0341  8B 84 0FAAr			     MOV AX, WORD PTR BUFFER2[SI]
+    677
+    678	0345  3B C1				     CMP AX, CX	; Compara AX (la ultima	posicion) con CX (la posicion actual).
+    679	0347  74 05				     JE	FIN_CHECK_INTERSECTION_2 ; Si son iguales acabas, no se	ha movido ahora	la  +
+    680				     cabeza.
+    681
+    682						     ; Sino, gana el jugador uno, ya que el dos	se ha chocado.
+    683	0349  B0 01				     MOV AL, 1
+    684	034B  A2 1F4Fr				     MOV BYTE PTR JUGADOR_GANADOR, AL
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 13
+snake.asm
+
+
+
+    685
+    686
+    687	034E					     FIN_CHECK_INTERSECTION_2:
+    688	034E  59				     POP CX
+    689	034F  5A				     POP DX
+    690	0350  5B				     POP BX
+    691	0351  58				     POP AX
+    692	0352  5E				     POP SI
+    693
+    694	0353  C3				     RET
+    695	0354				     CHECK_INTERSECTION_2 ENDP
+    696
+    697					     ; Llamarla, sin argumentos, para generar de forma aleatoria 1 recompensa,
+    698					     ; cuadrados de 10x10 amarillos dentro de la zona que se pueden mover las serpientes,   +
+    699				     240x180.
+    700	0354				     GENERATE_REWARD PROC
+    701	0354  50				     PUSH AX
+    702	0355  53				     PUSH BX
+    703	0356  51				     PUSH CX
+    704	0357  52				     PUSH DX
+    705
+    706						     ; Get System Time,	deja en	CX:DX el tiempo	del sistema.
+    707						     ; Como vamos a usar modulos bajos,	solo usaremos DX.
+    708	0358  B4 00				     MOV AH, 00H
+    709	035A  CD 1A				     INT 1AH
+    710
+    711						     ; Generamos la X.
+    712	035C  8B C2				     MOV AX, DX
+    713	035E  35 0019				     XOR AX, 011001b ; Suma aleatoriedad.
+    714	0361  8B 1E 1FF7r			     MOV BX, NUMERO_RECOMPENSAS
+    715	0365  03 C3				     ADD AX, BX
+    716	0367  03 C3				     ADD AX, BX
+    717	0369  03 C3				     ADD AX, BX
+    718	036B  BB 0017				     MOV BX, 23	; Modulo 23.
+    719	036E  B4 00				     MOV AH, 0
+    720	0370  F6 F3				     DIV BL ; AH es el resto de	23.
+    721	0372  FE C4				     INC AH ; Rango [1..23].
+    722	0374  8A C4				     MOV AL, AH
+    723	0376  BB 000A				     MOV BX, 10
+    724	0379  F6 E3				     MUL BL ; Rango [10..230].
+    725	037B  8A C8				     MOV CL, AL	; La x se guarda en CL.
+    726	037D  51				     PUSH CX ; Se guarda porque	CX se va a sobreescribir.
+    727
+    728	037E  B4 00				     MOV AH, 00H
+    729	0380  CD 1A				     INT 1AH
+    730
+    731						     ; Generamos la Y.
+    732	0382  8B C2				     MOV AX, DX
+    733	0384  35 0019				     XOR AX, 011001b ; Suma aleatoriedad.
+    734	0387  8B 1E 1FF7r			     MOV BX, NUMERO_RECOMPENSAS
+    735	038B  03 C3				     ADD AX, BX
+    736	038D  03 C3				     ADD AX, BX
+    737	038F  03 C3				     ADD AX, BX
+    738	0391  BB 0011				     MOV BX, 17	; Modulo 17.
+    739	0394  B4 00				     MOV AH, 0
+    740	0396  F6 F3				     DIV BL ; AH es el resto de	17.
+    741	0398  FE C4				     INC AH ; Rango [1..17].
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 14
+snake.asm
+
+
+
+    742	039A  8A C4				     MOV AL, AH
+    743	039C  BB 000A				     MOV BX, 10
+    744	039F  F6 E3				     MUL BL ; Rango [10..170].
+    745	03A1  59				     POP CX ; Se restaura CX.
+    746	03A2  8A E8				     MOV CH, AL	; La x se guarda en CL.
+    747
+    748						     ; Pintamos	(X, Y) de color	amarillo.
+    749	03A4  8B C1				     MOV AX, CX
+    750	03A6  CD 58				     INT 58H
+    751
+    752						     ; Incrementa en 1 el numero de recompensas	activas.
+    753	03A8  A1 1FF7r				     MOV AX, WORD PTR NUMERO_RECOMPENSAS
+    754	03AB  40				     INC AX
+    755	03AC  A3 1FF7r				     MOV WORD PTR NUMERO_RECOMPENSAS, AX
+    756
+    757	03AF  5A				     POP DX
+    758	03B0  59				     POP CX
+    759	03B1  5B				     POP BX
+    760	03B2  58				     POP AX
+    761
+    762	03B3  C3				     RET
+    763	03B4				     GENERATE_REWARD ENDP
+    764
+    765					     ; Recibe por argumento un numero binario en AX, y guardara	en
+    766					     ; memoria el codigo ASCII del numero + '$'. Devuelve DX:BX,
+    767					     ; donde DX	es el segmento de la cadena resultado y	BX su offset.
+    768	03B4				     CONVERT_BIN_ASCII PROC
+    769	03B4  50				     PUSH AX
+    770	03B5  51				     PUSH CX
+    771	03B6  56				     PUSH SI
+    772
+    773	03B7  BE 0005				     MOV SI, 5 ; Es la ultima posicion de converted_str.
+    774	03BA  B9 000A				     MOV CX, 10	; Convertimos a	base 10.
+    775	03BD  C6 84 1FF9r 24			     MOV BYTE PTR converted_str[SI], '$' ; FIN DE CADENA.
+    776	03C2  4E				     DEC SI
+    777
+    778						     ; Mientras	el numero sea >	0 lo divide y guarda el	mod 10 en memoria.
+    779	03C3					     BUCLE_EXTERIOR_BIN2ASCII:
+    780	03C3  BA 0000					     MOV DX, 0 ; Resetea DX.
+    781	03C6  F7 F1					     DIV CX ; Dividimos	DX:AX por CX.
+    782
+    783	03C8  83 C2 30					     ADD DX, 30H; convierte DX a ASCII.
+    784	03CB  88 94 1FF9r				     MOV BYTE PTR converted_str[SI], DL	; Lo guarda en memoria.
+    785	03CF  4E					     DEC SI
+    786
+    787	03D0  3D 0000					     CMP AX, 0
+    788	03D3  75 EE					     JNE BUCLE_EXTERIOR_BIN2ASCII
+    789
+    790						     ; Guarda el segmento y el offset.
+    791	03D5  BA 0000s				     MOV DX, SEG converted_str
+    792	03D8  BB 1FF9r				     MOV BX, OFFSET converted_str
+    793	03DB  46				     INC SI
+    794	03DC  03 DE				     ADD BX, SI
+    795
+    796	03DE  5E				     POP SI
+    797	03DF  59				     POP CX
+    798	03E0  58				     POP AX
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 15
+snake.asm
+
+
+
+    799
+    800	03E1  C3				     RET
+    801	03E2				     CONVERT_BIN_ASCII ENDP
+    802
+    803	03E2			     CODIGO ENDS
+    804				     END MAIN
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 16
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "05/08/21"
+??FILENAME			  Text	 "snake	  "
+??TIME				  Text	 "23:02:41"
+??VERSION			  Number 0200
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODIGO
+@FILENAME			  Text	 SNAKE
+@WORDSIZE			  Text	 2
+BUCLE_EXTERIOR_BIN2ASCII	  Near	 CODIGO:03C3
+BUCLE_TECLADO			  Near	 CODIGO:0044
+BUFFER1				  Word	 DATA:0005
+BUFFER2				  Word	 DATA:0FAA
+CHECK_INTERSECTION_1		  Near	 CODIGO:0290
+CHECK_INTERSECTION_2		  Near	 CODIGO:02F3
+CHECK_TECLA_PULSADA		  Near	 CODIGO:004E
+CONVERTED_STR			  Byte	 DATA:1FF9
+CONVERT_BIN_ASCII		  Near	 CODIGO:03B4
+EJECUTA_TECLA_1			  Near	 CODIGO:0158
+EJECUTA_TECLA_2			  Near	 CODIGO:01AD
+FIN_BUCLE_TECLADO		  Near	 CODIGO:00F3
+FIN_CHECK_INTERSECTION_1	  Near	 CODIGO:02ED
+FIN_CHECK_INTERSECTION_2	  Near	 CODIGO:034E
+FIN_EJECUTA_TECLA_1		  Near	 CODIGO:01AC
+FIN_EJECUTA_TECLA_2		  Near	 CODIGO:0201
+FIN_GANA2			  Near	 CODIGO:010B
+FIN_PROGRAMA			  Near	 CODIGO:0119
+FIRST1				  Word	 DATA:0003
+FIRST2				  Word	 DATA:0FA8
+GANA1				  Byte	 DATA:1F50
+GANA2				  Byte	 DATA:1F71
+GENERATE_REWARD			  Near	 CODIGO:0354
+INCREMENTA_1			  Near	 CODIGO:0256
+INCREMENTA_2			  Near	 CODIGO:0273
+JUGADOR_GANADOR			  Byte	 DATA:1F4F
+LAST_DIR1			  Byte	 DATA:0FA5
+LAST_DIR2			  Byte	 DATA:1F4A
+LEN1				  Word	 DATA:0001
+LEN2				  Word	 DATA:0FA6
+MAIN				  Near	 CODIGO:0000
+MODO_VIDEO			  Byte	 DATA:0000
+MUEVE_1				  Near	 CODIGO:0202
+MUEVE_2				  Near	 CODIGO:022C
+NO_A				  Near	 CODIGO:016A
+NO_D				  Near	 CODIGO:017C
+NO_HA_PASADO_10_SEC		  Near	 CODIGO:00A3
+NO_HA_PASADO_15_SEC		  Near	 CODIGO:008B
+NO_I				  Near	 CODIGO:01E3
+NO_J				  Near	 CODIGO:01BF
+NO_K				  Near	 CODIGO:01F5
+NO_L				  Near	 CODIGO:01D1
+NO_RECOMPENSA_1			  Near	 CODIGO:02C8
+NO_RECOMPENSA_2			  Near	 CODIGO:032B
+NO_S				  Near	 CODIGO:01A0
+NO_TECLA_PULSADA		  Near	 CODIGO:0057
+Turbo Assembler	 Version 2.0	    05/08/21 23:02:41	    Page 17
+Symbol Table
+
+
+
+NO_W				  Near	 CODIGO:018E
+NUMERO_RECOMPENSAS		  Word	 DATA:1FF7
+PUNTUACION_1			  Byte	 DATA:1FC3
+PUNTUACION_1_STR		  Byte	 DATA:1F93
+PUNTUACION_2			  Byte	 DATA:1FF6
+PUNTUACION_2_STR		  Byte	 DATA:1FC4
+SECONDS_ELAPSED_MOD10		  Word	 DATA:1F4B
+SECONDS_ELAPSED_MOD15		  Word	 DATA:1F4D
+TECLA_FUE_PULSADA_1		  Near	 CODIGO:01A1
+TECLA_FUE_PULSADA_2		  Near	 CODIGO:01F6
+TECLA_PULSADA			  Near	 CODIGO:00D8
+VA_A_GANAR1			  Near	 CODIGO:01FC
+VA_A_GANAR2			  Near	 CODIGO:01A7
+VELOCIDAD			  Word	 DATA:1FFF
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODIGO				  16  03E2 Para	  none
+DATA				  16  2001 Para	  none
+

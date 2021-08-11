@@ -1,0 +1,152 @@
+\documentclass[12pt]{article}
+\usepackage{tikz}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{lscape}
+\usepackage{minted}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{diagbox}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{enumerate}
+\usepackage{graphics}
+\usepackage{hyperref}
+\usepackage[spanish]{babel} %Traduce todo al espaniol.
+
+\hypersetup{
+    %colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    %linkcolor=blue,  %choose some color if you want links to stand out
+}
+\setcounter{secnumdepth}{0} %no numera las secciones y aparecen en el índice
+
+\begin{document}
+\iffalse
+\title{Práctica 3}
+\author{Junco de las Heras Valenzuela y Marta Vaquerizo Núñez}
+
+\medskip
+\fi
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+ 
+        \Huge
+        \textbf{Práctica 3}
+        
+        \vspace{2 cm}
+        
+        \textbf{Lógica}
+
+        \vspace{2 cm}
+        \LARGE
+         Junco de las Heras Valenzuela \\ y \\ Marta Vaquerizo Núñez
+    \end{center}
+\end{titlepage}
+\tableofcontents
+
+\newpage
+\phantomsection
+
+\section{Problema de las 8 reinas}
+\subsection{Descripción del problema}
+El problema de las ocho reinas consiste en encontrar una forma de colocar esas ocho reinas en un tablero de ajedrez tal que no se ataquen entre ellas. Se dice que una reina puede atacar a otra si esta se encuentra en una fila, columna o diagonal en la que está la primera. Entonces, se busca una forma de colocar las reinas en el tablero sin que estén en la misma fila, columna o diagonal. Esta información se puede encontrar en el link donde está el código Prolog que se va a analizar posteriormente:
+\begin{center}
+    \url{https://www.ic.unicamp.br/~meidanis/courses/mc336/2009s2/prolog/problemas/}
+\end{center} 
+y de forma un poco más extensiva en el siguiente link:\\
+\hspace*{0.3 cm}\url{https://es.wikipedia.org/wiki/Problema_de_las_ocho_reinas}.
+
+\subsection{Explicación del algoritmo de la solución}
+El algoritmo recibe como input N, que es la dimensión del tablero a resolver el problema de las N damas, pero nosotros vamos a comentar el caso donde N es igual a 8.
+\paragraph{}
+Para el algoritmo, se representan las posiciones de las reinas en una lista de 8 elementos de números del $1$ al $8$, ya que hay $8$ filas y $8$ columnas. Por ejemplo, si la solución propuesta es $[2, 4, 6, 8, 3, 1, 7, 5]$, esto significa que la reina de la primera columna está en la segunda fila, la reina de la segunda columna está en la cuarta fila, y así con todas las columnas. 
+\paragraph{}
+Primero inicializa la lista resultante con los números del 1 al 8, satisfaciendo la condicion de que en cada fila y columna no haya dos damas atacándose.
+\paragraph{}
+Luego, el algoritmo permuta las posiciones de la lista garantizando que no haya dos reinas en la misma fila ni columna, faltando garantizar que no haya dos en la misma diagonal. Sabiendo que una reina que está la posición (X,Y) ataca dos diagonales, y si nombramos a esas diagonales C $=$ X $-$ Y (la que va de abajo a la izquierda a arriba a la derecha) y D $=$ X $+$ Y (la que va de arriba a la izquierda a abajo a la derecha), podemos llevar la cuenta de que reinas están en las diagonales y de esa manera comprobar si esa combinación se puede dar. 
+\paragraph{}
+Después de permutar el algoritmo le aplica una función test que comprueba que no haya dos damas en la misma diagonal. En caso de que las haya devuelve un False y hace backtracking, para proceder a encontrar la siguiente solución.
+\paragraph{}
+La información ha sido sacada de las webs anteriores y del código \texttt{p90.pl}.
+
+\subsection{Descripción del código Prolog}
+Para ejecutar el código se ejecuta el comando: \texttt{queens\_1(N, Q)},
+donde \texttt{N} es el número de reinas a colocar y Q es la solución al problema. En nuestro caso \texttt{queens\_1(8, Q)}.
+\paragraph{}
+Lo primero que hace el código es generar una lista con los número del $1$ al \texttt{N} en ese orden, para esto se usa una recursión con el predicado: \texttt{range(A,B,L)}, donde A es el número mínimo del rango, B es el número máximo del rango, y L es la lista con los números del A al B. Una vez generada esta lista, se van permutando los elementos de la misma con los predicados: \texttt{permu(Xs,Zs)}, donde Xs es la lista original, y Zs es el resultado de permutar Xs; y \texttt{del(X,[Y|Ys],[Y|Zs])}, donde X es el elemento a eliminar de la lista $[Y|Ys]$, y el resultado de la eliminación se devuelve por $[Y|Zs]$.
+
+\paragraph{}
+Tras la permutación, se comprueba que en las diagonales no haya más de una reina. Esto se hace con los predicados: \texttt{test(Qs)}, donde Qs es una solución al problema a testear; y \texttt{test(Qs,X,Cs,Ds)}, donde Qs es una lista de las filas en las que están las reinas desde la columna X a la columna N (en nuestro caso $8$) de la solución propuesta,  Cs es una lista con los numeros que representan las diagonales que van de abajo a la izquierda a arriba a la derecha, y Ds es una lista con los numeros que representan las diagonales que van de arriba a la izquierda a abajo a la derecha. Al llevar la cuenta de las diagonales, cada vez que se chequea si una reina (posicionada en $(X,Y)$) ataca alguna diagonal en la que hay alguna reina, solo hace falta ver si C $=$ X $-$ Y está en Cs, y si D $=$ X $+$ Y está en Ds. Si ocurre que C está en Cs o D en Ds, esa solución no vale, y se vuelve a permutar la lista original.
+
+\subsection{Ejecución del código}
+A continuación se va a mostrar la ejecución de la primera iteración del código para ver mejor lo que se ha contado anteriormente. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1.05]{Ejecucion_codigo_parte1.PNG}
+    \caption{Creación de la lista de números del 1 al 8.}
+\end{figure}
+\paragraph{}
+Como se puede observar en la imagen, se llama recursivamente al predicado \texttt{range(X,8,L)}, donde X empieza siendo $1$, y va aumentando en una unidad hasta que llega a $8$, donde acaba la recursión, y al volver de la recursión, se van añadiendo los números que se han ido obteniendo al sumar de $1$ en $1$. A continuación, se permuta esta lista recién generada:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1.15]{Ejecucion_codigo_parte2.PNG}
+    \caption{Generación de una permutación de la lista original.}
+\end{figure}
+
+\paragraph{}
+En este caso, como es la primera iteración, no se produce ninguna permutación como tal, ya que se tiene que probar si la lista generada funciona, pero para observar las llamadas y el proceso de permutación nos sirve.
+
+\paragraph{}
+Se observa en la imagen que primero se llama a permutación con la lista original, y después se intercalan las llamadas de \texttt{del(X,L1,L2)} y de \texttt{permu(L2,R)}, donde L1 es la lista a la que se le quita el elemento X, y L2 es el resultado de esa eliminación, hasta que L2 se vacia. En la vuelta de la recursión se forma la permutación, que en este caso, como se ha comentado es la misma lista que la original, generada al principio.
+
+\newpage
+De todas maneras, se muestra a continuación el mismo proceso de generación de una permutación, pero de la segunda iteración, en la que ya hay una permutación real.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1.1]{Ejecucion_codigo_parte4.PNG}
+    \caption{Generación de una permutación de la lista original, segunda iteración.}
+\end{figure}
+
+\paragraph{}
+En este caso, se puede observar que el no se llama a permutar con la lista original, sino que se hace un \textbf{Redo} de la llamada a \texttt{permu}, para generar una permutación nueva. Y por último se comprueba que las diagonales también son atacadas por una sola reina:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1.2]{Ejecucion_codigo_parte3.PNG}
+    \caption{Comprobación de que en las diagonales no hay más que una reina.}
+\end{figure}
+
+\paragraph{}
+En esta parte de la ejecución, se puede ver que tras llamar a \texttt{test(L, 1, Cs,Ds}, donde L es la permutación propuesta como solución, y donde inicialmente Cs y Ds son [ ], se calcula C de la primera reina, y se comprueba si C (en este caso con valor $0$) está en Cs, pero como es la primera reina y Cs es [ ], pasa a comprobar si D (en este caso con valor $2$) está en Ds, y como Ds es [ ], se pasa a la segunda reina. Antes de eso, a Cs se añade $0$, pasando a ser Cs $= [0]$, y a Ds se añade $2$, pasando a ser Ds $= [2]$. Entonces pasa a la segunda reina, y vuelve a repetir el proceso. Primero calcula C, que en este caso tiene el valor $0$, y se comprueba si C está en Cs $= [0]$, como está, esa solución ya no es valida, entonces se vuelve de la recursión para repetir el proceso de generar otra solución con otra permutación.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.6]{solutions.png}
+    \caption{Ejemplo de ejecución con N = 8 y algunos primeros resultados.}
+\end{figure}
+
+
+\subsection{Comentario personal sobre la solución}
+Nos parece que es una solución adecuada, ya que es capaz de encontrar todas las soluciones al problema. 
+\paragraph{}
+Sin embargo hay algunas posibles mejoras al algoritmo. Este algoritmo tiene tres fases, la primera es escribir los números del 1 al 8, luego los permuta y luego le aplica la función test, pero esto no es óptimo ya que si la primera dama está en la casilla (1,1) y la segunda en la casilla (2, 2) entonces se están atacando por la diagonal, pero el algoritmo efectúa 6! = operaciones.
+\paragraph{}
+Lo óptimo sería ir haciendo las comprobaciones de la diagonal al mismo tiempo que se va generando la permutación. Nótese que para ir commprobando una diagonal en la posición (i, j) no hace falta recorrer una por una todas las casillas hasta llegar al borde del tablero (que tendría complejidad O(N)) sino que se podría guardar una lista de visitados donde visitados[x] es True si hay una dama en la diagonal x, y si está en la casilla (i, j) la diagonal es la i+j, teniendo una complejidad de O(1) comprobar las diagonales.
+\end{document}
+

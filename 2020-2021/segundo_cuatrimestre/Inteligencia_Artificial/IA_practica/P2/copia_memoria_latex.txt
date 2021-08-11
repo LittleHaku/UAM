@@ -1,0 +1,344 @@
+\documentclass[12pt]{article}
+\usepackage{tikz}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage{multicol}
+\usepackage{lscape}
+\usepackage{minted}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{diagbox}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{enumerate}
+\usepackage{graphics}
+\usepackage[spanish]{babel} %Traduce todo al espaniol.
+
+\hypersetup{
+    %colorlinks=true, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    %linkcolor=blue,  %choose some color if you want links to stand out
+}
+\setcounter{secnumdepth}{0} %no numera las secciones y aparecen en el índice
+
+\begin{document}
+\iffalse
+\title{Práctica 2}
+\author{Junco de las Heras Valenzuela y Marta Vaquerizo Núñez}
+
+\medskip
+\fi
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{1cm}
+ 
+        \Huge
+        \textbf{Práctica 2}
+        
+        \vspace{2 cm}
+        
+        \textbf{Búsqueda con adversarios}
+        
+        \vspace{2 cm}
+        \LARGE
+         Junco de las Heras Valenzuela \\ y \\ Marta Vaquerizo Núñez
+    \end{center}
+\end{titlepage}
+\tableofcontents
+
+\newpage
+\phantomsection
+
+\section{1. Documentación para minimax con poda alfa-beta.}
+\begin{enumerate}[a.]
+    \item Detalles de implementación.
+    
+    \begin{enumerate}[i.]
+        \item ¿Qué pruebas se han diseñado y aplicado para determinar si la implementación es correcta?
+        
+        \paragraph{}
+        Para comprobar que la implementación es correcta, en el fichero \texttt{demo\_reversi.py}, se han creado dos jugadores \texttt{player\_minimax5} y \texttt{player\_minimax6} con la estrategia de minimax poda $\alpha-\beta$. Se ha comprobado que tanto con el minimax como con el minimax con poda se han tomado los mismos movimientos (puesto que tenían heurísticas deterministas deberían dar el mismo mejor movimiento). Después se ha comprobado que se ha reducido el tiempo de ejecución usando la librería \texttt{timeit} jugando una partida con dos jugadores minimax y luego jugando entre dos jugadores del tipo \texttt{player\_minimax5} y \texttt{player\_minimax6}. En en siguiente apartado se muestra una tabla con los tiempos.
+        \\
+        
+        \item Diseño: Estructuras de datos utilizadas, descomposición funcional, etc.
+        
+        \paragraph{}
+        En el fichero \texttt{strategy.py}, la clase \texttt{MinimaxAlphaBetaStrategy} está formada por tres funciones, a parte de la de inicialización:
+        
+        \begin{itemize}
+            \item \textbf{next\_move}: esta función determina el siguiente movimiento del jugador, se llama siendo un nodo MAX.
+            \item \textbf{\_min\_value}: esta función calcula el $\beta$, ya que se llama siendo un nodo MIN.
+            \item \textbf{\_max\_value}: esta función calcula el $\alpha$, ya que se llama siendo un nodo MAX.
+        \end{itemize}
+        
+        \paragraph{}
+        En la función \texttt{next\_move}, se inicializan los valores de $[\alpha, \beta]$ a $[-\infty,\infty]$, después se recorren todos los sucesores, que son nodos MIN, para obtener sus $\beta's$, y así obtener el máximo de ellas, dándonos el siguiente movimiento. Para obtener la $\beta$, se llama a la función \texttt{min\_value}, que si es un nodo hoja, devuelve el valor de la función utilidad, y si no es, pasa por todos sus sucesores (nodos MAX), y obtiene el mínimo de los valores devueltos por la función \texttt{max\_value} en cada uno de ellos, para obtener su $\beta$.
+        \paragraph{}
+        La base de la recursión es cuando se llega a profundidad 0. Cada llamada recursiva decrementa en uno la profundidad, así que el algoritmo finaliza, completando la recursión.
+        \paragraph{}
+        Cada función devuelve el valor minimax y el alpha y el beta de ese nodo, para que su estado ancestro (padre) pueda actualizar los suyos acorde a los del hijo.
+        \paragraph{}
+        
+        \item Implementación.
+        
+        \begin{minted}{python}
+    class MinimaxAlphaBetaStrategy(Strategy):
+    """Minimax alpha-beta strategy."""
+    
+    def __init__(
+        self,
+        heuristic: Heuristic,
+        max_depth_minimax: int,
+        verbose: int = 0,
+    ) -> None:
+        super().__init__(verbose)
+        self.heuristic = heuristic
+        self.max_depth_minimax = max_depth_minimax
+        
+    def next_move(
+        self,
+        state: TwoPlayerGameState,
+        gui: bool = False,
+    ) -> TwoPlayerGameState:
+        """Compute next state in the game."""
+
+        successors = self.generate_successors(state)
+        next_state = None
+        minimax_value = -np.inf
+        alpha = -np.inf
+        beta = np.inf
+    
+        for successor in successors:
+            if self.verbose > 1:
+                print('{}: {}'.format(state.board, minimax_value))
+    
+                successor_minimax_value, alpha_ret, beta_ret =
+                self._min_value(
+                    successor,
+                    self.max_depth_minimax,
+                    alpha,
+                    beta
+                )
+                # If the actual successor gives more value, update
+                next_state.
+                if successor_minimax_value > minimax_value:
+                    minimax_value = successor_minimax_value
+                    alpha = minimax_value
+                    next_state = successor
+                    
+        if self.verbose > 0:
+            if self.verbose > 1:
+                print('\nGame state before move:\n')
+                print(state.board)
+                print()
+            print('Minimax value = {:.2g}'.format(minimax_value))
+    
+        # If the actual node is not final node, there will be next state.
+        return next_state
+    
+    def _min_value(
+        self,
+        state: TwoPlayerGameState,
+        depth: int,
+        alpha: int,
+        beta: int,
+    ) -> (float, float, float):
+        """Min step of the minimax-alpha-beta pruning algorithm."""
+        if state.end_of_game or depth == 0:
+            minimax_value = self.heuristic.evaluate(state)
+            alpha = minimax_value
+            beta = minimax_value
+        else:
+            minimax_value = beta
+            successors = self.generate_successors(state)
+            
+            for successor in successors:
+                if self.verbose > 1:
+                    print('{}:{}'.format(state.board,minimax_value))
+                    
+                successor_minimax_value, alpha_ret, beta_ret =
+                self._max_value(
+                    successor, depth - 1, alpha, beta
+                )
+                # Actualize min node.
+                if alpha_ret < beta:
+                    beta = alpha_ret
+                    minimax_value = beta
+                # Prune.
+                if alpha >= beta:
+                    break
+                    
+        if self.verbose > 1:
+            print('{}: {}'.format(state.board, minimax_value))
+    
+        return minimax_value, alpha, beta
+    
+    def _max_value(
+        self,
+        state: TwoPlayerGameState,
+        depth: int,
+        alpha: int,
+        beta:  int,
+    ) -> (float, float, float):
+        """Max step of the minimax-alpha-beta pruning algorithm."""
+    
+        if state.end_of_game or depth == 0:
+            minimax_value = self.heuristic.evaluate(state)
+            alpha = minimax_value
+            beta = minimax_value
+        else:
+            minimax_value = alpha
+    
+            successors = self.generate_successors(state)
+        
+            for successor in successors:
+                if self.verbose > 1:
+                    print('{}: {}'.format(state.board,minimax_value))
+        
+                successor_minimax_value, alpha_ret, beta_ret =
+                self._min_value(
+                    successor, depth - 1, alpha, beta
+                )
+                
+                # Actualize max node.
+                if beta_ret > alpha:
+                    alpha = beta_ret
+                    minimax_value = alpha
+                # Prune.
+                if alpha >= beta:
+                    break
+    
+    if self.verbose > 1:
+        print('{}: {}'.format(state.board, minimax_value))
+    
+    return minimax_value, alpha, beta
+    \end{minted}
+    \paragraph{}
+    \item Otra información relevante.\\
+    Gracias a la implementación del minimax poda alfa-beta hemos podido entender mejor el algoritmo con sus llamadas recursivas visto en clase de forma teórica.
+    \paragraph{}
+    
+    
+    \end{enumerate}
+    \newpage
+    \item Eficiencia de la poda alfa-beta. Descripción completa del protocolo de evaluación.
+    \begin{enumerate}[i.]
+        \item Tablas con información sobre los tiempos empleados con y sin poda.
+        \paragraph{}
+        A continuación, se muestra la tabla de tiempos de 1 ejecución:
+        \newline
+        \begin{table}[htbp]
+        \begin{center}
+        \begin{tabular}{|c|c|c|}
+        \hline
+        \rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Heurística}{Versión}} & \makebox[4 cm][c]{\textcolor{white}{\textbf{Sin poda}}} & \makebox[4 cm][c]{\textcolor{white}{\textbf{Con poda}}} \\ \hline
+        
+        \cellcolor[gray]{0.8}\textbf{Proporcionada} &  \makebox[4 cm][c]{$1519.234$} & \makebox[4 cm][c]{$122.369$}  \\ \hline
+        
+        \cellcolor[gray]{0.8}\textbf{Nuestra} &  \makebox[4 cm][c]{$2818.446$} & \makebox[4 cm][c]{$164.016$}\\ \hline
+        \end{tabular}
+        \caption{\textbf{Tiempos de ejecución (s)}.}
+        \end{center}
+        \end{table}
+
+       \hspace*{0.3 cm} Cabe destacar que en la partida con el minimax y nuestra heurística, se quedó en la mitad porque uno de los jugadores se pasó de tiempo. Así que, si la mitad de la partida tardó $2818.446$ segundos, aproximadamente toda la partida hubiese durado unos $4818.446$ segundos, como unos $2000$ segundos más, y no el doble, ya que cuando quedan pocas posiciones por abarcar del tablero, se acelera la partida.
+        \\
+        \item Medidas de mejora independientes del ordenador.
+        \paragraph{}
+        Para tomar medidas independientes del ordenador se han tomado 2 medidas con el ordenador de un miembro de la pareja, y otras 2 medidas usando el ordenador del otro miembro, y luego se ha hecho la media aritmética.
+        \newline
+        \begin{table}[htbp]
+        \begin{center}
+        \begin{tabular}{|c|c|c|}
+        \hline
+        \rowcolor[rgb]{0.4,0.13, 0.4}\textcolor{white}{\backslashbox{Heurística}{Versión}} & \makebox[4 cm][c]{\textcolor{white}{\textbf{Sin poda}}} & \makebox[4 cm][c]{\textcolor{white}{\textbf{Con poda}}} \\ \hline
+        
+        \cellcolor[gray]{0.8}\textbf{Proporcionada} &  \makebox[4 cm][c]{$1413.832$} & \makebox[4 cm][c]{$108.556$}  \\ \hline
+        
+        \cellcolor[gray]{0.8}\textbf{Nuestra} &  \makebox[4 cm][c]{$2820.446$} & \makebox[4 cm][c]{$152.160$}\\ \hline
+        \end{tabular}
+        \caption{\textbf{Tiempos de ejecución (s)}.}
+        \end{center}
+        \end{table}
+        
+        Cabe destacar que nuestra heurística sin poda sigue dando timeout, de ahí que tenga un tiempo parecido a la tabla de una sola ejecución mientras que los valores de tiempo de las demas casillas bajen. Debido a que el ordenador que no ha tomado los tiempos del apartado anterior ejecutaba de media en menos tiempo las heurísticas, los tiempos generales han menguado.
+        
+        \item Un análisis correcto, claro y completo de los resultados.
+        \paragraph{}
+        Primero se va a analizar los tiempos de la heurística proporcionada. Se puede observar que usando la estrategia minimax con poda $\alpha-\beta$ se obtiene un tiempo bastante menor que cuando se usa la de minimax, con una diferencia de $1250$ segundo aproximadamente. Esto mismo ocurre si comparamos los tiempos de nuestra heurística, solo  que la diferencia de tiempos es incluso mayor.
+        
+        \paragraph{}
+        También se puede observar que los tiempos de nuestra heurística son mayores que los de la heurística proporcionada. Esto se debe a que la heurística proporcionada es más simple que la nuestra. Es importante destacar que en el caso de sin poda, la diferencia de tiempos es muchísimo mayor en comparación con la diferencia de tiempos en el caso de con poda. La razón de este suceso es que en el caso de sin poda se pasa por todos los nodos, y si se realiza la estrategia con una heurística más compleja, que tarda más, el tiempo aumenta bastante.
+        \\
+        
+        \item Otra información relevante.
+        \paragraph{}
+        Hemos podido comprobar que el algoritmo minimax con poda alfa-beta acelera considerablemente el tiempo de ejecución de las heurísticas, aunque la peor complejidad sea la misma del algoritmo sin poda, la complejidad media es mejor, comprobado empíricamente.
+        
+    \end{enumerate} 
+\end{enumerate}
+
+\section{2. Documentación del proceso de diseño de la heurística.}
+
+\begin{enumerate}[a.]
+    \item Descripción de trabajo anterior sobre estrategias para el juego Reversi, incluyendo estrategias en formato APA.
+    \paragraph{}
+    Primero buscamos información sobre cómo jugar al Reversi en pdfs como \footnote{Engel, K. T. Learning a Reversi Board Evaluator with Minimax.}. Y luego, en una aplicación para móviles, jugamos una serie de partidas hasta que fuimos entendiendo y aprendiendo una serie de estrategias, las cuales implementariamos luego y las probaríamos en los torneos anticipados.
+    
+    \item Descripción del proceso de diseño:
+    \begin{enumerate}[i.]
+        \item ¿Cómo se planificó y realizó el proceso de diseño?
+        \paragraph{}
+        Tras investigar las estrategias para el juego, decidimos crear funciones que calculasen un valor a partir de una estrategia, por ejemplo, crear un tablero con pesos en cada posición, que favorece atacar las esquinas, o tener en cuenta la movilidad del adversario, es decir, cuantos movimientos puede realizar. Las heurísticas se calculan con distintos pesos de estas funciones. 
+        \paragraph{}
+        Se planificó el diseño de un modo incremental, escribíamos código para nuestras primeras heurísticas, las poníamos a prueba en los torneos anticipados y veíamos cómo se desempeñaban contra los otros adversarios. También competíamos manualmente contra nuestras heurísticas, viendo posibles fallos como que regalase una esquina o una X-square (Casilla en diagonal de la esquina). 
+        \\
+        
+        \item ¿Se utilizó un procedimiento sistemático para la evaluación de las heurísticas diseñadas?
+        \paragraph{}
+        Para evaluar las heurísticas, las poníamos a competir entre ellas y veíamos las jugadas que realizaban, si alguna de estas jugadas parecía sospechosa o débil, se cambiaba lo que hacía que eso ocurriese. Otro procedimiento era uno mismo contra la máquina y observar de nuevo las jugadas de la máquina. A parte de estos prodecimientos que se hacían antes de la entrega de los torneos, una vez que salía el ranking, veíamos la posición, y en función de la misma, mejorabamos las heurísticas y hacíamos todo el procedimiento anterior. 
+        \\
+        
+        \item ¿Utilizaste en el diseño estrategias diseñadas por otros? Si estas están disponibles de manera pública, proporciona referencias en formato APA; en caso contrario, indica el nombre de la persona que proporcionó la información y reconoce dicha contribución como “comunicación privada”
+        \paragraph{}
+        La idea de poner pesos a las casillas del tablero la hemos tomado del pdf \footnote{Sannidhanam, V., \& Annamalai, M. (2015). An Analysis of Heuristics in Othello.}. Otro paper que también nos ha ayudado a entender mejor el juego del Othello y sus bases teóricas (con la idea de mejorar nuestro juego para hacer una mejor heurística) es \footnote{Lu, K. (2014). The Game Theory of Reversi.}.
+        
+    \end{enumerate}
+    
+    \item Descripción de la heurística final entregada.
+    \paragraph{}
+    Las heurísticas y todo el código relacionado está en el fichero \\ \texttt{2301\_p2\_09\_de\_las\_Heras\_Vaquerizo.py}.
+    \paragraph{}
+    
+    Las tres heurísticas que hemos entregado son muy parecidas, solo cambia los pesos que les hemos asignado a unas variables de tal forma que busquen distintos objetivos.
+    \paragraph{}
+    Lo primero que hace la heurística es comprobar si el estado es un estado terminal o no. Si lo es devuelve el valor real de la puntuación, es decir, el número de fichas que tienen tu color menos el número de fichas que tienen el color del rival.
+    \paragraph{}
+    Luego inicializa unas variables como un tablero en forma de array y otro en forma de diccionario.
+    \paragraph{}
+    Ahora calcula el factor de mobilidad, es decir el número de movimientos válidos que tiene actualmente. Cuantos más movimientos válidos tenga mejor, porque hay más probabilidad de elegir un movimiento que sea muy bueno y saque mucha ventaja posicional.
+    \paragraph{}
+    Seguidamente itera sobre todas las casillas del tablero y le suma el valor asignado a cada heurística en concreto, por ejemplo a las esquinas el valor 4000, que es uno muy grande comparado con el centro que puede ser 1.
+    \paragraph{}
+    En ret (de retorno), calcula una media ponderada del factor valores del tablero y de la mobilidad, ambos calculados previamente.
+    \paragraph{}
+    Finalmente, si el jugador juega como un jugador MAX devuelve esa estimación, si juega como MIN devuelve la estimación negada (Porque asumimos que juega MAX, entonces la estrategia MIN quiere hacer la jugada opuesta a MAX).
+    
+    \item Otra información relevante.
+    \paragraph{}
+    Gracias a los múltiples torneos anticipados hemos podido comprobar nuestras heurísticas con las de otras parejas, viendo qué tipo de cosas funcionaban y cuales no, por ejemplo poner algo de indeterminismo (con un random()) no nos dió buenos resultados, así que en la entrega final hemos suprimido esas llamadas.
+    
+\end{enumerate}
+
+\end{document}
+

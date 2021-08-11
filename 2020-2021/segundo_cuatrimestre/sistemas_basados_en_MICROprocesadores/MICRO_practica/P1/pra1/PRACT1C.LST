@@ -1,0 +1,107 @@
+Turbo Assembler	 Version 2.0	    03/12/21 18:32:24	    Page 1
+pract1c.asm
+
+
+
+      1				     ; Autor Junco de las Heras	Valenzuela. junco.heras@estudiante.uam.es
+      2				     ; Grupo: Doble Grado 2301
+      3
+      4				     ;**************************************************************************
+      5				     ; SBM 2020. ESTRUCTURA BÁSICA DE UN PROGRAMA EN ENSAMBLADOR
+      6				     ;**************************************************************************
+      7				     ; DEFINICION DEL SEGMENTO DE DATOS
+      8	0000			     DATOS SEGMENT
+      9					     ;-- rellenar con los datos	solicitados
+     10	0000  00		     MARCADOR DB 0H
+     11	0001  CAFE		     BEBE DW 0CAFEH
+     12	0003  C8*(00)		     TABLA200 DB 200 DUP(0)
+     13	00CB  45 73 74 65 20 70	72+  ERRORTOTAL1 DB "Este programa se cuelga siempre."
+     14	      6F 67 72 61 6D 61	20+
+     15	      73 65 20 63 75 65	6C+
+     16	      67 61 20 73 69 65	6D+
+     17	      70 72 65 2E
+     18	00EB			     DATOS ENDS
+     19				     ;**************************************************************************
+     20				     ; DEFINICION DEL SEGMENTO DE PILA
+     21	0000			     PILA SEGMENT STACK	"STACK"
+     22	0000  40*(00)			     DB	40H DUP	(0) ;ejemplo de	inicialización, 64 bytes inicializados	a 0
+     23	0040			     PILA ENDS
+     24				     ;**************************************************************************
+     25				     ; DEFINICION DEL SEGMENTO EXTRA
+     26	0000			     EXTRA SEGMENT
+     27	0000  0000 0000			     RESULT DW 0,0 ;ejemplo de inicialización.	2 PALABRAS (4 BYTES)
+     28	0004			     EXTRA ENDS
+     29				     ;**************************************************************************
+     30				     ; DEFINICION DEL SEGMENTO DE CODIGO
+     31	0000			     CODE SEGMENT
+     32				     ASSUME CS:	CODE, DS: DATOS, ES: EXTRA, SS:	PILA
+     33				     ; COMIENZO	DEL PROCEDIMIENTO PRINCIPAL
+     34	0000			     INICIO PROC
+     35					     ; INICIALIZA LOS REGISTROS	DE SEGMENTO CON	SU VALOR
+     36	0000  B8 0000s			     MOV AX, DATOS
+     37	0003  8E D8			     MOV DS, AX
+     38	0005  B8 0000s			     MOV AX, PILA
+     39	0008  8E D0			     MOV SS, AX
+     40	000A  B8 0000s			     MOV AX, EXTRA
+     41	000D  8E C0			     MOV ES, AX
+     42	000F  BC 0040			     MOV SP, 64	; CARGA	EL PUNTERO DE PILA CON EL VALOR	MAS ALTO
+     43					     ; FIN DE LAS INICIALIZACIONES
+     44					     ; COMIENZO	DEL PROGRAMA
+     45
+     46					     ; El tercer caracter es el	de offset 2, la	't'.
+     47	0012  A0 00CDr			     MOV AL, ERRORTOTAL1[2]
+     48					     ; La posicion 63 (que no 63H pues se sale de la tabla200) es un offset 62.
+     49					     ; Se puede	comprobar en el	debugger accediendo en el panel	de memoria a ds:41.
+     50	0015  A2 0041r			     MOV TABLA200[62], AL
+     51					     ; La posicion 23 es el offset 22.
+     52					     ; Se puede	comprobar en el	debugger accediendo en el panel	de memoria a ds:1A.
+     53	0018  A1 0001r			     MOV AX, BEBE[0]
+     54	001B  A3 0019r			     MOV WORD PTR TABLA200[22],	AX
+     55					     ; Se puede	comprobar en el	debugger accediendo en el panel	de memoria a ds:0.
+     56	001E  88 26 0000r		     MOV MARCADOR[0], AH
+     57	0022  8A C0			     MOV AL, AL
+Turbo Assembler	 Version 2.0	    03/12/21 18:32:24	    Page 2
+pract1c.asm
+
+
+
+     58
+     59
+     60					     ; FIN DEL PROGRAMA
+     61	0024  B8 4C00			     MOV AX, 4C00H
+     62	0027  CD 21			     INT 21H
+     63	0029			     INICIO ENDP
+     64				     ; FIN DEL SEGMENTO	DE CODIGO
+     65	0029			     CODE ENDS
+     66				     ; FIN DEL PROGRAMA	INDICANDO DONDE	COMIENZA LA EJECUCION
+     67				     END INICIO
+Turbo Assembler	 Version 2.0	    03/12/21 18:32:24	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "03/12/21"
+??FILENAME			  Text	 "pract1c "
+??TIME				  Text	 "18:32:24"
+??VERSION			  Number 0200
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 PRACT1C
+@WORDSIZE			  Text	 2
+BEBE				  Word	 DATOS:0001
+ERRORTOTAL1			  Byte	 DATOS:00CB
+INICIO				  Near	 CODE:0000
+MARCADOR			  Byte	 DATOS:0000
+RESULT				  Word	 EXTRA:0000
+TABLA200			  Byte	 DATOS:0003
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  0029 Para	  none
+DATOS				  16  00EB Para	  none
+EXTRA				  16  0004 Para	  none
+PILA				  16  0040 Para	  Stack	  STACK
+

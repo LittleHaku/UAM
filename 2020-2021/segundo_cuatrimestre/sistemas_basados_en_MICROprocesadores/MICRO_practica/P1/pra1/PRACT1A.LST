@@ -1,0 +1,123 @@
+Turbo Assembler	 Version 2.0	    03/12/21 18:32:24	    Page 1
+pract1a.asm
+
+
+
+      1				     ; Autor Junco de las Heras	Valenzuela. junco.heras@estudiante.uam.es
+      2				     ; Grupo: Doble Grado 2301
+      3
+      4				     ;**************************************************************************
+      5				     ; SBM 2020. ESTRUCTURA BÁSICA DE UN PROGRAMA EN ENSAMBLADOR
+      6				     ;**************************************************************************
+      7				     ; DEFINICION DEL SEGMENTO DE DATOS
+      8	0000			     DATOS SEGMENT
+      9					     ;-- rellenar con los datos	solicitados
+     10	0000			     DATOS ENDS
+     11				     ;**************************************************************************
+     12				     ; DEFINICION DEL SEGMENTO DE PILA
+     13	0000			     PILA SEGMENT STACK	"STACK"
+     14	0000  40*(00)			     DB	40H DUP	(0) ;ejemplo de	inicialización, 64 bytes inicializados	a 0
+     15	0040			     PILA ENDS
+     16				     ;**************************************************************************
+     17				     ; DEFINICION DEL SEGMENTO EXTRA
+     18	0000			     EXTRA SEGMENT
+     19	0000  0000 0000			     RESULT DW 0,0 ;ejemplo de inicialización.	2 PALABRAS (4 BYTES)
+     20	0004			     EXTRA ENDS
+     21				     ;**************************************************************************
+     22				     ; DEFINICION DEL SEGMENTO DE CODIGO
+     23	0000			     CODE SEGMENT
+     24				     ASSUME CS:	CODE, DS: DATOS, ES: EXTRA, SS:	PILA
+     25				     ; COMIENZO	DEL PROCEDIMIENTO PRINCIPAL
+     26	0000			     INICIO PROC
+     27					     ; INICIALIZA LOS REGISTROS	DE SEGMENTO CON	SU VALOR
+     28	0000  B8 0000s			     MOV AX, DATOS
+     29	0003  8E D8			     MOV DS, AX
+     30	0005  B8 0000s			     MOV AX, PILA
+     31	0008  8E D0			     MOV SS, AX
+     32	000A  B8 0000s			     MOV AX, EXTRA
+     33	000D  8E C0			     MOV ES, AX
+     34	000F  BC 0040			     MOV SP, 64	; CARGA	EL PUNTERO DE PILA CON EL VALOR	MAS ALTO
+     35					     ; FIN DE LAS INICIALIZACIONES
+     36					     ; COMIENZO	DEL PROGRAMA
+     37
+     38					     ; Para comprobar los ejercicios se	ha mirado el registro que se quiere escribir.
+     39
+     40					     ; Comprobado con el debugger que guarda 009B en AX.
+     41	0012  B8 009B			     MOV AX, 9BH ; Ej 1.
+     42					     ; Comprobado con el debugger que guarda 00B2 en BX.
+     43					     ; Se aniade un 0 al B2H para que el se identifique	como una constante numerica.
+     44	0015  B3 B2			     MOV BL, 0B2H ; Ej 2.
+     45					     ; Comprobado con el debugger que guarda 3412 en CX.
+     46	0017  B9 3412			     MOV CX, 3412H ; Ej	3.
+     47					     ; Comprobado con el debugger que guarda 0049 en DS. He tenido que guardar la constante +
+     48				     en	el registro general AX antes que en DS.
+     49	001A  B8 0049			     Mov AX, 01001001b ; Ej 4.
+     50	001D  8E D8			     MOV DS, AX
+     51					     ; Comprobado con el debugger que guarda 3412 en DX.
+     52	001F  8B D1			     MOV DX, CX	; Ej 5.
+     53					     ; Comprobado con el debugger que guarda 0102 en BX. 01 en BH Y 02 EN BL.
+     54					     ; Se hacen	dos MOV	porque uno solo	no bastaria al ser little endian.
+     55					     ; Se guardan dos constantes 01 y 02 para ver que se leen bien.
+     56	0021  B8 5523			     MOV AX, 5523H ; Ej	6.
+     57	0024  8E C0			     MOV ES, AX
+Turbo Assembler	 Version 2.0	    03/12/21 18:32:24	    Page 2
+pract1a.asm
+
+
+
+     58	0026  26: C6 06	0005 01		     MOV BYTE PTR ES:[5H], 01H
+     59	002C  26: C6 06	0006 02		     MOV BYTE PTR ES:[6H], 02H
+     60	0032  26: 8A 3E	0005		     MOV BH, ES:[5H]
+     61	0037  26: 8A 1E	0006		     MOV BL, ES:[6H]
+     62					     ; Comprobado con el debugger que guarda 34	en la posicion de memoria 70008.
+     63					     ; Se ha ido a goto: es:8 en el panel de memoria para ver el Byte escrito.
+     64	003C  B8 7000			     MOV AX, 7000H ; Ej	7.
+     65	003F  8E C0			     MOV ES, AX
+     66	0041  26: 88 2E	0008		     MOV ES:[8H], CH
+     67					     ; Comprobado con el debugger que guarda 1234 en AX.
+     68					     ; Se guardan una constante	1234 para ver que se leen bien.
+     69	0046  C7 04 1234		     MOV WORD PTR [SI],	1234H ;	Ej 8.
+     70	004A  8B 04			     MOV AX, [SI]
+     71					     ; Comprobado con el debugger que guarda 4321 en BX.
+     72					     ; Se guarda una constante 4321 para ver que se leen bien.
+     73	004C  C7 46 0A 4321		     MOV WORD PTR [BP +	10], 4321H ; Ej	9.
+     74	0051  8B 5E 0A			     MOV BX, [BP + 10]
+     75
+     76
+     77
+     78
+     79
+     80					     ; FIN DEL PROGRAMA
+     81	0054  B8 4C00			     MOV AX, 4C00H
+     82	0057  CD 21			     INT 21H
+     83	0059			     INICIO ENDP
+     84				     ; FIN DEL SEGMENTO	DE CODIGO
+     85	0059			     CODE ENDS
+     86				     ; FIN DEL PROGRAMA	INDICANDO DONDE	COMIENZA LA EJECUCION
+     87				     END INICIO
+Turbo Assembler	 Version 2.0	    03/12/21 18:32:24	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "03/12/21"
+??FILENAME			  Text	 "pract1a "
+??TIME				  Text	 "18:32:24"
+??VERSION			  Number 0200
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 PRACT1A
+@WORDSIZE			  Text	 2
+INICIO				  Near	 CODE:0000
+RESULT				  Word	 EXTRA:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  0059 Para	  none
+DATOS				  16  0000 Para	  none
+EXTRA				  16  0004 Para	  none
+PILA				  16  0040 Para	  Stack	  STACK
+

@@ -1,0 +1,814 @@
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 1
+p4a.asm
+
+
+
+      1				     ; Autor Junco de las Heras	Valenzuela. junco.heras@estudiante.uam.es
+      2				     ; Grupo: Doble Grado 2301
+      3
+      4
+      5				     ;**************************************************************************
+      6				     ; DEFINICION DEL SEGMENTO DE CODIGO
+      7	0000			     CODE SEGMENT
+      8					     ASSUME CS:	CODE
+      9
+     10					     ORG 256
+     11	0100  E9 0422			     INICIO: JMP MAIN
+     12
+     13	0103  41 75 74 6F 72 3A	20+	     AUTOR DB "Autor: Junco de las Heras Valenzuela. ",	13, 10,	"$"
+     14	      4A 75 6E 63 6F 20	64+
+     15	      65 20 6C 61 73 20	48+
+     16	      65 72 61 73 20 56	61+
+     17	      6C 65 6E 7A 75 65	6C+
+     18	      61 2E 20 0D 0A 24
+     19	012C  43 6F 72 72 65 6F	3A+	     CORREO DB "Correo:	junco.heras@estudiante.uam.es",	13, 10,	"$"
+     20	      20 6A 75 6E 63 6F	2E+
+     21	      68 65 72 61 73 40	65+
+     22	      73 74 75 64 69 61	6E+
+     23	      74 65 2E 75 61 6D	2E+
+     24	      65 73 0D 0A 24
+     25	0154  55 73 65 20 6C 6F	73+	     INSTRUCCIONES DB "Use los argumentos /I para instalar y /D	para desinstalar.", 13,	10, +
+     26	      20 61 72 67 75 6D	65+  "$"
+     27	      6E 74 6F 73 20 2F	49+
+     28	      20 70 61 72 61 20	69+
+     29	      6E 73 74 61 6C 61	72+
+     30	      20 79 20 2F 44 20	70+
+     31	      61 72 61 20 64 65	73+
+     32	      69 6E 73 74 61 6C	61+
+     33	      72 2E 0D 0A 24
+     34	0191  49 6E 73 74 61 6C	61+	     INSTALANDO	DB "Instalando vector de interrupcion",	13, 10,	"$"
+     35	      6E 64 6F 20 76 65	63+
+     36	      74 6F 72 20 64 65	20+
+     37	      69 6E 74 65 72 72	75+
+     38	      70 63 69 6F 6E 0D	0A+
+     39	      24
+     40	01B5  44 65 73 69 6E 73	74+	     DESINSTALANDO DB "Desinstalando vector de interrupcion", 13, 10, "$"
+     41	      61 6C 61 6E 64 6F	20+
+     42	      76 65 63 74 6F 72	20+
+     43	      64 65 20 69 6E 74	65+
+     44	      72 72 75 70 63 69	6F+
+     45	      6E 0D 0A 24
+     46	01DC  45 6C 20 64 72 69	76+	     NO_INSTALADO DB "El driver	NO esta	instalado", 13,	10, "$"
+     47	      65 72 20 4E 4F 20	65+
+     48	      73 74 61 20 69 6E	73+
+     49	      74 61 6C 61 64 6F	0D+
+     50	      0A 24
+     51	01FA  45 6C 20 64 72 69	76+	     SI_INSTALADO DB "El driver	SI esta	instalado", 13,	10, "$"
+     52	      65 72 20 53 49 20	65+
+     53	      73 74 61 20 69 6E	73+
+     54	      74 61 6C 61 64 6F	0D+
+     55	      0A 24
+     56					     ; Guarda la direccion de la interrupcion 1CH para restaurarla.
+     57	0218  0000			     OLD_OFFSET_1CH DW 0
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 2
+p4a.asm
+
+
+
+     58	021A  0000			     OLD_SEGMENT_1CH DW	0
+     59					     ; Firma digital para saber	si el driver esta instalado o no.
+     60	021C  00			     CONTADOR_1CH DB 0
+     61	021D  CAF3			     FIRMA DW 0CAF3H
+     62
+     63					     ; Interrupcion 55H, argumentos de entrada AL la posicion X	donde pintar, y	AH la	    +
+     64				     posicion Y	donde pintar.
+     65					     ; Pinta un	cuadrado 10x10 con el pixel mas	pequeño en (AL, AH), de color azul.
+     66	021F				     RSI55 PROC	FAR
+     67						     ; Guarda los registros en pila.
+     68	021F  56				     PUSH SI
+     69	0220  57				     PUSH DI
+     70	0221  53				     PUSH BX
+     71	0222  51				     PUSH CX
+     72	0223  52				     PUSH DX
+     73	0224  50				     PUSH AX
+     74
+     75						     ; Comprobamos que el modo de video	es el correcto.
+     76						     ; usamos interrupción 10h	para entrar en modo video
+     77	0225  B4 0F				     MOV AH,0Fh	; Peticion de obtencion	de modo	de video
+     78	0227  CD 10				     INT 10h ; Llamada al BIOS
+     79	0229  3C 0D				     CMP AL, 0DH ; 320x200 16 color graphics (VGA)
+     80	022B  75 2F				     JNE FIN_55
+     81
+     82						     ; Restauramos AX y	lo volvemos a guardar.
+     83	022D  58				     POP AX
+     84	022E  50				     PUSH AX
+     85
+     86						     ; Si se sale de 240x180.
+     87	022F  3C F0				     CMP AL, 240 ; La X.
+     88	0231  73 29				     JAE FIN_55
+     89	0233  80 FC B4				     CMP AH, 180 ; La Y.
+     90	0236  73 24				     JAE FIN_55
+     91
+     92						     ; Dos bucles anidados que pintan todo un cuadrado 10x10.
+     93	0238  BE 000A				     MOV SI, 10	; i, desde 10 hasta 1.
+     94	023B					     BUCLE_EXTERNO_55:
+     95	023B  BF 000A					     MOV DI, 10	; j, desde 10 hasta 1.
+     96	023E						     BUCLE_INTERNO_55:
+     97
+     98								     ; Recupera	AX de la pila para leer	el valor.
+     99	023E  58						     POP AX
+    100								     ;Int10H pintar pixel --> AH=0Ch	     AL	= Color, BH =	    +
+    101				     NumPag, CX	= x, DX	= y
+    102	023F  B5 00						     MOV CH, 0
+    103	0241  8A C8						     MOV CL, AL	; posicion X donde pintar
+    104	0243  49						     DEC CX ; Para que el pixel	mas bajo sea (AL, AH).
+    105	0244  03 CF						     ADD CX, DI	; X+j-1
+    106	0246  B6 00						     MOV DH, 0
+    107	0248  8A D4						     MOV DL, AH	; posicion Y donde pintar
+    108	024A  4A						     DEC DX ; Para que el pixel	mas bajo sea (AL, AH).
+    109	024B  03 D6						     ADD DX, SI	; Y+i-1
+    110								     ; Guarda de nuevo AX en la	pila.
+    111	024D  50						     PUSH AX
+    112
+    113	024E  B4 0C						     mov ah, 0Ch
+    114	0250  B0 01						     MOV AL, 1H	; El color a pintar. (1	AZUL).
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 3
+p4a.asm
+
+
+
+    115	0252  B7 00						     mov bh, 00h ; numero pagina (dejar	siempre	a cero)
+    116	0254  CD 10						     INT 10H
+    117
+    118	0256  4F						     DEC DI
+    119	0257  75 E5						     JNZ BUCLE_INTERNO_55
+    120
+    121	0259  4E					     DEC SI
+    122	025A  75 DF					     JNZ BUCLE_EXTERNO_55
+    123
+    124	025C					     FIN_55:
+    125						     ; Recupera	los valores de la pila.
+    126	025C  58				     POP AX
+    127	025D  5A				     POP DX
+    128	025E  59				     POP CX
+    129	025F  5B				     POP BX
+    130	0260  5F				     POP DI
+    131	0261  5E				     POP SI
+    132
+    133	0262  CF				     IRET
+    134	0263				     RSI55 ENDP
+    135
+    136					     ; Interrupcion 56H, argumentos de entrada AL la posicion X	donde pintar, y	AH la	    +
+    137				     posicion Y	donde pintar.
+    138					     ; Pinta un	cuadrado 10x10 con el pixel mas	pequeño en (AL, AH), de color negro.
+    139	0263				     RSI56 PROC	FAR
+    140						     ; Guarda los registros en pila.
+    141	0263  56				     PUSH SI
+    142	0264  57				     PUSH DI
+    143	0265  53				     PUSH BX
+    144	0266  51				     PUSH CX
+    145	0267  52				     PUSH DX
+    146	0268  50				     PUSH AX
+    147
+    148						     ; Comprobamos que el modo de video	es el correcto.
+    149						     ; usamos interrupción 10h	para entrar en modo video
+    150	0269  B4 0F				     MOV AH,0Fh	; Peticion de obtencion	de modo	de video
+    151	026B  CD 10				     INT 10h ; Llamada al BIOS
+    152	026D  3C 0D				     CMP AL, 0DH ; 320x200 16 color graphics (VGA)
+    153	026F  75 2F				     JNE FIN_56
+    154
+    155						     ; Restauramos AX y	lo volvemos a guardar.
+    156	0271  58				     POP AX
+    157	0272  50				     PUSH AX
+    158
+    159						     ; Si se sale de 240x180.
+    160	0273  3C F0				     CMP AL, 240 ; La X.
+    161	0275  73 29				     JAE FIN_56
+    162	0277  80 FC B4				     CMP AH, 180 ; La Y.
+    163	027A  73 24				     JAE FIN_56
+    164
+    165						     ; Dos bucles anidados que pintan todo un cuadrado 10x10.
+    166	027C  BE 000A				     MOV SI, 10	; i, desde 10 hasta 1.
+    167	027F					     BUCLE_EXTERNO_56:
+    168	027F  BF 000A					     MOV DI, 10	; j, desde 10 hasta 1.
+    169	0282						     BUCLE_INTERNO_56:
+    170
+    171								     ; Recupera	AX de la pila para leer	el valor.
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 4
+p4a.asm
+
+
+
+    172	0282  58						     POP AX
+    173								     ;Int10H pintar pixel --> AH=0Ch	     AL	= Color, BH =	    +
+    174				     NumPag, CX	= x, DX	= y
+    175	0283  B5 00						     MOV CH, 0
+    176	0285  8A C8						     MOV CL, AL	; posicion X donde pintar
+    177	0287  49						     DEC CX ; Para que el pixel	mas bajo sea (AL, AH).
+    178	0288  03 CF						     ADD CX, DI	; X+j-1
+    179	028A  B6 00						     MOV DH, 0
+    180	028C  8A D4						     MOV DL, AH	; posicion Y donde pintar
+    181	028E  4A						     DEC DX ; Para que el pixel	mas bajo sea (AL, AH).
+    182	028F  03 D6						     ADD DX, SI	; Y+i-1
+    183								     ; Guarda de nuevo AX en la	pila.
+    184	0291  50						     PUSH AX
+    185
+    186	0292  B4 0C						     mov ah, 0Ch
+    187	0294  B0 00						     MOV AL, 0H	; El color a pintar. (0	NEGRO).
+    188	0296  B7 00						     mov bh, 00h ; numero pagina (dejar	siempre	a cero)
+    189	0298  CD 10						     INT 10H
+    190
+    191	029A  4F						     DEC DI
+    192	029B  75 E5						     JNZ BUCLE_INTERNO_56
+    193
+    194	029D  4E					     DEC SI
+    195	029E  75 DF					     JNZ BUCLE_EXTERNO_56
+    196
+    197	02A0					     FIN_56:
+    198						     ; Recupera	los valores de la pila.
+    199	02A0  58				     POP AX
+    200	02A1  5A				     POP DX
+    201	02A2  59				     POP CX
+    202	02A3  5B				     POP BX
+    203	02A4  5F				     POP DI
+    204	02A5  5E				     POP SI
+    205
+    206	02A6  CF				     IRET
+    207	02A7				     RSI56 ENDP
+    208
+    209					     ; Interrupcion 57H, argumentos de entrada AL la posicion X	donde pintar, y	AH la	    +
+    210				     posicion Y	donde pintar.
+    211					     ; Pinta un	cuadrado 10x10 con el pixel mas	pequeño en (AL, AH), de color rojo.
+    212	02A7				     RSI57 PROC	FAR
+    213						     ; Guarda los registros en pila.
+    214	02A7  56				     PUSH SI
+    215	02A8  57				     PUSH DI
+    216	02A9  53				     PUSH BX
+    217	02AA  51				     PUSH CX
+    218	02AB  52				     PUSH DX
+    219	02AC  50				     PUSH AX
+    220
+    221						     ; Comprobamos que el modo de video	es el correcto.
+    222						     ; usamos interrupción 10h	para entrar en modo video
+    223	02AD  B4 0F				     MOV AH,0Fh	; Peticion de obtencion	de modo	de video
+    224	02AF  CD 10				     INT 10h ; Llamada al BIOS
+    225	02B1  3C 0D				     CMP AL, 0DH ; 320x200 16 color graphics (VGA)
+    226	02B3  75 2F				     JNE FIN_57
+    227
+    228						     ; Restauramos AX y	lo volvemos a guardar.
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 5
+p4a.asm
+
+
+
+    229	02B5  58				     POP AX
+    230	02B6  50				     PUSH AX
+    231
+    232						     ; Si se sale de 240x180.
+    233	02B7  3C F0				     CMP AL, 240 ; La X.
+    234	02B9  73 29				     JAE FIN_57
+    235	02BB  80 FC B4				     CMP AH, 180 ; La Y.
+    236	02BE  73 24				     JAE FIN_57
+    237
+    238						     ; Dos bucles anidados que pintan todo un cuadrado 10x10.
+    239	02C0  BE 000A				     MOV SI, 10	; i, desde 10 hasta 1.
+    240	02C3					     BUCLE_EXTERNO_57:
+    241	02C3  BF 000A					     MOV DI, 10	; j, desde 10 hasta 1.
+    242	02C6						     BUCLE_INTERNO_57:
+    243
+    244								     ; Recupera	AX de la pila para leer	el valor.
+    245	02C6  58						     POP AX
+    246								     ;Int10H pintar pixel --> AH=0Ch	     AL	= Color, BH =	    +
+    247				     NumPag, CX	= x, DX	= y
+    248	02C7  B5 00						     MOV CH, 0
+    249	02C9  8A C8						     MOV CL, AL	; posicion X donde pintar
+    250	02CB  49						     DEC CX ; Para que el pixel	mas bajo sea (AL, AH).
+    251	02CC  03 CF						     ADD CX, DI	; X+j-1
+    252	02CE  B6 00						     MOV DH, 0
+    253	02D0  8A D4						     MOV DL, AH	; posicion Y donde pintar
+    254	02D2  4A						     DEC DX ; Para que el pixel	mas bajo sea (AL, AH).
+    255	02D3  03 D6						     ADD DX, SI	; Y+i-1
+    256								     ; Guarda de nuevo AX en la	pila.
+    257	02D5  50						     PUSH AX
+    258
+    259	02D6  B4 0C						     mov ah, 0Ch
+    260	02D8  B0 04						     MOV AL, 4H	; El color a pintar. (4	ROJO).
+    261	02DA  B7 00						     mov bh, 00h ; numero pagina (dejar	siempre	a cero)
+    262	02DC  CD 10						     INT 10H
+    263
+    264	02DE  4F						     DEC DI
+    265	02DF  75 E5						     JNZ BUCLE_INTERNO_57
+    266
+    267	02E1  4E					     DEC SI
+    268	02E2  75 DF					     JNZ BUCLE_EXTERNO_57
+    269
+    270	02E4					     FIN_57:
+    271						     ; Recupera	los valores de la pila.
+    272	02E4  58				     POP AX
+    273	02E5  5A				     POP DX
+    274	02E6  59				     POP CX
+    275	02E7  5B				     POP BX
+    276	02E8  5F				     POP DI
+    277	02E9  5E				     POP SI
+    278
+    279	02EA  CF				     IRET
+    280	02EB				     RSI57 ENDP
+    281
+    282					     ; Interrupcion 58H, argumentos de entrada AL la posicion X	donde pintar, y	AH la	    +
+    283				     posicion Y	donde pintar.
+    284					     ; Pinta un	cuadrado 10x10 con el pixel mas	pequeño en (AL, AH), de color amarillo.
+    285	02EB				     RSI58 PROC	FAR
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 6
+p4a.asm
+
+
+
+    286						     ; Guarda los registros en pila.
+    287	02EB  56				     PUSH SI
+    288	02EC  57				     PUSH DI
+    289	02ED  53				     PUSH BX
+    290	02EE  51				     PUSH CX
+    291	02EF  52				     PUSH DX
+    292	02F0  50				     PUSH AX
+    293
+    294						     ; Comprobamos que el modo de video	es el correcto.
+    295						     ; usamos interrupción 10h	para entrar en modo video
+    296	02F1  B4 0F				     MOV AH,0Fh	; Peticion de obtencion	de modo	de video
+    297	02F3  CD 10				     INT 10h ; Llamada al BIOS
+    298	02F5  3C 0D				     CMP AL, 0DH ; 320x200 16 color graphics (VGA)
+    299	02F7  75 2F				     JNE FIN_58
+    300
+    301						     ; Restauramos AX y	lo volvemos a guardar.
+    302	02F9  58				     POP AX
+    303	02FA  50				     PUSH AX
+    304
+    305						     ; Si se sale de 240x180.
+    306	02FB  3C F0				     CMP AL, 240 ; La X.
+    307	02FD  73 29				     JAE FIN_58
+    308	02FF  80 FC B4				     CMP AH, 180 ; La Y.
+    309	0302  73 24				     JAE FIN_58
+    310
+    311						     ; Dos bucles anidados que pintan todo un cuadrado 10x10.
+    312	0304  BE 000A				     MOV SI, 10	; i, desde 10 hasta 1.
+    313	0307					     BUCLE_EXTERNO_58:
+    314	0307  BF 000A					     MOV DI, 10	; j, desde 10 hasta 1.
+    315	030A						     BUCLE_INTERNO_58:
+    316
+    317								     ; Recupera	AX de la pila para leer	el valor.
+    318	030A  58						     POP AX
+    319								     ;Int10H pintar pixel --> AH=0Ch	     AL	= Color, BH =	    +
+    320				     NumPag, CX	= x, DX	= y
+    321	030B  B5 00						     MOV CH, 0
+    322	030D  8A C8						     MOV CL, AL	; posicion X donde pintar
+    323	030F  49						     DEC CX ; Para que el pixel	mas bajo sea (AL, AH).
+    324	0310  03 CF						     ADD CX, DI	; X+j-1
+    325	0312  B6 00						     MOV DH, 0
+    326	0314  8A D4						     MOV DL, AH	; posicion Y donde pintar
+    327	0316  4A						     DEC DX ; Para que el pixel	mas bajo sea (AL, AH).
+    328	0317  03 D6						     ADD DX, SI	; Y+i-1
+    329								     ; Guarda de nuevo AX en la	pila.
+    330	0319  50						     PUSH AX
+    331
+    332	031A  B4 0C						     mov ah, 0Ch
+    333	031C  B0 0E						     MOV AL, 0EH ; El color a pintar. (0EH amarillo).
+    334	031E  B7 00						     mov bh, 00h ; numero pagina (dejar	siempre	a cero)
+    335	0320  CD 10						     INT 10H
+    336
+    337	0322  4F						     DEC DI
+    338	0323  75 E5						     JNZ BUCLE_INTERNO_58
+    339
+    340	0325  4E					     DEC SI
+    341	0326  75 DF					     JNZ BUCLE_EXTERNO_58
+    342
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 7
+p4a.asm
+
+
+
+    343	0328					     FIN_58:
+    344						     ; Recupera	los valores de la pila.
+    345	0328  58				     POP AX
+    346	0329  5A				     POP DX
+    347	032A  59				     POP CX
+    348	032B  5B				     POP BX
+    349	032C  5F				     POP DI
+    350	032D  5E				     POP SI
+    351
+    352	032E  CF				     IRET
+    353	032F				     RSI58 ENDP
+    354
+    355					     ; Incrementa en 1 una variable global CONTADOR_1CH	cada vez que se	llama.
+    356	032F				     RSI_1C PROC FAR
+    357	032F  50				     PUSH AX
+    358
+    359	0330  2E: A0 021Cr			     MOV AL, BYTE PTR CONTADOR_1CH
+    360	0334  FE C0				     INC AL
+    361	0336  2E: A2 021Cr			     MOV BYTE PTR CONTADOR_1CH,	AL
+    362
+    363	033A  58				     POP AX
+    364
+    365	033B  CF				     IRET
+    366	033C				     RSI_1C ENDP
+    367
+    368					     ; Te instala la interrupcion 55H y	la 57H.
+    369	033C				     INSTALADOR	PROC
+    370						     ; Escribe instalando.
+    371	033C  B4 09				     MOV AH, 09H
+    372	033E  BA 0191r				     MOV DX, OFFSET INSTALANDO
+    373	0341  CD 21				     INT 21H
+    374
+    375						     ; Guarda la direccion de 1CH.
+    376	0343  B8 0000				     MOV AX, 0
+    377	0346  8E C0				     MOV ES, AX
+    378	0348  26: A1 0070			     MOV AX, ES:[1CH*4]
+    379	034C  2E: A3 0218r			     MOV WORD PTR OLD_OFFSET_1CH, AX
+    380	0350  26: A1 0072			     MOV AX, ES:[1CH*4+2]
+    381	0354  2E: A3 021Ar			     MOV WORD PTR OLD_SEGMENT_1CH, AX
+    382
+    383
+    384						     ; Instala la interrupcion 55H.
+    385	0358  B8 0000				     MOV AX, 0
+    386	035B  8E C0				     MOV ES, AX
+    387	035D  B9 021Fr				     MOV CX, OFFSET RSI55
+    388	0360  8C CB				     MOV BX, CS
+    389	0362  E4 21				     IN	AL, 21H	; CLI
+    390	0364  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    391	0366  E6 21				     OUT 21H, AL
+    392	0368  26: 89 0E	0154			     MOV ES:[55H*4], CX
+    393	036D  26: 89 1E	0156			     MOV ES:[55H*4+2], BX
+    394	0372  E4 21				     IN	AL, 21H	; STI
+    395	0374  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+    396	0376  E6 21				     OUT 21H, AL
+    397
+    398						     ; Instala la interrupcion 56H.
+    399	0378  B8 0000				     MOV AX, 0
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 8
+p4a.asm
+
+
+
+    400	037B  8E C0				     MOV ES, AX
+    401	037D  B9 0263r				     MOV CX, OFFSET RSI56
+    402	0380  8C CB				     MOV BX, CS
+    403	0382  E4 21				     IN	AL, 21H	; CLI
+    404	0384  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    405	0386  E6 21				     OUT 21H, AL
+    406	0388  26: 89 0E	0158			     MOV ES:[56H*4], CX
+    407	038D  26: 89 1E	015A			     MOV ES:[56H*4+2], BX
+    408	0392  E4 21				     IN	AL, 21H	; STI
+    409	0394  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+    410	0396  E6 21				     OUT 21H, AL
+    411
+    412						     ; Instala la interrupcion 57H.
+    413	0398  B8 0000				     MOV AX, 0
+    414	039B  8E C0				     MOV ES, AX
+    415	039D  B9 02A7r				     MOV CX, OFFSET RSI57
+    416	03A0  8C CB				     MOV BX, CS
+    417	03A2  E4 21				     IN	AL, 21H	; CLI
+    418	03A4  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    419	03A6  E6 21				     OUT 21H, AL
+    420	03A8  26: 89 0E	015C			     MOV ES:[57H*4], CX
+    421	03AD  26: 89 1E	015E			     MOV ES:[57H*4+2], BX
+    422	03B2  E4 21				     IN	AL, 21H	; STI
+    423	03B4  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+    424	03B6  E6 21				     OUT 21H, AL
+    425
+    426						     ; Instala la interrupcion 58H.
+    427	03B8  B8 0000				     MOV AX, 0
+    428	03BB  8E C0				     MOV ES, AX
+    429	03BD  B9 02EBr				     MOV CX, OFFSET RSI58
+    430	03C0  8C CB				     MOV BX, CS
+    431	03C2  E4 21				     IN	AL, 21H	; CLI
+    432	03C4  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    433	03C6  E6 21				     OUT 21H, AL
+    434	03C8  26: 89 0E	0160			     MOV ES:[58H*4], CX
+    435	03CD  26: 89 1E	0162			     MOV ES:[58H*4+2], BX
+    436	03D2  E4 21				     IN	AL, 21H	; STI
+    437	03D4  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+    438	03D6  E6 21				     OUT 21H, AL
+    439
+    440						     ; Instala la interrupcion 1CH.
+    441	03D8  B8 0000				     MOV AX, 0
+    442	03DB  8E C0				     MOV ES, AX
+    443	03DD  B9 032Fr				     MOV CX, OFFSET RSI_1C
+    444	03E0  8C CB				     MOV BX, CS
+    445	03E2  E4 21				     IN	AL, 21H	; CLI
+    446	03E4  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    447	03E6  E6 21				     OUT 21H, AL
+    448	03E8  26: 89 0E	0070			     MOV ES:[1CH*4], CX
+    449	03ED  26: 89 1E	0072			     MOV ES:[1CH*4+2], BX
+    450	03F2  E4 21				     IN	AL, 21H	; STI
+    451	03F4  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+    452	03F6  E6 21				     OUT 21H, AL
+    453
+    454
+    455	03F8  BA 033Cr				     MOV DX, OFFSET INSTALADOR
+    456	03FB  CD 27				     INT 27H
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 9
+p4a.asm
+
+
+
+    457
+    458	03FD  C3				     RET
+    459	03FE				     INSTALADOR	ENDP
+    460
+    461	03FE				     DESINSTALADOR PROC
+    462	03FE  50				     PUSH AX
+    463	03FF  53				     PUSH BX
+    464	0400  51				     PUSH CX
+    465	0401  52				     PUSH DX
+    466	0402  06				     PUSH ES
+    467	0403  1E				     PUSH DS
+    468
+    469						     ; Escribe desinstalando.
+    470	0404  B4 09				     MOV AH, 09H
+    471	0406  BA 01B5r				     MOV DX, OFFSET DESINSTALANDO
+    472	0409  CD 21				     INT 21H
+    473
+    474						     ; Guarda en la variable la	antigua	direccion de 1CH.
+    475	040B  B8 0000				     MOV AX, 0
+    476	040E  8E C0				     MOV ES, AX
+    477	0410  26: 8B 36	0154			     MOV SI, WORD PTR ES:[55H*4]
+    478	0415  26: A1 0156			     MOV AX, WORD PTR ES:[55H*4+2]
+    479
+    480	0419  8E C0				     MOV ES, AX
+    481	041B  26: 8B 5C	FB			     MOV BX, WORD PTR ES:[SI-5]
+    482	041F  2E: 89 1E	021Ar			     MOV WORD PTR OLD_SEGMENT_1CH, BX
+    483	0424  26: 8B 5C	F9			     MOV BX, WORD PTR ES:[SI-7]
+    484	0428  2E: 89 1E	0218r			     MOV WORD PTR OLD_OFFSET_1CH, BX
+    485
+    486	042D  2E: A1 0218r			     MOV AX, WORD PTR OLD_OFFSET_1CH
+    487	0431  3D 0000				     CMP AX, 0
+    488	0434  75 0C				     JNE ESTA_INSTALADO
+    489	0436  2E: A1 021Ar			     MOV AX, WORD PTR OLD_SEGMENT_1CH
+    490	043A  3D 0000				     CMP AX, 0
+    491	043D  75 03				     JNE ESTA_INSTALADO
+    492
+    493						     ; Si no esta instalado no desinstalar.
+    494	043F  E9 00DC				     JMP FIN_DESINSTALADOR
+    495
+    496	0442					     ESTA_INSTALADO:
+    497
+    498						     ; Desinstala la 55H.
+    499	0442  B9 0000				     MOV CX, 0
+    500	0445  8E D9				     MOV DS, CX
+    501	0447  8E 06 0156			     MOV ES, DS:[55H*4+2]
+    502	044B  26: 8B 1E	002C			     MOV BX, ES:[2CH]
+    503	0450  B4 49				     MOV AH, 49H
+    504	0452  CD 21				     INT 21H
+    505	0454  8E C3				     MOV ES, BX
+    506	0456  CD 21				     INT 21H
+    507	0458  E4 21				     IN	AL, 21H	; CLI
+    508	045A  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    509	045C  E6 21				     OUT 21H, AL
+    510	045E  89 0E 0154			     MOV DS:[55H*4], CX
+    511	0462  89 0E 0156			     MOV DS:[55H*4+2], CX
+    512	0466  E4 21				     IN	AL, 21H	; STI
+    513	0468  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 10
+p4a.asm
+
+
+
+    514	046A  E6 21				     OUT 21H, AL
+    515
+    516						     ; Desinstala la 56H.
+    517	046C  B9 0000				     MOV CX, 0
+    518	046F  8E D9				     MOV DS, CX
+    519	0471  8E 06 015A			     MOV ES, DS:[56H*4+2]
+    520	0475  26: 8B 1E	002C			     MOV BX, ES:[2CH]
+    521	047A  B4 49				     MOV AH, 49H
+    522	047C  CD 21				     INT 21H
+    523	047E  8E C3				     MOV ES, BX
+    524	0480  CD 21				     INT 21H
+    525	0482  E4 21				     IN	AL, 21H	; CLI
+    526	0484  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    527	0486  E6 21				     OUT 21H, AL
+    528	0488  89 0E 0158			     MOV DS:[56H*4], CX
+    529	048C  89 0E 015A			     MOV DS:[56H*4+2], CX
+    530	0490  E4 21				     IN	AL, 21H	; STI
+    531	0492  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+    532	0494  E6 21				     OUT 21H, AL
+    533
+    534						     ; Desinstala la 57H.
+    535	0496  B9 0000				     MOV CX, 0
+    536	0499  8E D9				     MOV DS, CX
+    537	049B  8E 06 015E			     MOV ES, DS:[57H*4+2]
+    538	049F  26: 8B 1E	002C			     MOV BX, ES:[2CH]
+    539	04A4  B4 49				     MOV AH, 49H
+    540	04A6  CD 21				     INT 21H
+    541	04A8  8E C3				     MOV ES, BX
+    542	04AA  CD 21				     INT 21H
+    543	04AC  E4 21				     IN	AL, 21H	; CLI
+    544	04AE  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    545	04B0  E6 21				     OUT 21H, AL
+    546	04B2  89 0E 015C			     MOV DS:[57H*4], CX
+    547	04B6  89 0E 015E			     MOV DS:[57H*4+2], CX
+    548	04BA  E4 21				     IN	AL, 21H	; STI
+    549	04BC  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+    550	04BE  E6 21				     OUT 21H, AL
+    551
+    552						     ; Desinstala la 58H.
+    553	04C0  B9 0000				     MOV CX, 0
+    554	04C3  8E D9				     MOV DS, CX
+    555	04C5  8E 06 0162			     MOV ES, DS:[58H*4+2]
+    556	04C9  26: 8B 1E	002C			     MOV BX, ES:[2CH]
+    557	04CE  B4 49				     MOV AH, 49H
+    558	04D0  CD 21				     INT 21H
+    559	04D2  8E C3				     MOV ES, BX
+    560	04D4  CD 21				     INT 21H
+    561	04D6  E4 21				     IN	AL, 21H	; CLI
+    562	04D8  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    563	04DA  E6 21				     OUT 21H, AL
+    564	04DC  89 0E 0160			     MOV DS:[58H*4], CX
+    565	04E0  89 0E 0162			     MOV DS:[58H*4+2], CX
+    566	04E4  E4 21				     IN	AL, 21H	; STI
+    567	04E6  24 FE				     AND AL, 11111110b ; Pone a	0 el ultimo bit.
+    568	04E8  E6 21				     OUT 21H, AL
+    569
+    570						     ; Desinstala la 1CH.
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 11
+p4a.asm
+
+
+
+    571	04EA  B9 0000				     MOV CX, 0
+    572	04ED  8E D9				     MOV DS, CX
+    573	04EF  8E 06 0072			     MOV ES, DS:[1CH*4+2]
+    574	04F3  26: 8B 1E	002C			     MOV BX, ES:[2CH]
+    575	04F8  B4 49				     MOV AH, 49H
+    576	04FA  CD 21				     INT 21H
+    577	04FC  8E C3				     MOV ES, BX
+    578	04FE  CD 21				     INT 21H
+    579	0500  E4 21				     IN	AL, 21H	; CLI
+    580	0502  0C 01				     OR	AL, 00000001b ;	Pone a 1 el ultimo bit.
+    581	0504  E6 21				     OUT 21H, AL
+    582	0506  2E: 8B 0E	0218r			     MOV CX, WORD PTR OLD_OFFSET_1CH
+    583	050B  89 0E 0070			     MOV DS:[1CH*4], CX
+    584	050F  2E: 8B 0E	021Ar			     MOV CX, WORD PTR OLD_SEGMENT_1CH
+    585	0514  89 0E 0072			     MOV DS:[1CH*4+2], CX
+    586	0518  E4 21				     IN	AL, 21H	; STI
+    587	051A  24 FE				     AND AL, 11111110B ; Pone a	0 el ultimo bit.
+    588	051C  E6 21				     OUT 21H, AL
+    589
+    590	051E					     FIN_DESINSTALADOR:
+    591
+    592	051E  1F				     POP DS
+    593	051F  07				     POP ES
+    594	0520  5A				     POP DX
+    595	0521  59				     POP CX
+    596	0522  5B				     POP BX
+    597	0523  58				     POP AX
+    598
+    599	0524  C3				     RET
+    600	0525				     DESINSTALADOR ENDP
+    601
+    602	0525				     MAIN PROC
+    603	0525  BE 0082				     MOV SI, 82H ; 82H CAMPO DEL PSP. (Primer char de los argumentos de	entrada).
+    604						     ; Comprobar si se quiere instalar.
+    605	0528  26: 80 3C	2F			     CMP BYTE PTR ES:[SI], '/'
+    606	052C  75 14				     JNE NO_INSTALADOR
+    607	052E  26: 80 7C	01 49			     CMP BYTE PTR ES:[SI+1], 'I'
+    608	0533  75 0D				     JNE NO_INSTALADOR
+    609	0535  26: 80 7C	02 0D			     CMP BYTE PTR ES:[SI+2], 13	; EL '\n'.
+    610	053A  75 06				     JNE NO_INSTALADOR
+    611
+    612	053C  E8 FDFD				     CALL INSTALADOR
+    613	053F  EB 66 90				     JMP FIN_INICIO
+    614
+    615						     ; Comprobar si se quiere desinstalar.
+    616	0542					     NO_INSTALADOR:
+    617	0542  26: 80 3C	2F			     CMP BYTE PTR ES:[SI], '/'
+    618	0546  75 14				     JNE NO_DESINSTALADOR
+    619	0548  26: 80 7C	01 44			     CMP BYTE PTR ES:[SI+1], 'D'
+    620	054D  75 0D				     JNE NO_DESINSTALADOR
+    621	054F  26: 80 7C	02 0D			     CMP BYTE PTR ES:[SI+2], 13	; EL '\n'.
+    622	0554  75 06				     JNE NO_DESINSTALADOR
+    623
+    624	0556  E8 FEA5				     CALL DESINSTALADOR
+    625	0559  EB 4C 90				     JMP FIN_INICIO
+    626
+    627						     ; Mostrar informacion y el	estado del driver.
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 12
+p4a.asm
+
+
+
+    628	055C					     NO_DESINSTALADOR:
+    629
+    630						     ; Escribe el autor.
+    631	055C  B4 09				     MOV AH, 09H
+    632	055E  BA 0103r				     MOV DX, OFFSET AUTOR
+    633	0561  CD 21				     INT 21H
+    634
+    635						     ; Escribe el correo.
+    636	0563  B4 09				     MOV AH, 09H
+    637	0565  BA 012Cr				     MOV DX, OFFSET CORREO
+    638	0568  CD 21				     INT 21H
+    639
+    640						     ; Escribe las instrucciones.
+    641	056A  B4 09				     MOV AH, 09H
+    642	056C  BA 0154r				     MOV DX, OFFSET INSTRUCCIONES
+    643	056F  CD 21				     INT 21H
+    644
+    645						     ; Comprueba si el driver esta instalado o no.
+    646	0571  B8 0000				     MOV AX, 0
+    647	0574  8E C0				     MOV ES, AX
+    648	0576  26: 8B 36	0154			     MOV SI, WORD PTR ES:[55H*4]
+    649	057B  26: A1 0156			     MOV AX, WORD PTR ES:[55H*4+2]
+    650
+    651						     ; Se comprueba si el vector de interrupcion es 0h:0h
+    652	057F  83 FE 00				     CMP SI, 0H
+    653	0582  75 05				     JNE BYTE_BAJO_NO_CERO
+    654	0584  3D 0000				     CMP AX, 0H
+    655	0587  74 17				     JE	NO_ESTA_INSTALADO
+    656
+    657	0589					     BYTE_BAJO_NO_CERO:
+    658
+    659						     ; Se copmrueba si la interrupcion instalada es la nuestra.
+    660	0589  8E C0				     MOV ES, AX
+    661	058B  26: 8B 5C	FE			     MOV BX, WORD PTR ES:[SI-2]
+    662
+    663	058F  2E: 3B 1E	021Dr			     CMP BX, FIRMA ; Se	comprueba con la firma.
+    664	0594  75 0A				     JNE NO_ESTA_INSTALADO
+    665
+    666						     ; Caso de que si este instalado.
+    667	0596  B4 09				     MOV AH, 09H
+    668	0598  BA 01FAr				     MOV DX, OFFSET SI_INSTALADO
+    669	059B  CD 21				     INT 21H
+    670	059D  EB 08 90				     JMP FIN_INICIO
+    671
+    672						     ; Caso de que no este instalado.
+    673	05A0					     NO_ESTA_INSTALADO:
+    674	05A0  B4 09				     MOV AH, 09H
+    675	05A2  BA 01DCr				     MOV DX, OFFSET NO_INSTALADO
+    676	05A5  CD 21				     INT 21H
+    677
+    678
+    679	05A7					     FIN_INICIO: ; FIN DEL PROGRAMA
+    680	05A7  B8 4C00				     MOV AX, 4C00H
+    681	05AA  CD 21				     INT 21H
+    682
+    683	05AC				     MAIN ENDP
+    684
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 13
+p4a.asm
+
+
+
+    685					     ; FIN DEL SEGMENTO	DE CODIGO
+    686	05AC			     CODE ENDS
+    687
+    688				     ; FIN DEL PROGRAMA	INDICANDO DONDE	COMIENZA LA EJECUCION
+    689				     END INICIO
+Turbo Assembler	 Version 2.0	    05/08/21 22:42:25	    Page 14
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "05/08/21"
+??FILENAME			  Text	 "p4a	  "
+??TIME				  Text	 "22:42:25"
+??VERSION			  Number 0200
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 P4A
+@WORDSIZE			  Text	 2
+AUTOR				  Byte	 CODE:0103
+BUCLE_EXTERNO_55		  Near	 CODE:023B
+BUCLE_EXTERNO_56		  Near	 CODE:027F
+BUCLE_EXTERNO_57		  Near	 CODE:02C3
+BUCLE_EXTERNO_58		  Near	 CODE:0307
+BUCLE_INTERNO_55		  Near	 CODE:023E
+BUCLE_INTERNO_56		  Near	 CODE:0282
+BUCLE_INTERNO_57		  Near	 CODE:02C6
+BUCLE_INTERNO_58		  Near	 CODE:030A
+BYTE_BAJO_NO_CERO		  Near	 CODE:0589
+CONTADOR_1CH			  Byte	 CODE:021C
+CORREO				  Byte	 CODE:012C
+DESINSTALADOR			  Near	 CODE:03FE
+DESINSTALANDO			  Byte	 CODE:01B5
+ESTA_INSTALADO			  Near	 CODE:0442
+FIN_55				  Near	 CODE:025C
+FIN_56				  Near	 CODE:02A0
+FIN_57				  Near	 CODE:02E4
+FIN_58				  Near	 CODE:0328
+FIN_DESINSTALADOR		  Near	 CODE:051E
+FIN_INICIO			  Near	 CODE:05A7
+FIRMA				  Word	 CODE:021D
+INICIO				  Near	 CODE:0100
+INSTALADOR			  Near	 CODE:033C
+INSTALANDO			  Byte	 CODE:0191
+INSTRUCCIONES			  Byte	 CODE:0154
+MAIN				  Near	 CODE:0525
+NO_DESINSTALADOR		  Near	 CODE:055C
+NO_ESTA_INSTALADO		  Near	 CODE:05A0
+NO_INSTALADO			  Byte	 CODE:01DC
+NO_INSTALADOR			  Near	 CODE:0542
+OLD_OFFSET_1CH			  Word	 CODE:0218
+OLD_SEGMENT_1CH			  Word	 CODE:021A
+RSI55				  Far	 CODE:021F
+RSI56				  Far	 CODE:0263
+RSI57				  Far	 CODE:02A7
+RSI58				  Far	 CODE:02EB
+RSI_1C				  Far	 CODE:032F
+SI_INSTALADO			  Byte	 CODE:01FA
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  05AC Para	  none
+

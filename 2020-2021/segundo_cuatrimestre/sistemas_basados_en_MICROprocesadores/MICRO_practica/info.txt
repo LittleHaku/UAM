@@ -1,0 +1,8 @@
+// pag que tiene el manual de todas las funciones en ASM.
+https://www.felixcloutier.com/x86/index.html
+
+// Pag que contiene los caracteres ASCII.
+https://bob.cs.sonoma.edu/IntroCompOrg-RPi/sec-ascii.html
+
+
+

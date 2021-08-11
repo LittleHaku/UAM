@@ -1,0 +1,294 @@
+Turbo Assembler	 Version 2.0	    04/01/21 16:46:35	    Page 1
+pract2c.asm
+
+
+
+      1				     ; Autor: Junco de las Heras Valenzuela junco.heras@estudiante.uam.es
+      2				     ; Grupo 2301 Doble	Grado.
+      3				     ; Práctica 2, ejercicio c.
+      4
+      5				     ; DEFINICION DEL SEGMENTO DE DATOS
+      6	0000			     DATOS SEGMENT
+      7					     ; DEFINICION DE LOS VECTORES
+      8	0000  01 02 02 04		     vector1 db	1,2,2,4
+      9	0004  04 02 05 01		     vector2 db	4,2,5,1
+     10	0008  03 02 04 01		     vector3 db	3,2,4,1
+     11	000C  46 55 45 52 41 20	44+	     salidaError1 DB "FUERA DEL	CONJUNTO: 1,2,3,4", 13,	10, '$'
+     12	      45 4C 20 43 4F 4E	4A+
+     13	      55 4E 54 4F 3A 20	31+
+     14	      2C 32 2C 33 2C 34	0D+
+     15	      0A 24
+     16	002A  52 45 50 45 54 49	43+	     salidaError2 DB "REPETICION", 13, 10, '$'
+     17	      49 4F 4E 0D 0A 24
+     18	0037  43 4F 52 52 45 43	54+	     salidaCorrecta DB "CORRECTO", 13, 10, '$'
+     19	      4F 0D 0A 24
+     20	0042  06*(00)			     converted_str DB 6	DUP(0);	2^16 = 65536, 5	CHARS +	'$'
+     21	0048			     DATOS ENDS
+     22
+     23				     ;**************************************************************************
+     24				     ; DEFINICION DEL SEGMENTO DE PILA
+     25	0000			     PILA SEGMENT STACK	"STACK"
+     26	0000  40*(00)			     DB	40H DUP	(0) ;ejemplo de	inicialización, 64 bytes inicializados	a 0
+     27	0040			     PILA ENDS
+     28				     ;**************************************************************************
+     29				     ; DEFINICION DEL SEGMENTO EXTRA
+     30	0000			     EXTRA SEGMENT
+     31	0000  0000 0000			     RESULT DW 0,0 ;ejemplo de inicialización.	2 PALABRAS (4 BYTES)
+     32	0004			     EXTRA ENDS
+     33				     ;**************************************************************************
+     34				     ; DEFINICION DEL SEGMENTO DE CODIGO
+     35	0000			     CODE SEGMENT
+     36					     ASSUME CS:	CODE, DS: DATOS, ES: EXTRA, SS:	PILA
+     37					     ; COMIENZO	DEL PROCEDIMIENTO PRINCIPAL
+     38	0000				     INICIO PROC
+     39						     ; INICIALIZA LOS REGISTROS	DE SEGMENTO CON	SU VALOR
+     40	0000  B8 0000s				     MOV AX, DATOS
+     41	0003  8E D8				     MOV DS, AX
+     42	0005  B8 0000s				     MOV AX, PILA
+     43	0008  8E D0				     MOV SS, AX
+     44	000A  B8 0000s				     MOV AX, EXTRA
+     45	000D  8E C0				     MOV ES, AX
+     46	000F  BC 0040				     MOV SP, 64	; CARGA	EL PUNTERO DE PILA CON EL VALOR	MAS ALTO
+     47						     ; FIN DE LAS INICIALIZACIONES
+     48						     ; COMIENZO	DEL PROGRAMA
+     49
+     50	0012  BB 0000r				     MOV BX, OFFSET vector1
+     51	0015  E8 005A				     CALL EJERCICIO_C ;	Procesa	el vector1.
+     52
+     53	0018  BB 0004r				     MOV BX, OFFSET vector2
+     54	001B  E8 0054				     CALL EJERCICIO_C ;	Procesa	el vector2.
+     55
+     56	001E  BB 0008r				     MOV BX, OFFSET vector3
+     57	0021  E8 004E				     CALL EJERCICIO_C ;	Procesa	el vector3.
+Turbo Assembler	 Version 2.0	    04/01/21 16:46:35	    Page 2
+pract2c.asm
+
+
+
+     58
+     59						     ; FIN DEL PROGRAMA
+     60	0024  B8 4C00				     MOV AX, 4C00H
+     61	0027  CD 21				     INT 21H
+     62
+     63	0029				     INICIO ENDP
+     64					     ;ESPACIO PARA SUBRUTINAS
+     65
+     66					     ; Imprime salidaError1 si hay algun numero	fuera del conjunto y guarda en CX un 0.	    +
+     67				     Sino, guarda
+     68					     ; en CX un	1.
+     69	0029				     OUT_ERR1 PROC
+     70	0029  B9 0004				     MOV CX, 4 ; El vector tiene dimension 4.
+     71
+     72	002C					     BUCLE_ERR1:
+     73	002C  8B F1				     MOV SI, CX
+     74	002E  8A 40 FF				     MOV AL, BYTE PTR [BX][SI-1] ; Procesa los numeros de uno en uno.
+     75	0031  3C 04				     CMP AL, 4
+     76	0033  7F 05				     JG	INVALID	; Si AL	> 4 es INVALID.
+     77	0035  49				     DEC CX
+     78	0036  E3 0D				     JCXZ VALID	; Si ha	procesado los 4	numeros	es VALID
+     79	0038  EB F2				     JMP BUCLE_ERR1; Repite bucle.
+     80
+     81
+     82	003A					     INVALID: ;	Imprime	errorNumDif.
+     83	003A  B4 09				     MOV AH, 09H
+     84	003C  BA 000Cr				     MOV DX, OFFSET salidaError1
+     85	003F  CD 21				     INT 21H
+     86
+     87	0041  B9 0000				     MOV CX, 0
+     88	0044  C3				     RET
+     89
+     90	0045					     VALID:
+     91
+     92	0045  B9 0001				     MOV CX, 1
+     93	0048  C3				     RET
+     94	0049				     ENDP OUT_ERR1
+     95
+     96					     ; Imprime salidaError1 si hay algun numero	fuera del conjunto y guarda en CX un 0.	    +
+     97				     Sino, guarda
+     98					     ; en CX un	1.
+     99	0049				     OUT_ERR2 PROC
+    100						     ; BUCLE_EXTERIOR itera desde [BX][3] HASTA	[BX][1].
+    101						     ; El pseudocodigo seria, si nuestro vector	es v,
+    102						     ; for(i = n-1; i >	0; i--)	for(j =	i-1; j >= 0; j--) if(v[i] == v[j])	    +
+    103				     salidaError.
+    104	0049  B9 0004				     MOV CX, 4 ; El vector tiene dimension 4.
+    105
+    106	004C  41				     INC CX
+    107	004D					     BUCLE_EXTERIOR_ERR2:
+    108	004D  49				     DEC CX ; CX ES EL CONTADOR	DEL BUCLE EXTERIOR.
+    109	004E  E3 13				     JCXZ VALID_ERR2
+    110	0050  8B F1				     MOV SI, CX
+    111	0052  8A 40 FF				     MOV AL, BYTE PTR [BX][SI-1] ; Elemento v[i] para comparar.
+    112
+    113	0055  8B D1				     MOV DX, CX
+    114						     ; COMPARA LOS ELEMENTOS [BX][0] HASTA [BX][SI-2] CON [BX][SI-1].
+Turbo Assembler	 Version 2.0	    04/01/21 16:46:35	    Page 3
+pract2c.asm
+
+
+
+    115	0057					     BUCLE_INTERIOR_ERR2:
+    116	0057  4A				     DEC DX ; DX ES EL CONTADOR	DEL BUCLE INTERIOR.
+    117	0058  74 F3				     JZ	BUCLE_EXTERIOR_ERR2
+    118	005A  8B F2				     MOV SI, DX
+    119	005C  3A 40 FF				     CMP AL, BYTE PTR [BX][SI-1] ; Elemento v[j] para comparar.
+    120	005F  74 06				     JZ	INVALID_ERR2
+    121	0061  EB F4				     JMP BUCLE_INTERIOR_ERR2
+    122
+    123	0063					     VALID_ERR2:
+    124	0063  B9 0001				     MOV CX, 1
+    125	0066  C3				     RET
+    126
+    127	0067					     INVALID_ERR2: ; Imprime salidaError.
+    128	0067  B4 09				     MOV AH, 09H
+    129	0069  BA 002Ar				     MOV DX, OFFSET salidaError2
+    130	006C  CD 21				     INT 21H
+    131
+    132	006E  B9 0000				     MOV CX, 0
+    133	0071  C3				     RET
+    134	0072				     OUT_ERR2 ENDP
+    135
+    136					     ; Proceso que resuelve el ejercicio 3 para	un vector con base BX.
+    137	0072				     EJERCICIO_C PROC
+    138	0072  E8 0012				     CALL IMPRIME_VECTOR ; Imprime los elementos del vector.
+    139
+    140	0075  E8 FFB1				     CALL OUT_ERR1 ; Comprobar que los elementos pertenezcan a [1..4].
+    141	0078  E3 0C				     JCXZ NOT_CORRECT ;	Si imprime un fallo retornar del procedimiento.
+    142
+    143	007A  E8 FFCC				     CALL OUT_ERR2 ; Comprobar que no haya elementos repetidos.
+    144	007D  E3 07				     JCXZ NOT_CORRECT ;	Si imprime un fallo retornar del procedimiento.
+    145
+    146						     ; Si se cumplen ambas condiciones.
+    147	007F  B4 09				     MOV AH, 09H ; Imprime salidaCorrecta.
+    148	0081  BA 0037r				     MOV DX, OFFSET salidaCorrecta
+    149	0084  CD 21				     INT 21H
+    150
+    151	0086					     NOT_CORRECT:
+    152	0086  C3				     RET
+    153	0087				     EJERCICIO_C ENDP
+    154
+    155					     ; Proceso que dado	en BX el offset	de un vector de	tamanio	4, imprime
+    156					     ; en la pantalla su contenido.
+    157	0087				     IMPRIME_VECTOR PROC
+    158	0087  B9 0000				     MOV CX, 0
+    159
+    160	008A					     BUCLE_EXTERIOR:
+    161	008A  8B F1				     MOV SI, CX
+    162
+    163	008C  B8 0000				     MOV AX, 0
+    164	008F  8A 00				     MOV AL, BYTE PTR[BX][SI] ;	Lees el	dato a imprimir.
+    165
+    166	0091  56				     PUSH SI ; Imprime el caracter y guarda en pila los	registros necesarios.
+    167	0092  51				     PUSH CX
+    168	0093  53				     PUSH BX
+    169	0094  E8 001A				     CALL CONVERT_BIN_ASCII
+    170	0097  1E				     PUSH DS
+    171	0098  8E DA				     MOV DS, DX
+Turbo Assembler	 Version 2.0	    04/01/21 16:46:35	    Page 4
+pract2c.asm
+
+
+
+    172	009A  B4 09				     MOV AH, 09H
+    173	009C  8B D3				     MOV DX, BX
+    174	009E  CD 21				     INT 21H
+    175	00A0  1F				     POP DS
+    176	00A1  5B				     POP BX
+    177	00A2  59				     POP CX
+    178	00A3  5E				     POP SI
+    179
+    180	00A4  B4 02				     MOV AH, 02H ; Imprime un espacio de separacion.
+    181	00A6  B2 20				     MOV DL, ' '
+    182	00A8  CD 21				     INT 21H
+    183
+    184
+    185	00AA  41				     INC CX
+    186	00AB  83 F9 04				     CMP CX, 4
+    187	00AE  75 DA				     JNZ BUCLE_EXTERIOR
+    188
+    189	00B0  C3				     RET
+    190	00B1				     IMPRIME_VECTOR ENDP
+    191
+    192					     ; Recibe por argumento un numero binario en AX, y guardara	en
+    193					     ; memoria el codigo ASCII del numero + '$'. Devuelve DX:BX,
+    194					     ; donde DX	es el segmento de la cadena resultado y	BX su offset.
+    195	00B1				     CONVERT_BIN_ASCII PROC
+    196	00B1  BE 0005				     MOV SI, 5 ; Es la ultima posicion de converted_str.
+    197	00B4  B9 000A				     MOV CX, 10	; Convertimos a	base 10.
+    198	00B7  C6 84 0042r 24			     MOV BYTE PTR converted_str[SI], '$' ; FIN DE CADENA.
+    199	00BC  4E				     DEC SI
+    200
+    201						     ; Mientras	el numero sea >	0 lo divide y guarda el	mod 10 en memoria.
+    202	00BD					     BUCLE_EXTERIOR_BIN2ASCII:
+    203	00BD  BA 0000				     MOV DX, 0 ; Resetea DX.
+    204	00C0  F7 F1				     DIV CX ; Dividimos	DX:AX por CX.
+    205
+    206	00C2  83 C2 30				     ADD DX, 30H; convierte DX a ASCII.
+    207	00C5  88 94 0042r			     MOV BYTE PTR converted_str[SI], DL	; Lo guarda en memoria.
+    208	00C9  4E				     DEC SI
+    209
+    210	00CA  3D 0000				     CMP AX, 0
+    211	00CD  75 EE				     JNE BUCLE_EXTERIOR_BIN2ASCII
+    212
+    213						     ; Guarda el segmento y el offset.
+    214	00CF  BA 0000s				     MOV DX, SEG converted_str
+    215	00D2  BB 0042r				     MOV BX, OFFSET converted_str
+    216	00D5  46				     INC SI
+    217	00D6  03 DE				     ADD BX, SI
+    218
+    219	00D8  C3				     RET
+    220	00D9				     CONVERT_BIN_ASCII ENDP
+    221
+    222
+    223				     ; FIN DEL SEGMENTO	DE CODIGO
+    224	00D9			     CODE ENDS
+    225				     ; FIN DEL PROGRAMA	INDICANDO DONDE	COMIENZA LA EJECUCION
+    226				     END INICIO
+Turbo Assembler	 Version 2.0	    04/01/21 16:46:35	    Page 5
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "04/01/21"
+??FILENAME			  Text	 "pract2c "
+??TIME				  Text	 "16:46:35"
+??VERSION			  Number 0200
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 PRACT2C
+@WORDSIZE			  Text	 2
+BUCLE_ERR1			  Near	 CODE:002C
+BUCLE_EXTERIOR			  Near	 CODE:008A
+BUCLE_EXTERIOR_BIN2ASCII	  Near	 CODE:00BD
+BUCLE_EXTERIOR_ERR2		  Near	 CODE:004D
+BUCLE_INTERIOR_ERR2		  Near	 CODE:0057
+CONVERTED_STR			  Byte	 DATOS:0042
+CONVERT_BIN_ASCII		  Near	 CODE:00B1
+EJERCICIO_C			  Near	 CODE:0072
+IMPRIME_VECTOR			  Near	 CODE:0087
+INICIO				  Near	 CODE:0000
+INVALID				  Near	 CODE:003A
+INVALID_ERR2			  Near	 CODE:0067
+NOT_CORRECT			  Near	 CODE:0086
+OUT_ERR1			  Near	 CODE:0029
+OUT_ERR2			  Near	 CODE:0049
+RESULT				  Word	 EXTRA:0000
+SALIDACORRECTA			  Byte	 DATOS:0037
+SALIDAERROR1			  Byte	 DATOS:000C
+SALIDAERROR2			  Byte	 DATOS:002A
+VALID				  Near	 CODE:0045
+VALID_ERR2			  Near	 CODE:0063
+VECTOR1				  Byte	 DATOS:0000
+VECTOR2				  Byte	 DATOS:0004
+VECTOR3				  Byte	 DATOS:0008
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  00D9 Para	  none
+DATOS				  16  0048 Para	  none
+EXTRA				  16  0004 Para	  none
+PILA				  16  0040 Para	  Stack	  STACK
+
